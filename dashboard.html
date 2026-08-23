@@ -318,10 +318,13 @@ function showLogin() {
           <input id="login-pass" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;">
         </div>
         <button onclick="doLogin()" style="width:100%;padding:0.6rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.85rem;cursor:pointer;font-family:inherit;font-weight:500;">Anmelden</button>
-      </div>
-    </div>
-  `;
-}
+                <div style="text-align:center;margin-top:1rem;font-size:0.78rem;color:#64748b;">
+                  Noch kein Konto? <a href="#" onclick="showRegister();return false;" style="color:#5e5ce6;text-decoration:none;">Registrieren</a>
+                </div>
+              </div>
+            </div>
+          `;
+        }
 
 async function doLogin() {
   const email = document.getElementById('login-email').value.trim();
@@ -341,12 +344,96 @@ async function doLogin() {
     localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
     location.reload();
   } catch(e) {
-    errEl.textContent = '❌ ' + e.message;
-    errEl.style.display = 'block';
+      errEl.textContent = '❌ ' + e.message;
+      errEl.style.display = 'block';
+    }
   }
-}
 
-function doLogout() {
+  function showRegister() {
+    document.body.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0a0a1a;font-family:'Inter',system-ui,sans-serif;">
+        <div style="background:#0f0f23;border:1px solid #1e1e3a;border-radius:12px;padding:2.5rem;width:360px;">
+          <div style="text-align:center;margin-bottom:2rem;">
+            <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#5e5ce6,#7c7aff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;margin:0 auto 0.75rem;">D</div>
+            <h1 style="font-size:1.2rem;font-weight:600;color:#f1f1f9;">DrexOSS</h1>
+            <p style="font-size:0.8rem;color:#64748b;">Neues Konto erstellen</p>
+          </div>
+          <div id="reg-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.75rem;display:none;"></div>
+          <div id="reg-success" style="font-size:0.75rem;color:#34d399;margin-bottom:0.75rem;display:none;"></div>
+          <div style="margin-bottom:0.75rem;">
+            <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">EMAIL</label>
+            <input id="reg-email" type="email" placeholder="deine@email.de" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;">
+          </div>
+          <div style="margin-bottom:0.75rem;">
+            <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">PASSWORT</label>
+            <input id="reg-pass" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;">
+          </div>
+          <div style="margin-bottom:1.25rem;">
+            <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">PASSWORT BESTÄTIGEN</label>
+            <input id="reg-pass2" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;">
+          </div>
+          <button onclick="doRegister()" style="width:100%;padding:0.6rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.85rem;cursor:pointer;font-family:inherit;font-weight:500;">Konto erstellen</button>
+          <div style="text-align:center;margin-top:1rem;font-size:0.78rem;color:#64748b;">
+            Schon ein Konto? <a href="#" onclick="showLogin();return false;" style="color:#5e5ce6;text-decoration:none;">Anmelden</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  async function doRegister() {
+    const email = document.getElementById('reg-email').value.trim();
+    const pass = document.getElementById('reg-pass').value;
+    const pass2 = document.getElementById('reg-pass2').value;
+    const errEl = document.getElementById('reg-error');
+    const sucEl = document.getElementById('reg-success');
+    errEl.style.display = 'none';
+    sucEl.style.display = 'none';
+
+    if (!email || !pass || !pass2) { errEl.textContent = '❌ Alle Felder ausfüllen'; errEl.style.display = 'block'; return; }
+    if (pass !== pass2) { errEl.textContent = '❌ Passwörter stimmen nicht überein'; errEl.style.display = 'block'; return; }
+    if (pass.length < 6) { errEl.textContent = '❌ Mindestens 6 Zeichen'; errEl.style.display = 'block'; return; }
+
+    try {
+      const res = await fetch(SUPABASE_URL + '/auth/v1/signup', {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: pass })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.msg || data.error_description || 'Registrierung fehlgeschlagen');
+
+      const uid = data.id || (data.user && data.user.id);
+      if (uid) {
+        await fetch(SUPABASE_URL + '/rest/v1/user_profiles', {
+          method: 'POST',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ id: uid, email: email, name: email.split('@')[0], type: 'privat', role: 'admin', status: 'active' })
+        });
+      }
+
+      sucEl.innerHTML = '✅ Konto erstellt! Du wirst weitergeleitet...';
+      sucEl.style.display = 'block';
+
+      // Auto-login
+      const loginRes = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: pass })
+      });
+      const loginData = await loginRes.json();
+      if (loginRes.ok) {
+        currentUser = { email: loginData.user.email, id: loginData.user.id };
+        localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
+        setTimeout(() => location.reload(), 1000);
+      }
+    } catch(e) {
+      errEl.textContent = '❌ ' + e.message;
+      errEl.style.display = 'block';
+    }
+  }
+
+  function doLogout() {
   localStorage.removeItem('drexoss_session');
   currentUser = null;
   showLogin();
