@@ -339,7 +339,17 @@ async function doLogin() {
       body: JSON.stringify({ email, password: pass })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error_description || data.error || 'Login fehlgeschlagen');
+        if (!res.ok) {
+            const errMsg = data.error_description || data.error || 'Login fehlgeschlagen';
+            // Check if it's an unconfirmed user
+            if (errMsg.includes('Invalid login credentials') || errMsg.includes('Email not confirmed')) {
+                errEl.innerHTML = '❌ Email nicht bestätigt oder falsche Zugangsdaten.<br><span style="font-size:0.7rem;">Bei neuer Registrierung: Bestätigungslink in deiner Email klicken.</span>';
+            } else {
+                errEl.innerHTML = '❌ ' + errMsg;
+            }
+            errEl.style.display = 'block';
+            return;
+        }
     
     currentUser = { email: data.user.email, id: data.user.id };
     localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
@@ -414,26 +424,17 @@ async function doLogin() {
         });
       }
 
-      sucEl.innerHTML = '✅ Konto erstellt! Du wirst weitergeleitet...';
-      sucEl.style.display = 'block';
+      sucEl.innerHTML = '✅ Registrierung erfolgreich!<br><span style="font-size:0.7rem;">Wir haben dir eine Bestätigungs-Email gesendet. Klick den Link, dann kannst du dich anmelden.</span>';
+            sucEl.style.display = 'block';
+            document.getElementById('reg-pass').value = '';
+            document.getElementById('reg-pass2').value = '';
 
-      // Auto-login
-      const loginRes = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
-        method: 'POST',
-        headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password: pass })
-      });
-      const loginData = await loginRes.json();
-      if (loginRes.ok) {
-        currentUser = { email: loginData.user.email, id: loginData.user.id };
-        localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
-        setTimeout(() => location.reload(), 1000);
-      }
-    } catch(e) {
-      errEl.textContent = '❌ ' + e.message;
-      errEl.style.display = 'block';
-    }
-  }
+            // Kein Auto-Login — User muss Email bestätigen
+          } catch(e) {
+            errEl.innerHTML = '❌ ' + e.message;
+            errEl.style.display = 'block';
+          }
+        }
 
   function doLogout() {
   localStorage.removeItem('drexoss_session');
