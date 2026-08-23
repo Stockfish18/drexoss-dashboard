@@ -289,13 +289,13 @@ function checkSession() {
       currentUser = JSON.parse(saved);
       document.getElementById('user-badge').textContent = '👤 ' + currentUser.email;
       document.getElementById('user-badge').style.display = 'inline';
-      document.getElementById('logout-btn').style.display = 'inline';
-      document.getElementById('pw-btn').style.display = 'inline';
-      document.getElementById('or-btn').style.display = 'inline';
-      loadAll();
-    } catch(e) { window.location.href = '/login'; }
+            document.getElementById('logout-btn').style.display = 'inline';
+            document.getElementById('pw-btn').style.display = 'inline';
+                  document.getElementById('or-btn').style.display = 'inline';
+                  loadAll();
+    } catch(e) { showLogin(); }
   } else {
-    window.location.href = '/login';
+    showLogin();
   }
 }
 
@@ -727,6 +727,8 @@ async function saveTask() {
 }
 
 // ====== CHAT ======
+const BACKEND_URL = 'http://localhost:8000';
+
 async function sendChat() {
   const input = document.getElementById('chat-input');
   const msg = input.value.trim();
@@ -746,55 +748,39 @@ async function sendChat() {
     return;
   }
 
-  // Projekt-Chat: mit OpenRouter
+  // Projekt-Chat: mit Stockfish Backend
   msgs.innerHTML += '<div class="c-msg"><div class="who">Du <span class="time">' + time + '</span></div><div class="txt">' + escHtml(msg) + '</div></div>';
   input.value = '';
   msgs.scrollTop = msgs.scrollHeight;
 
   // Loading-Indikator
-  msgs.innerHTML += '<div class="c-msg" id="thinking"><div class="who">Drexoss <span class="time">' + time + '</span></div><div class="txt ai">⏳ Denke nach...</div></div>';
+  msgs.innerHTML += '<div class="c-msg" id="thinking"><div class="who">Stockfish <span class="time">' + time + '</span></div><div class="txt ai">⏳ Denke nach...</div></div>';
   msgs.scrollTop = msgs.scrollHeight;
 
   try {
-    // OpenRouter API call
-    // Using the model configured in Hermes: deepseek/dsv4-flash
-    const openRouterKey = localStorage.getItem('openrouter_key') || '';
-    
-    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const res = await fetch(BACKEND_URL + '/chat', {
       method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + openRouterKey,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://drexoss.pages.dev',
-        'X-Title': 'DrexOSS Dashboard'
-      },
-      body: JSON.stringify({
-        model: 'deepseek/deepseek-v4-flash',
-        messages: [
-          { role: 'system', content: 'Du bist Hermes, ein KI-Assistent von Nous Research. Hilfreich, direkt, ehrlich. Antworte auf Deutsch.' },
-          { role: 'user', content: msg }
-        ],
-        max_tokens: 1000
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg, user_id: 'Rason' })
     });
 
     document.getElementById('thinking')?.remove();
 
     if (!res.ok) {
       const err = await res.text();
-      if (res.status === 401) {
-        msgs.innerHTML += '<div class="c-msg"><div class="who">Drexoss <span class="time">' + time + '</span></div><div class="txt ai">🔑 OpenRouter API-Key fehlt! Klick oben rechts auf "🔑 API-Key" um ihn zu setzen.</div></div>';
+      if (res.status === 0 || res.status >= 500) {
+        msgs.innerHTML += '<div class="c-msg"><div class="who">Stockfish <span class="time">' + time + '</span></div><div class="txt ai">🔌 Backend nicht erreichbar. Starte es mit: cd stockfish-chat-backend && .venv\\Scripts\\python main.py</div></div>';
       } else {
-        throw new Error(err.substring(0,100));
+        msgs.innerHTML += '<div class="c-msg"><div class="who">Stockfish <span class="time">' + time + '</span></div><div class="txt ai">❌ Fehler: ' + escHtml(err.substring(0,100)) + '</div></div>';
       }
     } else {
       const data = await res.json();
-      const reply = data.choices?.[0]?.message?.content || 'Keine Antwort erhalten.';
-      msgs.innerHTML += '<div class="c-msg"><div class="who">Drexoss <span class="time">' + time + '</span></div><div class="txt ai">' + escHtml(reply) + '</div></div>';
+      const reply = data.reply || 'Keine Antwort.';
+      msgs.innerHTML += '<div class="c-msg"><div class="who">Stockfish <span class="time">' + time + '</span></div><div class="txt ai">' + escHtml(reply) + '</div></div>';
     }
   } catch(e) {
     document.getElementById('thinking')?.remove();
-    msgs.innerHTML += '<div class="c-msg"><div class="who">Drexoss <span class="time">' + time + '</span></div><div class="txt ai">❌ Fehler: ' + escHtml(e.message) + '</div></div>';
+    msgs.innerHTML += '<div class="c-msg"><div class="who">Stockfish <span class="time">' + time + '</span></div><div class="txt ai">🔌 Backend nicht erreichbar. Starte: cd stockfish-chat-backend && .venv\\Scripts\\python main.py</div></div>';
   }
   msgs.scrollTop = msgs.scrollHeight;
 }
