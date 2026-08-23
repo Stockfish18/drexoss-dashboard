@@ -181,9 +181,9 @@ body { font-family:'Inter',system-ui,sans-serif; background:#0a0a1a; color:#f1f1
             <span class="profile-name" id="profile-name">Rason</span>
             <div class="profile-dropdown" id="profile-dropdown">
               <div class="pd-header">
-                <div class="pd-avatar" id="pd-avatar" style="cursor:pointer;position:relative;overflow:hidden;" onclick="document.getElementById('avatar-input').click()" title="Profilbild ändern">R
-              <input type="file" id="avatar-input" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="uploadAvatar(this)">
-            </div>
+                <div class="pd-avatar" id="pd-avatar" style="cursor:pointer;position:relative;overflow:hidden;" onclick="event.stopPropagation();document.getElementById('avatar-input').click()" title="Profilbild ändern">R
+                                              <input type="file" id="avatar-input" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="uploadAvatar(this)" onclick="event.stopPropagation();">
+                                            </div>
                 <div class="pd-info">
                   <h4 id="pd-name">Rason</h4>
                   <span id="pd-email">leis.rason@gmail.com</span>
