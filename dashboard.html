@@ -330,8 +330,7 @@ function checkSession() {
   if (saved) {
     try {
       currentUser = JSON.parse(saved);
-      loadProfile();
-      loadAll();
+      loadProfile().then(hasAccess => { if (hasAccess) loadAll(); });
     } catch(e) { showLogin(); }
   } else {
     showLogin();
@@ -358,11 +357,34 @@ async function loadProfile() {
     const firstName = (currentUser.profile && currentUser.profile.first_name) || name.split(' ')[0];
     const lastName = (currentUser.profile && currentUser.profile.last_name) || (name.split(' ').slice(1).join(' ') || '');
     const displayName = firstName + ' ' + lastName;
-    const role = (currentUser.profile && currentUser.profile.role) || 'admin';
-    const status = (currentUser.profile && currentUser.profile.status) || 'active';
-    const initial = firstName.charAt(0).toUpperCase();
+    const role = (currentUser.profile && currentUser.profile.role) || '';
+      const status = (currentUser.profile && currentUser.profile.status) || 'active';
+      const initial = firstName.charAt(0).toUpperCase();
   
-  const roleLabel = { admin: 'Admin', dev: 'DEV', customer: 'Kunde', freund: 'Freund' }[role] || role;
+      // === ROLLEN-CHECK: Nur gültige Rollen sehen das Dashboard ===
+      const validRoles = ['admin', 'dev', 'customer', 'freund'];
+      if (!role || !validRoles.includes(role)) {
+        const full = document.querySelector('.full-layout') || document.body;
+        full.innerHTML = `
+          <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;width:100vw;background:#0a0a1a;font-family:'Inter',system-ui,sans-serif;position:fixed;top:0;left:0;z-index:9999;">
+            <div style="background:#0f0f23;border:1px solid #1e1e3a;border-radius:12px;padding:2.5rem;width:380px;max-width:90vw;text-align:center;">
+              <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,#5e5ce6,#7c7aff);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:#fff;margin:0 auto 1rem;">D</div>
+              <h2 style="font-size:1.1rem;font-weight:600;color:#f1f1f9;margin-bottom:0.5rem;">Konto noch nicht freigeschaltet</h2>
+              <p style="font-size:0.82rem;color:#64748b;line-height:1.6;margin-bottom:0.5rem;">
+                Dein Konto hat noch keine gültige Rolle zugewiesen.<br>
+                Bitte warte bis ein Administrator dich freischaltet.
+              </p>
+              <p style="font-size:0.7rem;color:#5c5c78;margin-bottom:1.5rem;">
+                Bei Fragen: <span style="color:#5e5ce6;">leis.rason@gmail.com</span>
+              </p>
+              <button onclick="localStorage.removeItem('drexoss_session');location.reload()" style="padding:0.5rem 1.5rem;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:6px;color:#ef4444;font-size:0.8rem;cursor:pointer;font-family:inherit;">🚪 Abmelden</button>
+            </div>
+          </div>
+        `;
+        return false;
+              }
+  
+          const roleLabel = { admin: 'Admin', dev: 'DEV', customer: 'Kunde', freund: 'Freund' }[role] || role;
   const statusLabel = status === 'active' ? 'Aktiv' : status === 'pending' ? 'Ausstehend' : 'Inaktiv';
   const statusColor = status === 'active' ? '#34d399' : status === 'pending' ? '#fbbf24' : '#ef4444';
   
@@ -394,8 +416,9 @@ async function loadProfile() {
       document.getElementById('profile-avatar').textContent = '';
       document.getElementById('pd-avatar').style.backgroundImage = 'url(' + fullUrl + ')';
       document.getElementById('pd-avatar').textContent = '';
-    }
-  }
+          }
+          return true;
+        }
 
   async function uploadAvatar(input) {
     const file = input.files[0];
@@ -626,7 +649,7 @@ async function doLogin() {
                 first_name: first, last_name: last,
                 type: isFirma ? 'firma' : 'privat',
                 company_name: company, contact_person: contact,
-                role: 'customer', status: 'pending'
+                role: '', status: 'pending'
               })
             });
           }
