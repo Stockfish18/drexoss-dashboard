@@ -300,31 +300,32 @@ function checkSession() {
 }
 
 function showLogin() {
-  document.body.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0a0a1a;font-family:'Inter',system-ui,sans-serif;">
-      <div style="background:#0f0f23;border:1px solid #1e1e3a;border-radius:12px;padding:2.5rem;width:360px;">
+  const full = document.querySelector('.full-layout') || document.body;
+  full.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;width:100vw;background:#0a0a1a;font-family:'Inter',system-ui,sans-serif;position:fixed;top:0;left:0;z-index:9999;">
+      <div style="background:#0f0f23;border:1px solid #1e1e3a;border-radius:12px;padding:2.5rem;width:360px;max-width:90vw;">
         <div style="text-align:center;margin-bottom:2rem;">
           <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#5e5ce6,#7c7aff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;margin:0 auto 0.75rem;">D</div>
           <h1 style="font-size:1.2rem;font-weight:600;color:#f1f1f9;">DrexOSS</h1>
           <p style="font-size:0.8rem;color:#64748b;">Design · Refine · Execute</p>
         </div>
-        <div id="login-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.75rem;display:none;"></div>
+        <div id="login-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.75rem;display:none;text-align:center;"></div>
         <div style="margin-bottom:0.75rem;">
           <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">EMAIL</label>
-          <input id="login-email" type="email" value="leis.rason@gmail.com" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;">
+          <input id="login-email" type="email" value="leis.rason@gmail.com" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
         </div>
         <div style="margin-bottom:1.25rem;">
           <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">PASSWORT</label>
-          <input id="login-pass" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;">
+          <input id="login-pass" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
         </div>
         <button onclick="doLogin()" style="width:100%;padding:0.6rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.85rem;cursor:pointer;font-family:inherit;font-weight:500;">Anmelden</button>
-                <div style="text-align:center;margin-top:1rem;font-size:0.78rem;color:#64748b;">
-                  Noch kein Konto? <a href="#" onclick="showRegister();return false;" style="color:#5e5ce6;text-decoration:none;">Registrieren</a>
-                </div>
-              </div>
-            </div>
-          `;
-        }
+        <div style="text-align:center;margin-top:1rem;font-size:0.78rem;color:#64748b;">
+          Noch kein Konto? <a href="#" onclick="showRegister();return false;" style="color:#5e5ce6;text-decoration:none;">Registrieren</a>
+        </div>
+      </div>
+    </div>
+  `;
+}
 
 async function doLogin() {
   const email = document.getElementById('login-email').value.trim();
@@ -350,27 +351,28 @@ async function doLogin() {
   }
 
   function showRegister() {
-    document.body.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0a0a1a;font-family:'Inter',system-ui,sans-serif;">
-        <div style="background:#0f0f23;border:1px solid #1e1e3a;border-radius:12px;padding:2.5rem;width:360px;">
+    const full = document.querySelector('.full-layout') || document.body;
+    full.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;width:100vw;background:#0a0a1a;font-family:'Inter',system-ui,sans-serif;position:fixed;top:0;left:0;z-index:9999;">
+        <div style="background:#0f0f23;border:1px solid #1e1e3a;border-radius:12px;padding:2.5rem;width:360px;max-width:90vw;">
           <div style="text-align:center;margin-bottom:2rem;">
             <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#5e5ce6,#7c7aff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;margin:0 auto 0.75rem;">D</div>
             <h1 style="font-size:1.2rem;font-weight:600;color:#f1f1f9;">DrexOSS</h1>
             <p style="font-size:0.8rem;color:#64748b;">Neues Konto erstellen</p>
           </div>
-          <div id="reg-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.75rem;display:none;"></div>
-          <div id="reg-success" style="font-size:0.75rem;color:#34d399;margin-bottom:0.75rem;display:none;"></div>
+          <div id="reg-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.75rem;display:none;text-align:center;"></div>
+          <div id="reg-success" style="font-size:0.75rem;color:#34d399;margin-bottom:0.75rem;display:none;text-align:center;"></div>
           <div style="margin-bottom:0.75rem;">
             <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">EMAIL</label>
-            <input id="reg-email" type="email" placeholder="deine@email.de" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;">
+            <input id="reg-email" type="email" placeholder="deine@email.de" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
           </div>
           <div style="margin-bottom:0.75rem;">
             <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">PASSWORT</label>
-            <input id="reg-pass" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;">
+            <input id="reg-pass" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
           </div>
           <div style="margin-bottom:1.25rem;">
             <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">PASSWORT BESTÄTIGEN</label>
-            <input id="reg-pass2" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;">
+            <input id="reg-pass2" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
           </div>
           <button onclick="doRegister()" style="width:100%;padding:0.6rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.85rem;cursor:pointer;font-family:inherit;font-weight:500;">Konto erstellen</button>
           <div style="text-align:center;margin-top:1rem;font-size:0.78rem;color:#64748b;">
