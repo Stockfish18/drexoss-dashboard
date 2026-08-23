@@ -191,8 +191,9 @@ body { font-family:'Inter',system-ui,sans-serif; background:#0a0a1a; color:#f1f1
               <div class="pd-row"><span class="label">Rolle</span><span id="pd-role-text">Admin</span></div>
               <div class="pd-row"><span class="label">Status</span><span id="pd-status" style="color:#34d399;">Aktiv</span></div>
               <div class="pd-actions">
-                <button class="pd-logout" onclick="event.stopPropagation();doLogout()">🚪 Abmelden</button>
-              </div>
+                          <button class="pd-logout" onclick="event.stopPropagation();openPasswordModal()" style="margin-bottom:0.4rem;background:rgba(94,92,230,0.1);border:1px solid rgba(94,92,230,0.2);color:#5e5ce6;">🔑 Passwort ändern</button>
+                          <button class="pd-logout" onclick="event.stopPropagation();doLogout()">🚪 Abmelden</button>
+                        </div>
             </div>
           </div>
         </div>
@@ -349,9 +350,12 @@ async function loadProfile() {
   } catch(e) {}
   
   const name = (currentUser.profile && currentUser.profile.name) || currentUser.email.split('@')[0];
-  const role = (currentUser.profile && currentUser.profile.role) || 'admin';
-  const status = (currentUser.profile && currentUser.profile.status) || 'active';
-  const initial = name.charAt(0).toUpperCase();
+    const firstName = (currentUser.profile && currentUser.profile.first_name) || name.split(' ')[0];
+    const lastName = (currentUser.profile && currentUser.profile.last_name) || (name.split(' ').slice(1).join(' ') || '');
+    const displayName = firstName + ' ' + lastName;
+    const role = (currentUser.profile && currentUser.profile.role) || 'admin';
+    const status = (currentUser.profile && currentUser.profile.status) || 'active';
+    const initial = firstName.charAt(0).toUpperCase();
   
   const roleLabel = { admin: 'Admin', dev: 'DEV', customer: 'Kunde', freund: 'Freund' }[role] || role;
   const statusLabel = status === 'active' ? 'Aktiv' : status === 'pending' ? 'Ausstehend' : 'Inaktiv';
@@ -362,8 +366,8 @@ async function loadProfile() {
   document.getElementById('pd-avatar').textContent = initial;
   
   // Update names
-  document.getElementById('profile-name').textContent = name;
-  document.getElementById('pd-name').textContent = name;
+    document.getElementById('profile-name').textContent = displayName;
+    document.getElementById('pd-name').textContent = displayName;
   document.getElementById('pd-email').textContent = currentUser.email;
   
   // Update role badge
@@ -440,80 +444,138 @@ async function doLogin() {
   }
 
   function showRegister() {
-    const full = document.querySelector('.full-layout') || document.body;
-    full.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;width:100vw;background:#0a0a1a;font-family:'Inter',system-ui,sans-serif;position:fixed;top:0;left:0;z-index:9999;">
-        <div style="background:#0f0f23;border:1px solid #1e1e3a;border-radius:12px;padding:2.5rem;width:360px;max-width:90vw;">
-          <div style="text-align:center;margin-bottom:2rem;">
-            <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#5e5ce6,#7c7aff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;margin:0 auto 0.75rem;">D</div>
-            <h1 style="font-size:1.2rem;font-weight:600;color:#f1f1f9;">DrexOSS</h1>
-            <p style="font-size:0.8rem;color:#64748b;">Neues Konto erstellen</p>
-          </div>
-          <div id="reg-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.75rem;display:none;text-align:center;"></div>
-          <div id="reg-success" style="font-size:0.75rem;color:#34d399;margin-bottom:0.75rem;display:none;text-align:center;"></div>
-          <div style="margin-bottom:0.75rem;">
-            <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">EMAIL</label>
-            <input id="reg-email" type="email" placeholder="deine@email.de" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
-          </div>
-          <div style="margin-bottom:0.75rem;">
-            <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">PASSWORT</label>
-            <input id="reg-pass" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
-          </div>
-          <div style="margin-bottom:1.25rem;">
-            <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">PASSWORT BESTÄTIGEN</label>
-            <input id="reg-pass2" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
-          </div>
-          <button onclick="doRegister()" style="width:100%;padding:0.6rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.85rem;cursor:pointer;font-family:inherit;font-weight:500;">Konto erstellen</button>
-          <div style="text-align:center;margin-top:1rem;font-size:0.78rem;color:#64748b;">
-            Schon ein Konto? <a href="#" onclick="showLogin();return false;" style="color:#5e5ce6;text-decoration:none;">Anmelden</a>
+      const full = document.querySelector('.full-layout') || document.body;
+      full.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;width:100vw;background:#0a0a1a;font-family:'Inter',system-ui,sans-serif;position:fixed;top:0;left:0;z-index:9999;">
+          <div style="background:#0f0f23;border:1px solid #1e1e3a;border-radius:12px;padding:2rem;width:440px;max-width:92vw;">
+            <div style="text-align:center;margin-bottom:1.25rem;">
+              <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#5e5ce6,#7c7aff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;margin:0 auto 0.5rem;">D</div>
+              <h1 style="font-size:1.1rem;font-weight:600;color:#f1f1f9;">DrexOSS</h1>
+              <p style="font-size:0.78rem;color:#64748b;">Neues Konto erstellen</p>
+            </div>
+            <div id="reg-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.5rem;display:none;text-align:center;"></div>
+            <div id="reg-success" style="font-size:0.75rem;color:#34d399;margin-bottom:0.5rem;display:none;text-align:center;"></div>
+
+            <div style="display:flex;gap:0.5rem;margin-bottom:0.6rem;">
+              <div style="flex:1;">
+                <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">VORNAME</label>
+                <input id="reg-first" type="text" placeholder="Max" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;">
+              </div>
+              <div style="flex:1;">
+                <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">NACHNAME</label>
+                <input id="reg-last" type="text" placeholder="Mustermann" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;">
+              </div>
+            </div>
+
+            <div style="margin-bottom:0.6rem;">
+              <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">EMAIL</label>
+              <input id="reg-email" type="email" placeholder="deine@email.de" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;">
+            </div>
+
+            <div style="display:flex;gap:0.5rem;margin-bottom:0.6rem;">
+              <div style="flex:1;">
+                <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">PASSWORT</label>
+                <input id="reg-pass" type="password" placeholder="••••••••" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;">
+              </div>
+              <div style="flex:1;">
+                <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">PASSWORT BESTÄTIGEN</label>
+                <input id="reg-pass2" type="password" placeholder="••••••••" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;">
+              </div>
+            </div>
+
+            <div style="margin-bottom:0.6rem;">
+              <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">TYP</label>
+              <div style="display:flex;gap:0.5rem;">
+                <label onclick="document.getElementById('reg-type-privat').checked=true;toggleCompany()" style="flex:1;display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.6rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;cursor:pointer;font-size:0.8rem;color:#c4c4d4;">
+                  <input type="radio" id="reg-type-privat" name="reg-type" value="privat" checked onchange="toggleCompany()" style="accent-color:#5e5ce6;"> 👤 Privat
+                </label>
+                <label onclick="document.getElementById('reg-type-firma').checked=true;toggleCompany()" style="flex:1;display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.6rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;cursor:pointer;font-size:0.8rem;color:#c4c4d4;">
+                  <input type="radio" id="reg-type-firma" name="reg-type" value="firma" onchange="toggleCompany()" style="accent-color:#5e5ce6;"> 🏢 Firma
+                </label>
+              </div>
+            </div>
+
+            <div id="reg-company-fields" style="display:none;">
+              <div style="display:flex;gap:0.5rem;margin-bottom:0.6rem;">
+                <div style="flex:1;">
+                  <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">FIRMENNAME</label>
+                  <input id="reg-company" type="text" placeholder="Firma GmbH" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;">
+                </div>
+                <div style="flex:1;">
+                  <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">ANSPRECHPARTNER</label>
+                  <input id="reg-contact" type="text" placeholder="Max Mustermann" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;">
+                </div>
+              </div>
+            </div>
+
+            <button onclick="doRegister()" style="width:100%;padding:0.55rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.85rem;cursor:pointer;font-family:inherit;font-weight:500;">Konto erstellen</button>
+            <div style="text-align:center;margin-top:0.75rem;font-size:0.78rem;color:#64748b;">
+              Schon ein Konto? <a href="#" onclick="showLogin();return false;" style="color:#5e5ce6;text-decoration:none;">Anmelden</a>
+            </div>
           </div>
         </div>
-      </div>
-    `;
-  }
+      `;
+    }
+
+    function toggleCompany() {
+      const isFirma = document.getElementById('reg-type-firma').checked;
+      document.getElementById('reg-company-fields').style.display = isFirma ? 'block' : 'none';
+    }
 
   async function doRegister() {
     const email = document.getElementById('reg-email').value.trim();
     const pass = document.getElementById('reg-pass').value;
     const pass2 = document.getElementById('reg-pass2').value;
     const errEl = document.getElementById('reg-error');
-    const sucEl = document.getElementById('reg-success');
-    errEl.style.display = 'none';
-    sucEl.style.display = 'none';
+        const sucEl = document.getElementById('reg-success');
+        errEl.style.display = 'none';
+        sucEl.style.display = 'none';
 
-    if (!email || !pass || !pass2) { errEl.textContent = '❌ Alle Felder ausfüllen'; errEl.style.display = 'block'; return; }
-    if (pass !== pass2) { errEl.textContent = '❌ Passwörter stimmen nicht überein'; errEl.style.display = 'block'; return; }
-    if (pass.length < 6) { errEl.textContent = '❌ Mindestens 6 Zeichen'; errEl.style.display = 'block'; return; }
+        const first = document.getElementById('reg-first').value.trim();
+        const last = document.getElementById('reg-last').value.trim();
+        const isFirma = document.getElementById('reg-type-firma').checked;
+        const company = isFirma ? document.getElementById('reg-company').value.trim() : '';
+        const contact = isFirma ? document.getElementById('reg-contact').value.trim() : '';
 
-    try {
-      const res = await fetch(SUPABASE_URL + '/auth/v1/signup', {
-        method: 'POST',
-        headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password: pass })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.msg || data.error_description || 'Registrierung fehlgeschlagen');
+        if (!email || !pass || !pass2 || !first || !last) { errEl.innerHTML = '❌ Alle Pflichtfelder ausfüllen'; errEl.style.display = 'block'; return; }
+        if (pass !== pass2) { errEl.innerHTML = '❌ Passwörter stimmen nicht überein'; errEl.style.display = 'block'; return; }
+        if (pass.length < 6) { errEl.innerHTML = '❌ Mindestens 6 Zeichen'; errEl.style.display = 'block'; return; }
 
-      const uid = data.id || (data.user && data.user.id);
-      if (uid) {
-        await fetch(SUPABASE_URL + '/rest/v1/user_profiles', {
-          method: 'POST',
-          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-          body: JSON.stringify({ id: uid, email: email, name: email.split('@')[0], type: 'privat', role: 'admin', status: 'active' })
-        });
-      }
+        try {
+          const res = await fetch(SUPABASE_URL + '/auth/v1/signup', {
+            method: 'POST',
+            headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password: pass })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.msg || data.error_description || 'Registrierung fehlgeschlagen');
 
-      sucEl.innerHTML = '✅ Registrierung erfolgreich!<br><span style="font-size:0.7rem;">Wir haben dir eine Bestätigungs-Email gesendet. Klick den Link, dann kannst du dich anmelden.</span>';
-            sucEl.style.display = 'block';
-            document.getElementById('reg-pass').value = '';
-            document.getElementById('reg-pass2').value = '';
+          const uid = data.id || (data.user && data.user.id);
+          if (uid) {
+            await fetch(SUPABASE_URL + '/rest/v1/user_profiles', {
+              method: 'POST',
+              headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+              body: JSON.stringify({ 
+                id: uid, email, name: (first + ' ' + last).trim(),
+                first_name: first, last_name: last,
+                type: isFirma ? 'firma' : 'privat',
+                company_name: company, contact_person: contact,
+                role: 'customer', status: 'pending'
+              })
+            });
+          }
 
-            // Kein Auto-Login — User muss Email bestätigen
-          } catch(e) {
-                      errEl.innerHTML = '❌ ' + e.message;
-                      errEl.style.display = 'block';
-                    }
-                  }
+          sucEl.innerHTML = '✅ Registrierung erfolgreich!<br><span style="font-size:0.7rem;">Wir haben dir eine Bestätigungs-Email gesendet. Klick den Link, dann kannst du dich anmelden.</span>';
+                sucEl.style.display = 'block';
+                document.getElementById('reg-pass').value = '';
+                document.getElementById('reg-pass2').value = '';
+
+                // Kein Auto-Login — User muss Email bestätigen
+              } catch(e) {
+                          errEl.innerHTML = '❌ ' + e.message;
+                          errEl.style.display = 'block';
+                        }
+                      }
 
           function toggleProfile() {
             const dd = document.getElementById('profile-dropdown');
