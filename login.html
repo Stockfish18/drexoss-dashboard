@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DrexOSS · Anmelden</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',system-ui,sans-serif; background:#0a0a1a; color:#f1f1f9; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+.card { background:#0f0f23; border:1px solid #1e1e3a; border-radius:12px; padding:2.5rem; width:380px; }
+.logo { width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,#5e5ce6,#7c7aff); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1rem; color:#fff; margin:0 auto 0.75rem; }
+h1 { text-align:center; font-size:1.3rem; font-weight:600; margin-bottom:2rem; }
+.form-group { margin-bottom:1rem; }
+.form-group label { display:block; font-size:0.7rem; color:#8888a0; margin-bottom:0.3rem; text-transform:uppercase; letter-spacing:0.05em; }
+.form-group input { width:100%; padding:0.6rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#f1f1f9; font-size:0.9rem; font-family:inherit; outline:none; }
+.form-group input:focus { border-color:rgba(94,92,230,0.4); }
+.error { font-size:0.78rem; color:#ef4444; margin-bottom:0.75rem; display:none; }
+.btn-primary { width:100%; padding:0.65rem; background:#5e5ce6; border:none; border-radius:6px; color:#fff; font-size:0.9rem; cursor:pointer; font-family:inherit; font-weight:500; }
+.btn-primary:hover { background:#6d6bf0; }
+.footer-text { text-align:center; margin-top:1.25rem; font-size:0.8rem; color:#5c5c78; }
+.footer-text a { color:#5e5ce6; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">D</div>
+  <h1>Willkommen zurück</h1>
+  <div class="error" id="login-error"></div>
+  <div class="form-group">
+        <label>Email</label>
+        <input id="email" type="email" name="email" placeholder="deine@email.de" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Passwort</label>
+        <input id="password" type="password" name="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+  <button class="btn-primary" onclick="doLogin()">Anmelden</button>
+  <div class="footer-text">Noch kein Konto? <a href="/register">Registrieren</a></div>
+</div>
+<script>
+const SUPABASE_URL = 'https://rmveqbegqfthwdopzykh.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ByDyItDAH-NvgMLIitjl9w_VdNJZqtp';
+
+// Check if already logged in
+const saved = localStorage.getItem('drexoss_session');
+if (saved) { window.location.href = '/dashboard'; }
+
+async function doLogin() {
+  const email = document.getElementById('email').value.trim();
+  const pass = document.getElementById('password').value;
+  const errEl = document.getElementById('login-error');
+  try {
+    const res = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error_description || data.error || 'Login fehlgeschlagen');
+    localStorage.setItem('drexoss_session', JSON.stringify({ email: data.user.email, id: data.user.id }));
+    window.location.href = '/dashboard';
+  } catch(e) {
+    errEl.textContent = '❌ ' + e.message;
+    errEl.style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>

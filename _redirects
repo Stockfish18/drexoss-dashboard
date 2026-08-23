@@ -1,0 +1,5 @@
+# Static file routing for Cloudflare Pages
+/login /login.html 200
+/register /register.html 200
+/dashboard /dashboard.html 200
+/* /index.html 200
