@@ -631,9 +631,9 @@ function doLogin() {
   const known = { 'leis.rason@gmail.com': { pass: 'DrexOSS2026!', name: 'Rason Leis', role: 'Admin' } };
   const user = known[email];
   if (user && user.pass === pass) {
-      localStorage.clear();
-      localStorage.setItem('drexoss_v', '2');
-      localStorage.setItem('drexoss_session', JSON.stringify({ email, name: user.name, role: user.role }));
+        localStorage.clear();
+        localStorage.setItem('dxs_v', '1');
+        localStorage.setItem('dxs_session', JSON.stringify({ email, name: user.name, role: user.role }));
     showHub();
   } else {
     alert('❌ Falsche E-Mail oder Passwort');
@@ -645,16 +645,16 @@ function showRegister() {
 }
 
 function checkSession() {
-  // Force reset from old version
-  const v = localStorage.getItem('drexoss_v');
+  // Force reset from old version — new key name
+  const v = localStorage.getItem('dxs_v');
   if (!v) {
     localStorage.clear();
-    localStorage.setItem('drexoss_v', '2');
+    localStorage.setItem('dxs_v', '1');
     document.getElementById('login-screen').classList.remove('hidden');
     return;
   }
   
-  const saved = localStorage.getItem('drexoss_session');
+  const saved = localStorage.getItem('dxs_session');
   if (saved) {
     try {
       const data = JSON.parse(saved);
@@ -675,8 +675,8 @@ function showHub() {
   hub.classList.add('show');
   
   // Set user info
-  try {
-    const data = JSON.parse(localStorage.getItem('drexoss_session'));
+    try {
+      const data = JSON.parse(localStorage.getItem('dxs_session'));
     if (data) {
       const nameEl = document.querySelector('.sb-user-name');
       const roleEl = document.querySelector('.sb-user-role');
@@ -688,9 +688,7 @@ function showHub() {
 
 function logout() {
   localStorage.clear();
-  document.getElementById('hub-screen').classList.remove('show');
-  document.getElementById('login-screen').classList.remove('hidden');
-  location.reload();
+  window.location.href = window.location.pathname + '?v=' + Date.now();
 }
 
 // ===== CHAT =====
