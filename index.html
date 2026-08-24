@@ -4,83 +4,752 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DrexOSS · Design · Refine · Execute</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Orbitron' font-weight='700' font-size='22' fill='%235e5ce6'%3ED%3C/text%3E%3C/svg%3E">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Inter',system-ui,sans-serif; background:#0a0a1a; color:#f1f1f9; min-height:100vh; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #000;
+    color: #e8e8e8;
+    height: 100vh;
+    display: flex;
+    -webkit-font-smoothing: antialiased;
+  }
 
-nav { display:flex; align-items:center; justify-content:space-between; padding:1rem 2rem; border-bottom:1px solid rgba(255,255,255,0.06); }
-.nav-l { display:flex; align-items:center; gap:0.75rem; }
-.nav-logo { width:32px; height:32px; border-radius:6px; background:linear-gradient(135deg,#5e5ce6,#7c7aff); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.85rem; color:#fff; }
-.nav-l span { font-size:1rem; font-weight:600; }
-.nav-r { display:flex; gap:0.75rem; }
-.nav-r a { padding:0.4rem 1rem; border-radius:6px; font-size:0.82rem; text-decoration:none; transition:all 0.12s; }
-.nav-r .btn-ghost { color:#94a3b8; border:1px solid rgba(255,255,255,0.08); }
-.nav-r .btn-ghost:hover { border-color:rgba(255,255,255,0.2); color:#f1f1f9; }
-.nav-r .btn-primary { background:#5e5ce6; color:#fff; }
-.nav-r .btn-primary:hover { background:#6d6bf0; }
+  /* ===== LOGIN SCREEN ===== */
+  .login-screen {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+  }
+  .login-screen.hidden { display: none; }
 
-.hero { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:4rem 2rem; text-align:center; min-height:70vh; }
-.hero-badge { font-size:0.7rem; color:#5e5ce6; background:rgba(94,92,230,0.1); border:1px solid rgba(94,92,230,0.2); padding:0.3rem 0.8rem; border-radius:999px; margin-bottom:1.5rem; }
-.hero h1 { font-size:3rem; font-weight:700; max-width:700px; line-height:1.15; margin-bottom:1rem; }
-.hero h1 span { background:linear-gradient(135deg,#5e5ce6,#7c7aff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.hero p { font-size:1.1rem; color:#8888a0; max-width:550px; margin-bottom:2rem; line-height:1.6; }
-.hero-actions { display:flex; gap:0.75rem; flex-wrap:wrap; justify-content:center; }
-.hero-actions a { padding:0.6rem 1.5rem; border-radius:8px; font-size:0.9rem; text-decoration:none; font-weight:500; transition:all 0.12s; }
-.hero-actions .btn-primary { background:#5e5ce6; color:#fff; }
-.hero-actions .btn-primary:hover { background:#6d6bf0; }
-.hero-actions .btn-ghost { color:#94a3b8; border:1px solid rgba(255,255,255,0.1); }
-.hero-actions .btn-ghost:hover { border-color:rgba(255,255,255,0.2); color:#f1f1f9; }
+  .login-brand {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    text-align: center;
+  }
 
-.features { max-width:1000px; margin:0 auto; padding:4rem 2rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
-.feature { background:#0f0f23; border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:1.5rem; }
-.feature .icon { font-size:1.5rem; margin-bottom:0.75rem; }
-.feature h3 { font-size:1rem; font-weight:600; margin-bottom:0.4rem; }
-.feature p { font-size:0.85rem; color:#8888a0; line-height:1.6; }
+  .login-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 4rem;
+    letter-spacing: -0.02em;
+    color: #e8e8e8;
+    margin-bottom: 0.75rem;
+  }
+  .login-logo span { color: #5e5ce6; }
 
-footer { text-align:center; padding:2rem; font-size:0.75rem; color:#5c5c78; border-top:1px solid rgba(255,255,255,0.06); }
-@media(max-width:600px) { .hero h1 { font-size:2rem; } }
+  .login-slogan {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: #555;
+    margin-bottom: 2.5rem;
+  }
+
+  .login-tagline {
+    font-size: 0.85rem;
+    color: #555;
+    max-width: 380px;
+    line-height: 1.7;
+  }
+  .login-tagline span { color: #5e5ce6; }
+  .login-tagline .dot { color: #333; }
+
+  .login-features {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    font-size: 0.6rem;
+    color: #333;
+    letter-spacing: 0.05em;
+  }
+  .login-features span { display: flex; align-items: center; gap: 0.3rem; }
+
+  .login-form-wrap {
+    width: 440px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    border-left: 2px solid;
+    border-image: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.02)) 1;
+  }
+
+  .login-box { width: 100%; max-width: 340px; }
+
+  .login-box h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    color: #888;
+    margin-bottom: 0.25rem;
+  }
+  .login-box .sub {
+    font-size: 0.78rem;
+    color: #555;
+    margin-bottom: 2rem;
+  }
+
+  .field { margin-bottom: 1rem; }
+  .field label {
+    display: block;
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #666;
+    margin-bottom: 0.35rem;
+  }
+  .field input {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    background: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    color: #e8e8e8;
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.12s;
+  }
+  .field input:focus { border-color: #333; }
+  .field input::placeholder { color: #333; }
+
+  .btn-primary {
+    width: 100%;
+    padding: 0.65rem;
+    background: #5e5ce6;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.12s;
+    margin-top: 0.5rem;
+  }
+  .btn-primary:hover { background: #6d6bf0; }
+
+  .login-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+    color: #222;
+    font-size: 0.6rem;
+  }
+  .login-divider::before,
+  .login-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #141414;
+  }
+
+  .login-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.72rem;
+    color: #444;
+  }
+  .login-footer a { color: #5e5ce6; text-decoration: none; }
+  .login-footer a:hover { text-decoration: underline; }
+
+  /* ===== HUB LAYOUT ===== */
+  .hub-screen { display: none; width: 100%; height: 100vh; }
+  .hub-screen.show { display: flex; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 250px;
+    background: #000;
+    border-right: 2px solid;
+    border-image: linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(255,255,255,0.1)) 1;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  .sb-header {
+    padding: 1.25rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .logo-anim {
+    display: inline-block;
+    font-family:'Orbitron',sans-serif;
+    font-weight:700;
+    font-size:1.25rem;
+    letter-spacing:0.06em;
+    color:#e8e8e8;
+    padding:0 0.6rem;
+  }
+  .logo-anim span {
+    display: inline-block;
+    animation: logoFade 0.35s ease-out both;
+  }
+  .logo-anim .drex { animation-delay: 0s; }
+  .logo-anim .o { animation-delay: 0.3s; color:#5e5ce6; }
+  .logo-anim .s1 { animation-delay: 0.6s; color:#5e5ce6; }
+  .logo-anim .s2 { animation-delay: 0.9s; color:#5e5ce6; }
+
+  @keyframes logoFade {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .sb-new-btn {
+    margin: 0.35rem 0.75rem 0.75rem;
+    padding: 0.55rem;
+    background: transparent;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-size: 0.78rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.12s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+  .sb-new-btn:hover { border-color: #2a2a2a; color: #fff; }
+
+  .sb-search {
+    margin: 0 0.75rem 0.5rem;
+    padding: 0.45rem 0.6rem;
+    background: #0a0a0a;
+    border: 1px solid #141414;
+    border-radius: 6px;
+    color: #d8d8d8;
+    font-size: 0.72rem;
+    font-family: inherit;
+    outline: none;
+  }
+  .sb-search:focus { border-color: #222; color: #fff; }
+  .sb-search::placeholder { color: #444; }
+
+  .sb-scroll { flex: 1; overflow-y: auto; min-height: 0; }
+
+  .sb-section {
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #ccc;
+    padding: 0.75rem 0.6rem 0.3rem;
+  }
+
+  .sb-item {
+    padding: 0.55rem 0.6rem 0.55rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    color: #e0e0e0;
+    transition: all 0.1s;
+  }
+  .sb-item:hover { background: #141414; }
+  .sb-item.active { background: #141414; }
+
+  .sb-user {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.65rem 0.75rem; border-top: 1px solid #141414;
+  }
+  .sb-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #1a1a1a; display: flex; align-items: center;
+    justify-content: center; font-size: 0.65rem; font-weight: 600;
+    color: #fff; flex-shrink: 0;
+  }
+  .sb-user-info { flex: 1; min-width: 0; }
+  .sb-user-name { font-size: 0.75rem; color: #eee; font-weight: 500; }
+  .sb-user-role { font-size: 0.6rem; color: #ccc; }
+  .sb-dot { width: 5px; height: 5px; border-radius: 50%; background: #34d399; flex-shrink: 0; }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: #000;
+    position: relative;
+  }
+
+  .drop-zone { position: relative; }
+  .drop-zone.dragover { outline: 2px dashed #5e5ce6; outline-offset: -2px; background: rgba(94,92,230,0.05); }
+  .drop-overlay { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; font-size: 0.8rem; color: #5e5ce6; pointer-events: none; z-index: 10; }
+  .drop-zone.dragover .drop-overlay { display: flex; }
+
+  /* Chat Messages */
+  .chat-msgs {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem 3rem 0.5rem;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .msg {
+    display: flex;
+    margin-bottom: 0.6rem;
+    width: 100%;
+    max-width: 780px;
+    padding: 0 0.5rem;
+  }
+  .msg.user { justify-content: flex-end; }
+  .msg.ai { justify-content: flex-start; }
+
+  .msg-bubble {
+    max-width: 75%;
+    padding: 0.55rem 1rem;
+    border-radius: 18px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    word-wrap: break-word;
+  }
+  .msg.user .msg-bubble {
+    background: #5e5ce6;
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+  .msg.ai .msg-bubble {
+    background: #1a1a1a;
+    color: #e8e8e8;
+    border-bottom-left-radius: 4px;
+  }
+
+  .msg-bubble code {
+    background: rgba(255,255,255,0.08);
+    border-radius: 4px;
+    padding: 0.1rem 0.35rem;
+    font-size: 0.8rem;
+  }
+  .msg-bubble pre {
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    padding: 0.6rem;
+    margin: 0.4rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+  }
+  .msg-bubble p { margin-bottom: 0.4rem; }
+  .msg-bubble p:last-child { margin-bottom: 0; }
+
+  /* Empty State */
+  .empty-state {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 3rem;
+  }
+  .empty-center { text-align: center; max-width: 440px; }
+  .empty-center .brand { font-size: 3.2rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.5rem; color: #e8e8e8; font-family: 'Orbitron', sans-serif; }
+  .empty-center .brand span { color: #5e5ce6; }
+  .empty-center .slogan {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: #555;
+    margin-top: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+  .empty-center .suggestions { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+  .empty-center .suggestions span {
+    padding: 0.4rem 0.85rem; background: #0d0d0d;
+    border: 1px solid #1a1a1a; border-radius: 999px;
+    font-size: 0.75rem; color: #d0d0d0; cursor: pointer; transition: all 0.1s;
+  }
+  .empty-center .suggestions span:hover { border-color: #2a2a2a; color: #fff; background: #141414; }
+
+  /* Input */
+  .input-wrap { padding: 0.5rem 3rem 2rem; display: flex; justify-content: center; }
+
+  .input-box {
+    width: 100%;
+    max-width: 780px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #1f1f1f;
+    border: 1px solid #2e2e2e;
+    border-radius: 40px;
+    padding: 0.5rem 0.6rem;
+    transition: border-color 0.15s;
+  }
+  .input-box:focus-within { border-color: #444; }
+
+  .input-box textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #cccccc;
+    font-family: inherit;
+    font-size: 0.88rem;
+    padding: 0.35rem 0.5rem;
+    resize: none;
+    min-height: 24px;
+    max-height: 160px;
+    line-height: 1.5;
+  }
+  .input-box textarea::placeholder { color: #666; }
+
+  .input-actions { display: flex; align-items: center; gap: 0.25rem; }
+
+  .input-btn {
+    width: 34px; height: 34px; border-radius: 8px;
+    border: none; background: transparent; color: #ccc;
+    cursor: pointer; display: flex; align-items: center;
+    justify-content: center; font-size: 0.85rem;
+    transition: all 0.1s; flex-shrink: 0;
+  }
+  .input-btn:hover { background: #141414; color: #ccc; }
+  .audio-btn:hover { background: #4a48c4 !important; transition: background 0.15s; }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    width: 250px;
+    background: #000;
+    border-left: 2px solid;
+    border-image: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.02)) 1;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    padding: 1rem;
+  }
+  .rp-header {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+    margin-bottom: 1rem;
+    cursor: pointer;
+  }
+  .rp-kpi {
+    padding: 0.75rem;
+    background: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .rp-kpi:hover { background: #141414; border-color: #2a2a2a; }
+  .rp-kpi-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.2rem; }
+  .rp-kpi-label { font-size: 0.7rem; color: #888; }
+  .rp-kpi-num { font-size: 1.3rem; font-weight: 700; color: #fff; }
+  .rp-kpi-num.accent { color: #5e5ce6; }
+  .rp-kpi-sub { font-size: 0.6rem; color: #555; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #141414; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #222; }
+
+  @media (max-width: 800px) {
+    .login-screen { flex-direction: column; }
+    .login-form-wrap { width: 100%; border-left: none; border-top: 2px solid; }
+    .login-features { flex-wrap: wrap; justify-content: center; }
+    .sidebar, .right-panel { display: none; }
+  }
 </style>
 </head>
 <body>
-<nav>
-  <div class="nav-l">
-    <div class="nav-logo">D</div>
-    <span>DrexOSS</span>
-  </div>
-  <div class="nav-r">
-    <a href="/dashboard" class="btn-ghost">Anmelden</a>
-    <a href="/dashboard" class="btn-primary">Registrieren</a>
-  </div>
-</nav>
 
-<div class="hero">
-  <div class="hero-badge">🚀 Platform Preview</div>
-  <h1>Design · Refine · <span>Execute</span></h1>
-  <p>DrexOSS ist dein Operating System für technische Operations. Definiere Projekte, verwalte Tasks, orchestriere KI-Agenten — alles von einem Dashboard.</p>
-  <div class="hero-actions">
-    <a href="/dashboard" class="btn-primary">Zum Dashboard →</a>
-    <a href="/dashboard" class="btn-ghost">Konto erstellen</a>
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="login-screen" id="login-screen">
+
+  <div class="login-brand">
+    <div class="login-logo">Drex<span>OSS</span></div>
+    <div class="login-slogan">DESIGN · REFINE · EXECUTE</div>
+    <div class="login-tagline">
+      Dein <span>KI-Assistent</span> für Projekte<span class="dot"> · </span>Tasks<span class="dot"> · </span>Entscheidungen<br>
+      Willkommen im Operating System.
+    </div>
+    <div class="login-features">
+      <span>◆ KI-Chat</span>
+      <span>◆ Kanban</span>
+      <span>◆ Admin</span>
+    </div>
+  </div>
+
+  <div class="login-form-wrap">
+    <div class="login-box">
+      <h2>ZUGANG</h2>
+      <p class="sub">Melde dich an, um fortzufahren.</p>
+      <form onsubmit="doLogin();return false">
+        <div class="field">
+          <label>E-Mail</label>
+          <input id="login-email" type="email" placeholder="deine@email.de" value="leis.rason@gmail.com">
+        </div>
+        <div class="field">
+          <label>Passwort</label>
+          <input id="login-pass" type="password" placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn-primary">Anmelden</button>
+      </form>
+      <div class="login-divider">oder</div>
+      <div class="login-footer">
+        Noch kein Konto? <a href="#" onclick="showRegister();return false;">Registrieren</a>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="features">
-  <div class="feature">
-    <div class="icon">📋</div>
-    <h3>Task-Management</h3>
-    <p>Erstelle, bearbeite und organisiere Tasks mit Kanban-Board. Status-Wechsel, Aufwand, Assignee und eigener Chat pro Task.</p>
+<!-- ===== HUB SCREEN ===== -->
+<div class="hub-screen" id="hub-screen">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-header">
+      <span class="logo-anim"><span class="drex">Drex</span><span class="o">O</span><span class="s1">S</span><span class="s2">S</span></span>
+    </div>
+    <button class="sb-new-btn">+ Neuer Chat</button>
+    <input class="sb-search" type="text" placeholder="Durchsuchen...">
+    <div class="sb-scroll">
+      <div class="sb-section">Heute</div>
+      <div class="sb-item active">Dashboard-Layout</div>
+      <div class="sb-item">Avatar Upload Bug</div>
+      <div class="sb-section">Diese Woche</div>
+      <div class="sb-item">Supabase GRANTs</div>
+      <div class="sb-item">Logo-Varianten</div>
+      <div class="sb-item">Login Flow</div>
+    </div>
+    <div class="sb-section" style="padding:0.5rem 0.75rem 0.3rem;border-top:1px solid #141414;">Administration</div>
+    <div class="sb-item">Ticket anlegen</div>
+    <div class="sb-item">Projekte verwalten</div>
+    <div class="sb-item">Benutzer</div>
+    <div class="sb-item">Cronjobs</div>
+    <div class="sb-item">Einstellungen</div>
+    <div class="sb-user">
+      <span class="sb-dot"></span>
+      <div class="sb-avatar">R</div>
+      <div class="sb-user-info">
+        <div class="sb-user-name">Rason Leis</div>
+        <div class="sb-user-role">Admin</div>
+      </div>
+    </div>
   </div>
-  <div class="feature">
-    <div class="icon">🤖</div>
-    <h3>KI-Integration</h3>
-    <p>Chatte direkt mit KI-Agenten aus dem Dashboard. Projekt-Chat und Task-Chat mit persistentem Verlauf in der Cloud.</p>
+
+  <!-- MAIN -->
+  <div class="main" id="main">
+    <div class="empty-state" id="empty-state">
+      <div class="empty-center">
+        <div class="brand">Drex<span>OSS</span></div>
+        <div class="slogan">Design · Refine · Execute</div>
+        <div class="suggestions">
+          <span onclick="sendSuggestion(this)">Projekt-Update erstellen</span>
+          <span onclick="sendSuggestion(this)">Offene Tasks analysieren</span>
+          <span onclick="sendSuggestion(this)">Weekly Briefing</span>
+          <span onclick="sendSuggestion(this)">Dashboard erklären</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-msgs" id="chat-msgs"></div>
+
+    <div class="input-wrap" id="input-wrap">
+      <div class="input-box">
+        <textarea id="chat-input" rows="1" placeholder="Nachricht an Stockfish..." 
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,160)+'px'"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
+        <div class="input-actions">
+          <button class="input-btn audio-btn" title="Audio eingeben" style="width:38px;height:38px;border-radius:50%;background:#5e5ce6;color:#fff;display:flex;align-items:center;justify-content:center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <line x1="4" y1="8.5" x2="4" y2="15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="9.5" y1="2.5" x2="9.5" y2="21.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              <line x1="15" y1="5" x2="15" y2="19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              <line x1="20" y1="8.5" x2="20" y2="15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="feature">
-    <div class="icon">🔐</div>
-    <h3>Sicher & Skalierbar</h3>
-    <p>Supabase Auth mit Email/Password. Passwort-Änderung, Session-Management. Bereit für Multi-User.</p>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="rp-header" onclick="alert('Dashboard öffnen')">Dashboard</div>
+    <div class="rp-kpi" onclick="alert('Dashboard öffnen')">
+      <div class="rp-kpi-top">
+        <span class="rp-kpi-label">Projekte</span>
+        <span class="rp-kpi-num">3</span>
+      </div>
+      <div class="rp-kpi-sub">Aktiv · 1 in Planung</div>
+    </div>
+    <div class="rp-kpi" onclick="alert('Dashboard öffnen')">
+      <div class="rp-kpi-top">
+        <span class="rp-kpi-label">Offene Tasks</span>
+        <span class="rp-kpi-num">14</span>
+      </div>
+      <div class="rp-kpi-sub">6 in Arbeit · 8 offen</div>
+    </div>
+    <div class="rp-kpi" onclick="alert('Dashboard öffnen')">
+      <div class="rp-kpi-top">
+        <span class="rp-kpi-label">Erledigt</span>
+        <span class="rp-kpi-num accent">22</span>
+      </div>
+      <div class="rp-kpi-sub">+3 heute · 58%</div>
+    </div>
+    <div class="rp-kpi" onclick="alert('Dashboard öffnen')">
+      <div class="rp-kpi-top">
+        <span class="rp-kpi-label">Agent</span>
+        <span class="rp-kpi-num" style="font-size:0.8rem;color:#34d399;">Online</span>
+      </div>
+      <div class="rp-kpi-sub">Session aktiv</div>
+    </div>
   </div>
 </div>
-<footer>© 2026 DrexOSS · Design · Refine · Execute</footer>
+
+<script>
+// ===== LOGIN =====
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  if (!email || !pass) { alert('Bitte E-Mail und Passwort eingeben'); return; }
+  
+  // Simple login check (demo)
+  const known = { 'leis.rason@gmail.com': { pass: 'DrexOSS2026!', name: 'Rason Leis', role: 'Admin' } };
+  const user = known[email];
+  if (user && user.pass === pass) {
+    localStorage.setItem('drexoss_session', JSON.stringify({ email, name: user.name, role: user.role }));
+    showHub();
+  } else {
+    alert('❌ Falsche E-Mail oder Passwort');
+  }
+}
+
+function showRegister() {
+  alert('Registrierung folgt in Kürze.');
+}
+
+function checkSession() {
+  const saved = localStorage.getItem('drexoss_session');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      if (data.email) { showHub(); return; }
+    } catch(e) {}
+  }
+  document.getElementById('login-screen').classList.remove('hidden');
+}
+
+function showHub() {
+  document.getElementById('login-screen').classList.add('hidden');
+  const hub = document.getElementById('hub-screen');
+  hub.classList.add('show');
+  
+  // Set user info
+  try {
+    const data = JSON.parse(localStorage.getItem('drexoss_session'));
+    if (data) {
+      const nameEl = document.querySelector('.sb-user-name');
+      const roleEl = document.querySelector('.sb-user-role');
+      if (nameEl) nameEl.textContent = data.name || data.email;
+      if (roleEl) roleEl.textContent = data.role || 'User';
+    }
+  } catch(e) {}
+}
+
+function logout() {
+  localStorage.removeItem('drexoss_session');
+  document.getElementById('hub-screen').classList.remove('show');
+  document.getElementById('login-screen').classList.remove('hidden');
+}
+
+// ===== CHAT =====
+function sendMsg() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  
+  const hr = new Date().getHours();
+  let greet;
+  if (hr < 12) greet = 'Morgen';
+  else if (hr < 18) greet = 'Tag';
+  else greet = 'Abend';
+  const greetings = [
+    'Guten ' + greet + ' Boss! Ready to build.',
+    'Moinsen! Was steht an?',
+    'Hey Boss, alles klar?',
+    greet + ' Boss! Woran hacken wir heute?',
+    'Servus! Bin bereit.'
+  ];
+  const msg = greetings[Math.floor(Math.random() * greetings.length)];
+  
+  const empty = document.getElementById('empty-state');
+  const msgs = document.getElementById('chat-msgs');
+  empty.style.display = 'none';
+  msgs.style.display = 'flex';
+  
+  const userMsg = document.createElement('div');
+  userMsg.className = 'msg user';
+  userMsg.innerHTML = '<div class="msg-bubble"><p>' + escHtml(text) + '</p></div>';
+  msgs.appendChild(userMsg);
+  
+  input.value = '';
+  input.style.height = 'auto';
+  msgs.scrollTop = msgs.scrollHeight;
+  
+  setTimeout(function() {
+    const aiMsg = document.createElement('div');
+    aiMsg.className = 'msg ai';
+    aiMsg.innerHTML = '<div class="msg-bubble"><p>' + msg + '</p></div>';
+    msgs.appendChild(aiMsg);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 800);
+}
+
+function sendSuggestion(el) {
+  document.getElementById('chat-input').value = el.textContent;
+  sendMsg();
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ===== DRAG & DROP =====
+(function() {
+  const main = document.getElementById('main');
+  main.classList.add('drop-zone');
+  const overlay = document.createElement('div');
+  overlay.className = 'drop-overlay';
+  overlay.textContent = 'Datei hier ablegen';
+  main.appendChild(overlay);
+  main.addEventListener('dragover', function(e) { e.preventDefault(); main.classList.add('dragover'); });
+  main.addEventListener('dragleave', function() { main.classList.remove('dragover'); });
+  main.addEventListener('drop', function(e) {
+    e.preventDefault();
+    main.classList.remove('dragover');
+    if (e.dataTransfer.files.length) {
+      document.getElementById('chat-input').value = '[Datei: ' + e.dataTransfer.files[0].name + ']';
+    }
+  });
+})();
+
+// Check session on load
+checkSession();
+</script>
 </body>
 </html>
