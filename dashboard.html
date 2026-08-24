@@ -3,1276 +3,752 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DrexOSS · Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>DrexOSS · Design · Refine · Execute</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Orbitron' font-weight='700' font-size='22' fill='%235e5ce6'%3ED%3C/text%3E%3C/svg%3E">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Inter',system-ui,sans-serif; background:#0a0a1a; color:#f1f1f9; min-height:100vh; display:flex; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #000;
+    color: #e8e8e8;
+    height: 100vh;
+    display: flex;
+    -webkit-font-smoothing: antialiased;
+  }
 
-.sidebar { width:220px; background:#0f0f23; border-right:1px solid rgba(255,255,255,0.06); display:flex; flex-direction:column; flex-shrink:0; }
-.sb-header { padding:1rem; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:0.6rem; }
-.sb-logo { width:28px; height:28px; border-radius:6px; background:linear-gradient(135deg,#5e5ce6,#7c7aff); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; color:#fff; }
-.sb-header span { font-size:0.9rem; font-weight:600; }
-.sb-projects { flex:1; padding:0.75rem; overflow-y:auto; }
-.sb-section-title { font-size:0.65rem; color:#5c5c78; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.5rem; margin-top:0.5rem; font-weight:500; }
-.sb-item { padding:0.45rem 0.6rem; border-radius:6px; font-size:0.8rem; color:#8888a0; cursor:pointer; margin-bottom:0.15rem; transition:all 0.12s; display:flex; align-items:center; gap:0.5rem; }
-.sb-item:hover { background:rgba(255,255,255,0.04); color:#f1f1f9; }
-.sb-item.active { background:rgba(94,92,230,0.1); color:#5e5ce6; }
-.sb-item .sb-progress { font-size:0.6rem; color:#5c5c78; margin-left:auto; }
-.sb-item .sb-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
-.sb-item .sb-dot.green { background:#34d399; }
-.sb-item .sb-dot.gray { background:#5c5c78; }
-.sb-item .sb-dot.blue { background:#5e5ce6; }
+  /* ===== LOGIN SCREEN ===== */
+  .login-screen {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+  }
+  .login-screen.hidden { display: none; }
 
-.main { flex:1; display:flex; flex-direction:column; min-width:0; }
-.topbar { display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1.25rem; border-bottom:1px solid rgba(255,255,255,0.06); }
-.topbar-left { display:flex; align-items:center; gap:0.5rem; }
-.topbar-left h2 { font-size:0.9rem; font-weight:600; }
-.topbar-left .bread { color:#5c5c78; font-size:0.78rem; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:400px; }
-.topbar-right { display:flex; align-items:center; gap:0.75rem; }
-.status-dot { width:8px; height:8px; border-radius:50%; background:#34d399; display:inline-block; }
-.topbar-right .label { font-size:0.75rem; color:#8888a0; }
-.content { flex:1; display:flex; overflow:hidden; }
-.content-main { flex:1; padding:1.25rem; overflow-y:auto; min-width:0; }
+  .login-brand {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    text-align: center;
+  }
 
-.kanban { display:flex; gap:0.75rem; overflow-x:auto; padding-bottom:0.5rem; min-height:200px; }
-.column { min-width:240px; max-width:300px; background:#0f0f23; border-radius:10px; border:1px solid rgba(255,255,255,0.06); display:flex; flex-direction:column; max-height:calc(100vh - 300px); }
-.col-h { padding:0.75rem 1rem; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
-.col-h h3 { font-size:0.8rem; font-weight:500; }
-.col-h .count { font-size:0.65rem; color:#5c5c78; background:rgba(255,255,255,0.04); padding:0.1rem 0.4rem; border-radius:999px; }
-.col-body { flex:1; padding:0.5rem; overflow-y:auto; }
+  .login-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 4rem;
+    letter-spacing: -0.02em;
+    color: #e8e8e8;
+    margin-bottom: 0.75rem;
+  }
+  .login-logo span { color: #5e5ce6; }
 
-.task-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:0.6rem 0.75rem; margin-bottom:0.4rem; cursor:pointer; transition:all 0.12s; }
-.task-card:hover { border-color:rgba(94,92,230,0.3); }
-.task-card .t-title { font-size:0.78rem; font-weight:500; margin-bottom:0.15rem; display:flex; align-items:center; gap:0.4rem; }
-.task-card .t-desc { font-size:0.65rem; color:#8888a0; margin-bottom:0.2rem; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; }
-.task-card .t-meta { display:flex; align-items:center; gap:0.4rem; font-size:0.6rem; color:#5c5c78; flex-wrap:wrap; }
-.task-card .t-num { color:#5e5ce6; }
-.task-card .t-assignee { padding:0.05rem 0.3rem; background:rgba(94,92,230,0.1); color:#5e5ce6; border-radius:4px; }
-.task-card .t-effort { color:#fbbf24; }
+  .login-slogan {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: #555;
+    margin-bottom: 2.5rem;
+  }
 
-.project-detail, .task-detail-view { display:none; }
-.project-detail.active, .task-detail-view.active { display:block; }
+  .login-tagline {
+    font-size: 0.85rem;
+    color: #555;
+    max-width: 380px;
+    line-height: 1.7;
+  }
+  .login-tagline span { color: #5e5ce6; }
+  .login-tagline .dot { color: #333; }
 
-.proj-header { margin-bottom:0.5rem; }
-.proj-header h2 { font-size:1.3rem; font-weight:600; display:flex; align-items:center; gap:0.5rem; }
-.proj-header .meta { font-size:0.75rem; color:#8888a0; display:flex; gap:0.75rem; flex-wrap:wrap; }
-.proj-header .meta span { display:flex; align-items:center; gap:0.3rem; }
+  .login-features {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    font-size: 0.6rem;
+    color: #333;
+    letter-spacing: 0.05em;
+  }
+  .login-features span { display: flex; align-items: center; gap: 0.3rem; }
 
-/* ====== TASK DETAIL ====== */
-.task-detail { margin-bottom:1.5rem; }
-.task-detail-header { display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap; justify-content:space-between; }
-.task-detail-title { font-size:1.2rem; font-weight:600; display:flex; align-items:center; gap:0.5rem; }
-.task-detail-meta { display:flex; gap:0.75rem; flex-wrap:wrap; font-size:0.75rem; color:#8888a0; margin:0.5rem 0; }
-.task-detail-meta span { display:flex; align-items:center; gap:0.3rem; }
-.task-detail-body { margin-top:0.75rem; }
-.task-detail-body .field { margin-bottom:0.75rem; }
-.task-detail-body .field-label { font-size:0.65rem; color:#5e5ce6; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.2rem; }
-.task-detail-body .field-value { font-size:0.85rem; color:#c4c4d4; line-height:1.6; white-space:pre-wrap; }
+  .login-form-wrap {
+    width: 440px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    border-left: 2px solid;
+    border-image: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.02)) 1;
+  }
 
-.status-select { display:flex; gap:0.3rem; }
-.status-btn { padding:0.25rem 0.6rem; border-radius:6px; font-size:0.7rem; cursor:pointer; border:1px solid transparent; font-family:inherit; transition:all 0.12s; }
-.status-btn.s-open { background:rgba(148,163,184,0.1); color:#94a3b8; border-color:rgba(148,163,184,0.2); }
-.status-btn.s-progress { background:rgba(94,92,230,0.1); color:#5e5ce6; border-color:rgba(94,92,230,0.2); }
-.status-btn.s-done { background:rgba(52,211,153,0.1); color:#34d399; border-color:rgba(52,211,153,0.2); }
-.status-btn.active { border-width:2px; }
-.status-btn:hover { opacity:0.8; }
+  .login-box { width: 100%; max-width: 340px; }
 
-.badge { font-size:0.65rem; padding:0.15rem 0.5rem; border-radius:999px; white-space:nowrap; }
-.badge.green { background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3); }
-.badge.gray { background:rgba(148,163,184,0.15); color:#94a3b8; border:1px solid rgba(148,163,184,0.3); }
-.badge.blue { background:rgba(94,92,230,0.15); color:#5e5ce6; border:1px solid rgba(94,92,230,0.3); }
-.badge.yellow { background:rgba(251,191,36,0.15); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
+  .login-box h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    color: #888;
+    margin-bottom: 0.25rem;
+  }
+  .login-box .sub {
+    font-size: 0.78rem;
+    color: #555;
+    margin-bottom: 2rem;
+  }
 
-/* ====== TASK CHAT ====== */
-.chat-panel { width:360px; background:#0f0f23; border-left:1px solid rgba(255,255,255,0.06); display:flex; flex-direction:column; flex-shrink:0; }
-.chat-h { padding:0.75rem 1rem; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:0.5rem; font-size:0.78rem; font-weight:500; }
-.chat-h .chat-type { color:#5e5ce6; font-size:0.6rem; font-weight:400; }
-.chat-h .back-btn { cursor:pointer; font-size:0.9rem; color:#64748b; padding:0.1rem 0.3rem; border-radius:4px; }
-.chat-h .back-btn:hover { background:rgba(255,255,255,0.05); }
-.chat-msgs { flex:1; overflow-y:auto; padding:0.75rem; }
-.c-msg { margin-bottom:0.5rem; }
-.c-msg .who { font-size:0.7rem; color:#5c5c78; font-weight:500; display:flex; align-items:center; gap:0.3rem; }
-.c-msg .who .time { font-weight:400; font-size:0.6rem; color:#444468; }
-.c-msg .txt { font-size:0.78rem; color:#c4c4d4; margin-top:0.1rem; white-space:pre-wrap; }
-.c-msg .txt.ai { color:#5e5ce6; }
-.chat-in { padding:0.5rem; border-top:1px solid rgba(255,255,255,0.06); display:flex; gap:0.3rem; }
-.chat-in input { flex:1; padding:0.4rem 0.6rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:6px; color:#f1f1f9; font-size:0.78rem; outline:none; font-family:inherit; }
-.chat-in input:focus { border-color:rgba(94,92,230,0.4); }
-.chat-in button { padding:0.4rem 0.7rem; background:#5e5ce6; border:none; border-radius:6px; color:#fff; font-size:0.75rem; cursor:pointer; }
-.chat-hint { font-size:0.65rem; color:#5c5c78; text-align:center; padding:0.5rem; }
+  .field { margin-bottom: 1rem; }
+  .field label {
+    display: block;
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #666;
+    margin-bottom: 0.35rem;
+  }
+  .field input {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    background: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    color: #e8e8e8;
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.12s;
+  }
+  .field input:focus { border-color: #333; }
+  .field input::placeholder { color: #333; }
 
-/* ====== MODAL (nur noch für NEUEN Task) ====== */
-.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center; }
-.modal-overlay.show { display:flex; }
-.modal { background:#0f0f23; border:1px solid #1e1e3a; border-radius:12px; padding:1.5rem; width:480px; max-width:90vw; max-height:90vh; overflow-y:auto; }
-.modal h3 { font-size:1rem; font-weight:600; margin-bottom:1rem; }
-.form-group { margin-bottom:0.75rem; }
-.form-group label { display:block; font-size:0.7rem; color:#8888a0; margin-bottom:0.25rem; text-transform:uppercase; letter-spacing:0.05em; }
-.form-group input, .form-group select, .form-group textarea {
-  width:100%; padding:0.45rem 0.6rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.1); border-radius:6px;
-  color:#f1f1f9; font-size:0.82rem; font-family:inherit; outline:none;
-}
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:rgba(94,92,230,0.4); }
-.form-group textarea { resize:vertical; min-height:60px; }
-.form-row { display:flex; gap:0.75rem; }
-.form-row .form-group { flex:1; }
-.modal-actions { display:flex; gap:0.5rem; justify-content:flex-end; margin-top:1rem; }
-.btn { padding:0.45rem 1rem; border-radius:6px; font-size:0.8rem; cursor:pointer; font-family:inherit; border:none; transition:all 0.12s; }
-.btn-primary { background:#5e5ce6; color:#fff; }
-.btn-primary:hover { background:#6d6bf0; }
-.btn-ghost { background:rgba(255,255,255,0.05); color:#94a3b8; border:1px solid rgba(255,255,255,0.1); }
-.btn-ghost:hover { color:#f1f1f9; }
-.btn-sm { padding:0.25rem 0.6rem; font-size:0.7rem; }
+  .btn-primary {
+    width: 100%;
+    padding: 0.65rem;
+    background: #5e5ce6;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.12s;
+    margin-top: 0.5rem;
+  }
+  .btn-primary:hover { background: #6d6bf0; }
 
-.loading { color:#5c5c78; font-size:0.8rem; padding:1rem; text-align:center; }
-.error { color:#ef4444; font-size:0.8rem; padding:1rem; }
-.empty { color:#5c5c78; font-size:0.8rem; padding:1rem; text-align:center; }
+  .login-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+    color: #222;
+    font-size: 0.6rem;
+  }
+  .login-divider::before,
+  .login-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #141414;
+  }
 
-/* ====== PROFILE DROPDOWN ====== */
-.profile-wrap { position:relative; cursor:pointer; display:none; align-items:center; gap:0.5rem; padding:0.2rem 0.3rem; border-radius:8px; transition:background 0.12s; }
-.profile-wrap:hover { background:rgba(255,255,255,0.03); }
-.profile-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#5e5ce6,#7c7aff); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:0.8rem; color:#fff; flex-shrink:0; background-size:cover; background-position:center; }
-.profile-name { font-size:0.78rem; color:#d4d4e4; white-space:nowrap; }
-.profile-dropdown { display:none; position:absolute; top:calc(100% + 6px); right:0; width:260px; background:#0f0f23; border:1px solid #1e1e3a; border-radius:10px; padding:0.75rem; z-index:1000; box-shadow:0 8px 30px rgba(0,0,0,0.4); }
-.profile-dropdown.show { display:block; }
-.pd-header { display:flex; align-items:center; gap:0.75rem; padding-bottom:0.75rem; border-bottom:1px solid rgba(255,255,255,0.06); margin-bottom:0.75rem; }
-.pd-avatar { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#5e5ce6,#7c7aff); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:1rem; color:#fff; flex-shrink:0; background-size:cover; background-position:center; position:relative; }
-.pd-avatar .cam-overlay { display:none; position:absolute; inset:0; border-radius:50%; background:rgba(0,0,0,0.45); align-items:center; justify-content:center; font-size:1.1rem; color:#fff; }
-.pd-avatar:hover .cam-overlay { display:flex; }
-.pd-info h4 { font-size:0.85rem; font-weight:600; color:#f1f1f9; }
-.pd-info span { font-size:0.7rem; color:#64748b; }
-.pd-role { display:inline-block; font-size:0.6rem; font-weight:600; padding:0.15rem 0.5rem; border-radius:999px; text-transform:uppercase; letter-spacing:0.04em; margin-left:0.3rem; }
-.pd-role.admin { background:rgba(94,92,230,0.15); color:#5e5ce6; border:1px solid rgba(94,92,230,0.2); }
-.pd-role.dev { background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.2); }
-.pd-role.customer { background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.2); }
-.pd-role.freund { background:rgba(251,191,36,0.15); color:#fbbf24; border:1px solid rgba(251,191,36,0.2); }
-.pd-row { display:flex; align-items:center; gap:0.5rem; padding:0.4rem 0; font-size:0.78rem; color:#c4c4d4; }
-.pd-row .label { color:#64748b; min-width:60px; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.05em; }
-.pd-actions { padding-top:0.75rem; border-top:1px solid rgba(255,255,255,0.06); }
-.pd-logout { width:100%; padding:0.45rem; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); border-radius:6px; color:#ef4444; font-size:0.78rem; cursor:pointer; font-family:inherit; transition:all 0.12s; }
-.pd-logout:hover { background:rgba(239,68,68,0.2); }
+  .login-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.72rem;
+    color: #444;
+  }
+  .login-footer a { color: #5e5ce6; text-decoration: none; }
+  .login-footer a:hover { text-decoration: underline; }
 
-/* ====== HUB VIEW ====== */
-.hub-view { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:70vh; text-align:center; }
-.hub-view h1 { font-size:1.8rem; font-weight:700; margin-bottom:0.5rem; background:linear-gradient(135deg,#5e5ce6,#7c7aff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.hub-view p { font-size:0.9rem; color:#64748b; margin-bottom:2rem; }
-.hub-cards { display:flex; gap:1.5rem; flex-wrap:wrap; justify-content:center; }
-.hub-card { width:260px; background:#0f0f23; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:2rem 1.5rem; cursor:pointer; transition:all 0.2s; text-align:center; }
-.hub-card:hover { border-color:#5e5ce6; transform:translateY(-3px); box-shadow:0 8px 30px rgba(94,92,230,0.15); }
-.hub-card .icon { font-size:3rem; margin-bottom:1rem; }
-.hub-card h3 { font-size:1.1rem; font-weight:600; color:#f1f1f9; margin-bottom:0.4rem; }
-.hub-card p { font-size:0.78rem; color:#64748b; margin-bottom:0; }
-@media(max-width:900px) { .sidebar { display:none; } .chat-panel { display:none; } .column { min-width:200px; } }
+  /* ===== HUB LAYOUT ===== */
+  .hub-screen { display: none; width: 100%; height: 100vh; }
+  .hub-screen.show { display: flex; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 250px;
+    background: #000;
+    border-right: 2px solid;
+    border-image: linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(255,255,255,0.1)) 1;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  .sb-header {
+    padding: 1.25rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .logo-anim {
+    display: inline-block;
+    font-family:'Orbitron',sans-serif;
+    font-weight:700;
+    font-size:1.25rem;
+    letter-spacing:0.06em;
+    color:#e8e8e8;
+    padding:0 0.6rem;
+  }
+  .logo-anim span {
+    display: inline-block;
+    animation: logoFade 0.35s ease-out both;
+  }
+  .logo-anim .drex { animation-delay: 0s; }
+  .logo-anim .o { animation-delay: 0.3s; color:#5e5ce6; }
+  .logo-anim .s1 { animation-delay: 0.6s; color:#5e5ce6; }
+  .logo-anim .s2 { animation-delay: 0.9s; color:#5e5ce6; }
+
+  @keyframes logoFade {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .sb-new-btn {
+    margin: 0.35rem 0.75rem 0.75rem;
+    padding: 0.55rem;
+    background: transparent;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-size: 0.78rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.12s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+  .sb-new-btn:hover { border-color: #2a2a2a; color: #fff; }
+
+  .sb-search {
+    margin: 0 0.75rem 0.5rem;
+    padding: 0.45rem 0.6rem;
+    background: #0a0a0a;
+    border: 1px solid #141414;
+    border-radius: 6px;
+    color: #d8d8d8;
+    font-size: 0.72rem;
+    font-family: inherit;
+    outline: none;
+  }
+  .sb-search:focus { border-color: #222; color: #fff; }
+  .sb-search::placeholder { color: #444; }
+
+  .sb-scroll { flex: 1; overflow-y: auto; min-height: 0; }
+
+  .sb-section {
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #ccc;
+    padding: 0.75rem 0.6rem 0.3rem;
+  }
+
+  .sb-item {
+    padding: 0.55rem 0.6rem 0.55rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    color: #e0e0e0;
+    transition: all 0.1s;
+  }
+  .sb-item:hover { background: #141414; }
+  .sb-item.active { background: #141414; }
+
+  .sb-user {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.65rem 0.75rem; border-top: 1px solid #141414;
+  }
+  .sb-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #1a1a1a; display: flex; align-items: center;
+    justify-content: center; font-size: 0.65rem; font-weight: 600;
+    color: #fff; flex-shrink: 0;
+  }
+  .sb-user-info { flex: 1; min-width: 0; }
+  .sb-user-name { font-size: 0.75rem; color: #eee; font-weight: 500; }
+  .sb-user-role { font-size: 0.6rem; color: #ccc; }
+  .sb-dot { width: 5px; height: 5px; border-radius: 50%; background: #34d399; flex-shrink: 0; }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: #000;
+    position: relative;
+  }
+
+  .drop-zone { position: relative; }
+  .drop-zone.dragover { outline: 2px dashed #5e5ce6; outline-offset: -2px; background: rgba(94,92,230,0.05); }
+  .drop-overlay { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; font-size: 0.8rem; color: #5e5ce6; pointer-events: none; z-index: 10; }
+  .drop-zone.dragover .drop-overlay { display: flex; }
+
+  /* Chat Messages */
+  .chat-msgs {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem 3rem 0.5rem;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .msg {
+    display: flex;
+    margin-bottom: 0.6rem;
+    width: 100%;
+    max-width: 780px;
+    padding: 0 0.5rem;
+  }
+  .msg.user { justify-content: flex-end; }
+  .msg.ai { justify-content: flex-start; }
+
+  .msg-bubble {
+    max-width: 75%;
+    padding: 0.55rem 1rem;
+    border-radius: 18px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    word-wrap: break-word;
+  }
+  .msg.user .msg-bubble {
+    background: #5e5ce6;
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+  .msg.ai .msg-bubble {
+    background: #1a1a1a;
+    color: #e8e8e8;
+    border-bottom-left-radius: 4px;
+  }
+
+  .msg-bubble code {
+    background: rgba(255,255,255,0.08);
+    border-radius: 4px;
+    padding: 0.1rem 0.35rem;
+    font-size: 0.8rem;
+  }
+  .msg-bubble pre {
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    padding: 0.6rem;
+    margin: 0.4rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+  }
+  .msg-bubble p { margin-bottom: 0.4rem; }
+  .msg-bubble p:last-child { margin-bottom: 0; }
+
+  /* Empty State */
+  .empty-state {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 3rem;
+  }
+  .empty-center { text-align: center; max-width: 440px; }
+  .empty-center .brand { font-size: 3.2rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.5rem; color: #e8e8e8; font-family: 'Orbitron', sans-serif; }
+  .empty-center .brand span { color: #5e5ce6; }
+  .empty-center .slogan {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: #555;
+    margin-top: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+  .empty-center .suggestions { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+  .empty-center .suggestions span {
+    padding: 0.4rem 0.85rem; background: #0d0d0d;
+    border: 1px solid #1a1a1a; border-radius: 999px;
+    font-size: 0.75rem; color: #d0d0d0; cursor: pointer; transition: all 0.1s;
+  }
+  .empty-center .suggestions span:hover { border-color: #2a2a2a; color: #fff; background: #141414; }
+
+  /* Input */
+  .input-wrap { padding: 0.5rem 3rem 2rem; display: flex; justify-content: center; }
+
+  .input-box {
+    width: 100%;
+    max-width: 780px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #1f1f1f;
+    border: 1px solid #2e2e2e;
+    border-radius: 40px;
+    padding: 0.5rem 0.6rem;
+    transition: border-color 0.15s;
+  }
+  .input-box:focus-within { border-color: #444; }
+
+  .input-box textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #cccccc;
+    font-family: inherit;
+    font-size: 0.88rem;
+    padding: 0.35rem 0.5rem;
+    resize: none;
+    min-height: 24px;
+    max-height: 160px;
+    line-height: 1.5;
+  }
+  .input-box textarea::placeholder { color: #666; }
+
+  .input-actions { display: flex; align-items: center; gap: 0.25rem; }
+
+  .input-btn {
+    width: 34px; height: 34px; border-radius: 8px;
+    border: none; background: transparent; color: #ccc;
+    cursor: pointer; display: flex; align-items: center;
+    justify-content: center; font-size: 0.85rem;
+    transition: all 0.1s; flex-shrink: 0;
+  }
+  .input-btn:hover { background: #141414; color: #ccc; }
+  .audio-btn:hover { background: #4a48c4 !important; transition: background 0.15s; }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    width: 250px;
+    background: #000;
+    border-left: 2px solid;
+    border-image: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.02)) 1;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    padding: 1rem;
+  }
+  .rp-header {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+    margin-bottom: 1rem;
+    cursor: pointer;
+  }
+  .rp-kpi {
+    padding: 0.75rem;
+    background: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .rp-kpi:hover { background: #141414; border-color: #2a2a2a; }
+  .rp-kpi-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.2rem; }
+  .rp-kpi-label { font-size: 0.7rem; color: #888; }
+  .rp-kpi-num { font-size: 1.3rem; font-weight: 700; color: #fff; }
+  .rp-kpi-num.accent { color: #5e5ce6; }
+  .rp-kpi-sub { font-size: 0.6rem; color: #555; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #141414; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #222; }
+
+  @media (max-width: 800px) {
+    .login-screen { flex-direction: column; }
+    .login-form-wrap { width: 100%; border-left: none; border-top: 2px solid; }
+    .login-features { flex-wrap: wrap; justify-content: center; }
+    .sidebar, .right-panel { display: none; }
+  }
 </style>
 </head>
 <body>
 
-<div class="sidebar">
-  <div class="sb-header">
-    <div class="sb-logo">D</div>
-    <span>DrexOSS</span>
-  </div>
-  <div class="sb-projects">
-    <div class="sb-section-title">Projekte</div>
-    <div id="sb-list"><div class="loading">Laden...</div></div>
-  </div>
-</div>
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="login-screen" id="login-screen">
 
-<div class="main">
-  <div class="topbar">
-    <div class="topbar-left">
-      <span class="bread" id="breadcrumb" onclick="showKanban()">DrexOSS</span>
-      <h2 id="page-title">Übersicht</h2>
+  <div class="login-brand">
+    <div class="login-logo">Drex<span>OSS</span></div>
+    <div class="login-slogan">DESIGN · REFINE · EXECUTE</div>
+    <div class="login-tagline">
+      Dein <span>KI-Assistent</span> für Projekte<span class="dot"> · </span>Tasks<span class="dot"> · </span>Entscheidungen<br>
+      Willkommen im Operating System.
     </div>
-    <div class="topbar-right">
-          <span class="status-dot"></span>
-          <span class="label">Agent Online</span>
-          <div class="profile-wrap" id="profile-wrap" onclick="toggleProfile()">
-            <div class="profile-avatar" id="profile-avatar">R</div>
-            <span class="profile-name" id="profile-name">Rason</span>
-            <div class="profile-dropdown" id="profile-dropdown">
-              <div class="pd-header" style="position:relative;">
-                                            <div class="pd-avatar" id="pd-avatar" style="width:66px;height:66px;border-radius:50%;background:#1e1e3a;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:600;color:#f1f1f9;position:relative;overflow:hidden;flex-shrink:0;background-size:cover;background-position:center;">R
-                                                          <div class="cam-overlay" style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.5);text-align:center;font-size:0.7rem;padding:2px 0;">📷</div>
-                                                          <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" onchange="uploadAvatar(this)" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;">
-                                                        </div>
-                                            <div class="pd-info">
-                                              <h4 id="pd-name">Rason</h4>
-                                              <span id="pd-email">leis.rason@gmail.com</span>
-                                              <span class="pd-role admin" id="pd-role-badge">Admin</span>
-                                              <label style="display:inline-block;margin-top:0.3rem;font-size:0.65rem;color:#5e5ce6;cursor:pointer;text-decoration:underline;text-underline-offset:2px;">
-                                                👤 Bild ändern
-                                                <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" onchange="uploadAvatar(this)" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">
-                                              </label>
-                              </div>
-                            </div>
-              <div class="pd-row"><span class="label">Rolle</span><span id="pd-role-text">Admin</span></div>
-              <div class="pd-row"><span class="label">Status</span><span id="pd-status" style="color:#34d399;">Aktiv</span></div>
-              <div class="pd-actions">
-                          <button class="pd-logout" onclick="event.stopPropagation();openPasswordModal()" style="margin-bottom:0.4rem;background:rgba(94,92,230,0.1);border:1px solid rgba(94,92,230,0.2);color:#5e5ce6;">🔑 Passwort ändern</button>
-                          <button class="pd-logout" onclick="event.stopPropagation();doLogout()">🚪 Abmelden</button>
-                        </div>
-            </div>
-          </div>
-        </div>
+    <div class="login-features">
+      <span>◆ KI-Chat</span>
+      <span>◆ Kanban</span>
+      <span>◆ Admin</span>
+    </div>
   </div>
 
-  <div class="content">
-    <div class="content-main">
-      <div id="kanban-view">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
-          <div style="font-size:0.75rem;color:#64748b;">📋 Alle Tasks</div>
-          <button onclick="openNewTask(null)" style="padding:0.4rem 0.9rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.78rem;cursor:pointer;font-family:inherit;">➕ Neuer Task</button>
+  <div class="login-form-wrap">
+    <div class="login-box">
+      <h2>ZUGANG</h2>
+      <p class="sub">Melde dich an, um fortzufahren.</p>
+      <form onsubmit="doLogin();return false">
+        <div class="field">
+          <label>E-Mail</label>
+          <input id="login-email" type="email" placeholder="deine@email.de" value="leis.rason@gmail.com">
         </div>
-        <div class="kanban" id="kanban-board"></div>
-      </div>
-
-      <div id="project-detail" class="project-detail">
-        <div id="pd-content"></div>
-      </div>
-
-      <div id="task-detail-view" class="task-detail-view">
-        <div id="td-content"></div>
-      </div>
-    </div>
-
-    <div class="chat-panel">
-      <div class="chat-h" id="chat-header">💬 Projekt-Chat</div>
-      <div class="chat-msgs" id="chat-msgs">
-        <div class="c-msg"><div class="who">Drexoss <span class="time">12:00</span></div><div class="txt ai">Willkommen! Wähle ein Projekt oder einen Task.</div></div>
-      </div>
-      <div class="chat-in">
-        <input id="chat-input" placeholder="Nachricht..." onkeydown="if(event.key==='Enter')sendChat()">
-        <button onclick="sendChat()">➤</button>
+        <div class="field">
+          <label>Passwort</label>
+          <input id="login-pass" type="password" placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn-primary">Anmelden</button>
+      </form>
+      <div class="login-divider">oder</div>
+      <div class="login-footer">
+        Noch kein Konto? <a href="#" onclick="showRegister();return false;">Registrieren</a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ====== MODAL: Nur für neuen Task ====== -->
-<div class="modal-overlay" id="task-modal">
-  <div class="modal">
-    <h3 id="modal-title">➕ Neuer Task</h3>
-    <input type="hidden" id="edit-task-id">
-    <div class="form-group">
-      <label>Titel *</label>
-      <input id="task-title" placeholder="Kurze Beschreibung">
+<!-- ===== HUB SCREEN ===== -->
+<div class="hub-screen" id="hub-screen">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-header">
+      <span class="logo-anim"><span class="drex">Drex</span><span class="o">O</span><span class="s1">S</span><span class="s2">S</span></span>
     </div>
-    <div class="form-group">
-      <label>Beschreibung</label>
-      <textarea id="task-desc" placeholder="Details..."></textarea>
+    <button class="sb-new-btn">+ Neuer Chat</button>
+    <input class="sb-search" type="text" placeholder="Durchsuchen...">
+    <div class="sb-scroll">
+      <div class="sb-section">Heute</div>
+      <div class="sb-item active">Dashboard-Layout</div>
+      <div class="sb-item">Avatar Upload Bug</div>
+      <div class="sb-section">Diese Woche</div>
+      <div class="sb-item">Supabase GRANTs</div>
+      <div class="sb-item">Logo-Varianten</div>
+      <div class="sb-item">Login Flow</div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Projekt</label>
-        <select id="task-project"></select>
+    <div class="sb-section" style="padding:0.5rem 0.75rem 0.3rem;border-top:1px solid #141414;">Administration</div>
+    <div class="sb-item">Ticket anlegen</div>
+    <div class="sb-item">Projekte verwalten</div>
+    <div class="sb-item">Benutzer</div>
+    <div class="sb-item">Cronjobs</div>
+    <div class="sb-item">Einstellungen</div>
+    <div class="sb-user">
+      <span class="sb-dot"></span>
+      <div class="sb-avatar">R</div>
+      <div class="sb-user-info">
+        <div class="sb-user-name">Rason Leis</div>
+        <div class="sb-user-role">Admin</div>
       </div>
-      <div class="form-group">
-        <label>Status</label>
-        <select id="task-status">
-          <option value="open">📋 Offen</option>
-          <option value="in_progress">🔄 In Arbeit</option>
-          <option value="done">✅ Erledigt</option>
-        </select>
-      </div>
     </div>
-    <div class="form-row">
-      <div class="form-group"><label>Ersteller</label><input id="task-creator" value="Rason"></div>
-      <div class="form-group"><label>Aufwand</label><input id="task-effort" placeholder="z.B. 2h"></div>
-    </div>
-    <div class="form-group"><label>Assignee</label><input id="task-assignee" value="drexoss"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal()">Abbrechen</button>
-      <button class="btn btn-primary" onclick="saveTask()">💾 Speichern</button>
-    </div>
-  </div>
   </div>
 
-  <!-- ====== PASSWORT MODAL ====== -->
-  <div class="modal-overlay" id="pw-modal">
-      <div class="modal">
-        <h3>🔑 Passwort ändern</h3>
-        <div class="form-group">
-          <label>Aktuelles Passwort</label>
-          <div style="position:relative;">
-            <input id="pw-current" type="password" placeholder="••••••••" style="width:100%;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;padding-right:2rem;">
-            <span onclick="togglePW('pw-current',this)" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:1rem;color:#64748b;user-select:none;">👁️</span>
-          </div>
+  <!-- MAIN -->
+  <div class="main" id="main">
+    <div class="empty-state" id="empty-state">
+      <div class="empty-center">
+        <div class="brand">Drex<span>OSS</span></div>
+        <div class="slogan">Design · Refine · Execute</div>
+        <div class="suggestions">
+          <span onclick="sendSuggestion(this)">Projekt-Update erstellen</span>
+          <span onclick="sendSuggestion(this)">Offene Tasks analysieren</span>
+          <span onclick="sendSuggestion(this)">Weekly Briefing</span>
+          <span onclick="sendSuggestion(this)">Dashboard erklären</span>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Neues Passwort</label>
-            <div style="position:relative;">
-              <input id="pw-new" type="password" placeholder="••••••••" style="width:100%;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;padding-right:2rem;">
-              <span onclick="togglePW('pw-new',this)" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:1rem;color:#64748b;user-select:none;">👁️</span>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Bestätigen</label>
-            <div style="position:relative;">
-              <input id="pw-confirm" type="password" placeholder="••••••••" style="width:100%;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;padding-right:2rem;">
-              <span onclick="togglePW('pw-confirm',this)" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:1rem;color:#64748b;user-select:none;">👁️</span>
-            </div>
-          </div>
+      </div>
+    </div>
+
+    <div class="chat-msgs" id="chat-msgs"></div>
+
+    <div class="input-wrap" id="input-wrap">
+      <div class="input-box">
+        <textarea id="chat-input" rows="1" placeholder="Nachricht an Stockfish..." 
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,160)+'px'"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
+        <div class="input-actions">
+          <button class="input-btn audio-btn" title="Audio eingeben" style="width:38px;height:38px;border-radius:50%;background:#5e5ce6;color:#fff;display:flex;align-items:center;justify-content:center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <line x1="4" y1="8.5" x2="4" y2="15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="9.5" y1="2.5" x2="9.5" y2="21.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              <line x1="15" y1="5" x2="15" y2="19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              <line x1="20" y1="8.5" x2="20" y2="15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
         </div>
-      <div id="pw-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.5rem;display:none;"></div>
-      <div class="modal-actions">
-        <button class="btn btn-ghost" onclick="closePWModal()">Abbrechen</button>
-        <button class="btn btn-primary" onclick="changePassword()">💾 Ändern</button>
       </div>
     </div>
   </div>
 
-  <!-- ====== API-KEY MODAL ====== -->
-  <div class="modal-overlay" id="api-key-modal">
-    <div class="modal">
-      <h3>🔌 OpenRouter API-Key</h3>
-      <p style="font-size:0.78rem;color:#8888a0;margin-bottom:1rem;">Dein API-Key wird nur lokal im Browser gespeichert (localStorage). Niemals an Dritte weitergeben.</p>
-      <div class="form-group">
-        <label>API-Key</label>
-        <input id="api-key-input" type="password" placeholder="sk-or-v1-..." style="font-family:monospace;">
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="rp-header" onclick="alert('Dashboard öffnen')">Dashboard</div>
+    <div class="rp-kpi" onclick="alert('Dashboard öffnen')">
+      <div class="rp-kpi-top">
+        <span class="rp-kpi-label">Projekte</span>
+        <span class="rp-kpi-num">3</span>
       </div>
-      <div id="api-key-status" style="font-size:0.75rem;margin-bottom:0.5rem;display:none;"></div>
-      <div class="modal-actions">
-        <button class="btn btn-ghost" onclick="closeAPIKeyModal()">Abbrechen</button>
-        <button class="btn btn-primary" onclick="saveAPIKey()">💾 Speichern</button>
+      <div class="rp-kpi-sub">Aktiv · 1 in Planung</div>
+    </div>
+    <div class="rp-kpi" onclick="alert('Dashboard öffnen')">
+      <div class="rp-kpi-top">
+        <span class="rp-kpi-label">Offene Tasks</span>
+        <span class="rp-kpi-num">14</span>
       </div>
+      <div class="rp-kpi-sub">6 in Arbeit · 8 offen</div>
+    </div>
+    <div class="rp-kpi" onclick="alert('Dashboard öffnen')">
+      <div class="rp-kpi-top">
+        <span class="rp-kpi-label">Erledigt</span>
+        <span class="rp-kpi-num accent">22</span>
+      </div>
+      <div class="rp-kpi-sub">+3 heute · 58%</div>
+    </div>
+    <div class="rp-kpi" onclick="alert('Dashboard öffnen')">
+      <div class="rp-kpi-top">
+        <span class="rp-kpi-label">Agent</span>
+        <span class="rp-kpi-num" style="font-size:0.8rem;color:#34d399;">Online</span>
+      </div>
+      <div class="rp-kpi-sub">Session aktiv</div>
     </div>
   </div>
+</div>
 
-  <script>
-const SUPABASE_URL = 'https://rmveqbegqfthwdopzykh.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_ByDyItDAH-NvgMLIitjl9w_VdNJZqtp';
+<script>
+// ===== LOGIN =====
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  if (!email || !pass) { alert('Bitte E-Mail und Passwort eingeben'); return; }
+  
+  // Simple login check (demo)
+  const known = { 'leis.rason@gmail.com': { pass: 'DrexOSS2026!', name: 'Rason Leis', role: 'Admin' } };
+  const user = known[email];
+  if (user && user.pass === pass) {
+    localStorage.setItem('drexoss_session', JSON.stringify({ email, name: user.name, role: user.role }));
+    showHub();
+  } else {
+    alert('❌ Falsche E-Mail oder Passwort');
+  }
+}
 
-// ====== LOGIN/LOGOUT ======
-let currentUser = null;
+function showRegister() {
+  alert('Registrierung folgt in Kürze.');
+}
 
 function checkSession() {
   const saved = localStorage.getItem('drexoss_session');
   if (saved) {
     try {
-      currentUser = JSON.parse(saved);
-      loadProfile().then(result => { 
-        if (result === 'hub') showHub();
-        else if (result === 'dashboard') loadAll();
-        // false = blocked page (handled in loadProfile)
-      });
-    } catch(e) { showLogin(); }
-  } else {
-    showLogin();
+      const data = JSON.parse(saved);
+      if (data.email) { showHub(); return; }
+    } catch(e) {}
   }
+  document.getElementById('login-screen').classList.remove('hidden');
 }
 
-async function loadProfile() {
-  const wrap = document.getElementById('profile-wrap');
-  wrap.style.display = 'flex';
+function showHub() {
+  document.getElementById('login-screen').classList.add('hidden');
+  const hub = document.getElementById('hub-screen');
+  hub.classList.add('show');
   
-  // Fetch user profile from DB
+  // Set user info
   try {
-    const res = await fetch(SUPABASE_URL + '/rest/v1/user_profiles?email=eq.' + encodeURIComponent(currentUser.email), {
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
-    });
-    const profiles = await res.json();
-    if (profiles.length) {
-      currentUser.profile = profiles[0];
-      localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
+    const data = JSON.parse(localStorage.getItem('drexoss_session'));
+    if (data) {
+      const nameEl = document.querySelector('.sb-user-name');
+      const roleEl = document.querySelector('.sb-user-role');
+      if (nameEl) nameEl.textContent = data.name || data.email;
+      if (roleEl) roleEl.textContent = data.role || 'User';
     }
   } catch(e) {}
-  
-  const name = (currentUser.profile && currentUser.profile.name) || currentUser.email.split('@')[0];
-    const firstName = (currentUser.profile && currentUser.profile.first_name) || name.split(' ')[0];
-    const lastName = (currentUser.profile && currentUser.profile.last_name) || (name.split(' ').slice(1).join(' ') || '');
-    const displayName = firstName + ' ' + lastName;
-    const role = (currentUser.profile && currentUser.profile.role) || '';
-      const status = (currentUser.profile && currentUser.profile.status) || 'active';
-      const initial = firstName.charAt(0).toUpperCase();
-  
-      // === ROLLEN-CHECK: Nur gültige Rollen sehen das Dashboard ===
-      const validRoles = ['admin', 'dev', 'customer', 'freund'];
-      if (!role || !validRoles.includes(role)) {
-        const full = document.querySelector('.full-layout') || document.body;
-        full.innerHTML = `
-          <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;width:100vw;background:#0a0a1a;font-family:'Inter',system-ui,sans-serif;position:fixed;top:0;left:0;z-index:9999;">
-            <div style="background:#0f0f23;border:1px solid #1e1e3a;border-radius:12px;padding:2.5rem;width:380px;max-width:90vw;text-align:center;">
-              <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,#5e5ce6,#7c7aff);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:#fff;margin:0 auto 1rem;">D</div>
-              <h2 style="font-size:1.1rem;font-weight:600;color:#f1f1f9;margin-bottom:0.5rem;">Konto noch nicht freigeschaltet</h2>
-              <p style="font-size:0.82rem;color:#64748b;line-height:1.6;margin-bottom:0.5rem;">
-                Dein Konto hat noch keine gültige Rolle zugewiesen.<br>
-                Bitte warte bis ein Administrator dich freischaltet.
-              </p>
-              <p style="font-size:0.7rem;color:#5c5c78;margin-bottom:1.5rem;">
-                Bei Fragen: <span style="color:#5e5ce6;">leis.rason@gmail.com</span>
-              </p>
-              <button onclick="localStorage.removeItem('drexoss_session');location.reload()" style="padding:0.5rem 1.5rem;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:6px;color:#ef4444;font-size:0.8rem;cursor:pointer;font-family:inherit;">🚪 Abmelden</button>
-            </div>
-          </div>
-        `;
-        return false;
-              }
-  
-          const roleLabel = { admin: 'Admin', dev: 'DEV', customer: 'Kunde', freund: 'Freund' }[role] || role;
-  const statusLabel = status === 'active' ? 'Aktiv' : status === 'pending' ? 'Ausstehend' : 'Inaktiv';
-  const statusColor = status === 'active' ? '#34d399' : status === 'pending' ? '#fbbf24' : '#ef4444';
-  
-  // Update avatar
-  document.getElementById('profile-avatar').textContent = initial;
-  document.getElementById('pd-avatar').textContent = initial;
-  
-  // Update names
-    document.getElementById('profile-name').textContent = displayName;
-    document.getElementById('pd-name').textContent = displayName;
-  document.getElementById('pd-email').textContent = currentUser.email;
-  
-  // Update role badge
-    const badge = document.getElementById('pd-role-badge');
-    badge.textContent = roleLabel;
-    badge.className = 'pd-role ' + role;
-    document.getElementById('pd-role-text').textContent = roleLabel;
-  
-    // Update status
-    const stEl = document.getElementById('pd-status');
-    stEl.textContent = statusLabel;
-    stEl.style.color = statusColor;
-  
-    // Avatar image
-    const avatarUrl = currentUser.profile && currentUser.profile.avatar_url;
-        if (avatarUrl) {
-          const fullUrl = avatarUrl.startsWith('http') || avatarUrl.startsWith('data:') ? avatarUrl : SUPABASE_URL + '/storage/v1/object/public/' + avatarUrl;
-      document.getElementById('profile-avatar').style.backgroundImage = 'url(' + fullUrl + ')';
-      document.getElementById('profile-avatar').textContent = '';
-      document.getElementById('pd-avatar').style.backgroundImage = 'url(' + fullUrl + ')';
-      document.getElementById('pd-avatar').textContent = '';
-          }
-          // Hub for team roles, dashboard for customer
-                    return (role === 'customer') ? 'dashboard' : 'hub';
-                            }
-
-            function togglePW(id, el) {
-              const inp = document.getElementById(id);
-              if (inp.type === 'password') { inp.type = 'text'; el.textContent = '🙈'; }
-              else { inp.type = 'password'; el.textContent = '👁️'; }
-            }
-
-            async function uploadAvatar(input) {
-      const file = input.files[0];
-      if (!file) return;
-  
-      if (file.size > 5 * 1024 * 1024) { alert('❌ Bild zu groß (max 5MB)'); return; }
-      if (!file.type.match('image/(png|jpeg|webp|gif)')) { alert('❌ Nur PNG/JPG/WebP/GIF erlaubt'); return; }
-  
-      try {
-        // Read as base64 data URL
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-          const dataUrl = e.target.result;
-      
-          // Save to user_profiles (base64 data URL in avatar_url field)
-                    const res = await fetch(SUPABASE_URL + '/rest/v1/user_profiles?email=eq.' + encodeURIComponent(currentUser.email), {
-                      method: 'PATCH',
-                      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-                      body: JSON.stringify({ avatar_url: dataUrl })
-                    });
-                    if (!res.ok) { throw new Error('Speichern fehlgeschlagen (HTTP ' + res.status + ')'); }
-      
-          // Update local
-          if (currentUser.profile) currentUser.profile.avatar_url = dataUrl;
-          localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
-      
-          // Show image
-          document.getElementById('profile-avatar').style.backgroundImage = 'url(' + dataUrl + ')';
-          document.getElementById('profile-avatar').textContent = '';
-          document.getElementById('pd-avatar').style.backgroundImage = 'url(' + dataUrl + ')';
-          document.getElementById('pd-avatar').textContent = '';
-      
-          input.value = '';
-        };
-        reader.readAsDataURL(file);
-      } catch(e) {
-        alert('❌ Upload fehlgeschlagen: ' + e.message);
-      }
-    }
-
-            function showHub() {
-              document.getElementById('page-title').textContent = 'Start';
-              document.getElementById('kanban-view').innerHTML = `
-                <div class="hub-view">
-                  <h1>Willkommen, ${currentUser?.profile?.first_name || 'User'} 👋</h1>
-                  <p>Wohin möchtest du gehen?</p>
-                  <div class="hub-cards">
-                    <div class="hub-card" onclick="showStockfishChat()">
-                      <div class="icon">🤖</div>
-                      <h3>Stockfish Chat</h3>
-                      <p>Chatte mit dem KI-Assistenten — kontextbasiert und intelligent.</p>
-                    </div>
-                    <div class="hub-card" onclick="loadAll()">
-                      <div class="icon">📊</div>
-                      <h3>Dashboard</h3>
-                      <p>Projekte, Tasks, Kanban und Administration.</p>
-                    </div>
-                  </div>
-                </div>
-              `;
-              document.getElementById('project-detail').style.display = 'none';
-              document.getElementById('task-detail-view').style.display = 'none';
-            }
-
-            function showStockfishChat() {
-              document.getElementById('page-title').textContent = 'Stockfish Chat';
-              document.getElementById('kanban-view').innerHTML = `
-                <div class="hub-view">
-                  <h1>🤖 Stockfish Chat</h1>
-                  <p style="color:#64748b;max-width:500px;">Hier entsteht der persönliche KI-Assistent mit vollem Kontext — Memory, Projekte und Tasks. Bald verfügbar!</p>
-                  <div style="margin-top:2rem;">
-                    <button class="btn btn-primary" onclick="showHub()">← Zurück zur Startseite</button>
-                  </div>
-                </div>
-              `;
-              document.getElementById('project-detail').style.display = 'none';
-              document.getElementById('task-detail-view').style.display = 'none';
-            }
-
-function showLogin() {
-  const full = document.querySelector('.full-layout') || document.body;
-  full.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;width:100vw;background:#0a0a1a;font-family:'Inter',system-ui,sans-serif;position:fixed;top:0;left:0;z-index:9999;">
-      <div style="background:#0f0f23;border:1px solid #1e1e3a;border-radius:12px;padding:2.5rem;width:360px;max-width:90vw;">
-        <div style="text-align:center;margin-bottom:2rem;">
-          <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#5e5ce6,#7c7aff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;margin:0 auto 0.75rem;">D</div>
-          <h1 style="font-size:1.2rem;font-weight:600;color:#f1f1f9;">DrexOSS</h1>
-          <p style="font-size:0.8rem;color:#64748b;">Design · Refine · Execute</p>
-        </div>
-        <div id="login-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.75rem;display:none;text-align:center;"></div>
-                <form onsubmit="doLogin();return false">
-                <div style="margin-bottom:0.75rem;">
-                  <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">EMAIL</label>
-                  <input id="login-email" type="email" value="leis.rason@gmail.com" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
-                </div>
-                <div style="margin-bottom:1.25rem;">
-                                  <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">PASSWORT</label>
-                                  <div style="position:relative;">
-                                    <input id="login-pass" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;box-sizing:border-box;padding-right:2rem;">
-                                    <span onclick="togglePW('login-pass',this)" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:1rem;color:#64748b;user-select:none;">👁️</span>
-                                  </div>
-                                </div>
-                <button type="submit" style="width:100%;padding:0.6rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.85rem;cursor:pointer;font-family:inherit;font-weight:500;">Anmelden</button>
-                </form>
-        <div style="text-align:center;margin-top:1rem;font-size:0.78rem;color:#64748b;">
-          Noch kein Konto? <a href="#" onclick="showRegister();return false;" style="color:#5e5ce6;text-decoration:none;">Registrieren</a>
-        </div>
-      </div>
-    </div>
-  `;
 }
 
-async function doLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const pass = document.getElementById('login-pass').value;
-  const errEl = document.getElementById('login-error');
-  
-  try {
-    const res = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
-      method: 'POST',
-      headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password: pass })
-    });
-    const data = await res.json();
-        if (!res.ok) {
-            const errMsg = data.error_description || data.error || 'Login fehlgeschlagen';
-            // Check if it's an unconfirmed user
-            if (errMsg.includes('Invalid login credentials') || errMsg.includes('Email not confirmed')) {
-                errEl.innerHTML = '❌ Email nicht bestätigt oder falsche Zugangsdaten.<br><span style="font-size:0.7rem;">Bei neuer Registrierung: Bestätigungslink in deiner Email klicken.</span>';
-            } else {
-                errEl.innerHTML = '❌ ' + errMsg;
-            }
-            errEl.style.display = 'block';
-            return;
-        }
-    
-    currentUser = { email: data.user.email, id: data.user.id };
-    localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
-    location.reload();
-  } catch(e) {
-      errEl.textContent = '❌ ' + e.message;
-      errEl.style.display = 'block';
-    }
-  }
-
-  function showRegister() {
-      const full = document.querySelector('.full-layout') || document.body;
-      full.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;width:100vw;background:#0a0a1a;font-family:'Inter',system-ui,sans-serif;position:fixed;top:0;left:0;z-index:9999;">
-          <div style="background:#0f0f23;border:1px solid #1e1e3a;border-radius:12px;padding:2rem;width:440px;max-width:92vw;">
-            <div style="text-align:center;margin-bottom:1.25rem;">
-              <div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#5e5ce6,#7c7aff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;margin:0 auto 0.5rem;">D</div>
-              <h1 style="font-size:1.1rem;font-weight:600;color:#f1f1f9;">DrexOSS</h1>
-              <p style="font-size:0.78rem;color:#64748b;">Neues Konto erstellen</p>
-            </div>
-            <div id="reg-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.5rem;display:none;text-align:center;"></div>
-                        <div id="reg-success" style="font-size:0.75rem;color:#34d399;margin-bottom:0.5rem;display:none;text-align:center;"></div>
-                        <form onsubmit="doRegister();return false">
-
-            <div style="display:flex;gap:0.5rem;margin-bottom:0.6rem;">
-              <div style="flex:1;">
-                <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">VORNAME</label>
-                <input id="reg-first" type="text" placeholder="Max" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;">
-              </div>
-              <div style="flex:1;">
-                <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">NACHNAME</label>
-                <input id="reg-last" type="text" placeholder="Mustermann" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;">
-              </div>
-            </div>
-
-            <div style="margin-bottom:0.6rem;">
-              <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">EMAIL</label>
-              <input id="reg-email" type="email" placeholder="deine@email.de" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;">
-            </div>
-
-            <div style="display:flex;gap:0.5rem;margin-bottom:0.6rem;">
-                          <div style="flex:1;">
-                            <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">PASSWORT</label>
-                            <div style="position:relative;">
-                              <input id="reg-pass" type="password" placeholder="••••••••" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;padding-right:1.8rem;">
-                              <span onclick="togglePW('reg-pass',this)" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:0.85rem;color:#64748b;user-select:none;">👁️</span>
-                            </div>
-                          </div>
-                          <div style="flex:1;">
-                            <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">PASSWORT BESTÄTIGEN</label>
-                            <div style="position:relative;">
-                              <input id="reg-pass2" type="password" placeholder="••••••••" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;padding-right:1.8rem;">
-                              <span onclick="togglePW('reg-pass2',this)" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:0.85rem;color:#64748b;user-select:none;">👁️</span>
-                            </div>
-                          </div>
-                        </div>
-
-            <div style="margin-bottom:0.6rem;">
-              <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">TYP</label>
-              <div style="display:flex;gap:0.5rem;">
-                <label onclick="document.getElementById('reg-type-privat').checked=true;toggleCompany()" style="flex:1;display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.6rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;cursor:pointer;font-size:0.8rem;color:#c4c4d4;">
-                  <input type="radio" id="reg-type-privat" name="reg-type" value="privat" checked onchange="toggleCompany()" style="accent-color:#5e5ce6;"> 👤 Privat
-                </label>
-                <label onclick="document.getElementById('reg-type-firma').checked=true;toggleCompany()" style="flex:1;display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.6rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;cursor:pointer;font-size:0.8rem;color:#c4c4d4;">
-                  <input type="radio" id="reg-type-firma" name="reg-type" value="firma" onchange="toggleCompany()" style="accent-color:#5e5ce6;"> 🏢 Firma
-                </label>
-              </div>
-            </div>
-
-            <div id="reg-company-fields" style="display:none;">
-              <div style="display:flex;gap:0.5rem;margin-bottom:0.6rem;">
-                <div style="flex:1;">
-                  <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">FIRMENNAME</label>
-                  <input id="reg-company" type="text" placeholder="Firma GmbH" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;">
-                </div>
-                <div style="flex:1;">
-                  <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">ANSPRECHPARTNER</label>
-                  <input id="reg-contact" type="text" placeholder="Max Mustermann" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;">
-                </div>
-              </div>
-            </div>
-
-            <button type="submit" style="width:100%;padding:0.55rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.85rem;cursor:pointer;font-family:inherit;font-weight:500;">Konto erstellen</button>
-            </form>
-            <div style="text-align:center;margin-top:0.75rem;font-size:0.78rem;color:#64748b;">
-              Schon ein Konto? <a href="#" onclick="showLogin();return false;" style="color:#5e5ce6;text-decoration:none;">Anmelden</a>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    function toggleCompany() {
-      const isFirma = document.getElementById('reg-type-firma').checked;
-      document.getElementById('reg-company-fields').style.display = isFirma ? 'block' : 'none';
-    }
-
-  async function doRegister() {
-    const email = document.getElementById('reg-email').value.trim();
-    const pass = document.getElementById('reg-pass').value;
-    const pass2 = document.getElementById('reg-pass2').value;
-    const errEl = document.getElementById('reg-error');
-        const sucEl = document.getElementById('reg-success');
-        errEl.style.display = 'none';
-        sucEl.style.display = 'none';
-
-        const first = document.getElementById('reg-first').value.trim();
-        const last = document.getElementById('reg-last').value.trim();
-        const isFirma = document.getElementById('reg-type-firma').checked;
-        const company = isFirma ? document.getElementById('reg-company').value.trim() : '';
-        const contact = isFirma ? document.getElementById('reg-contact').value.trim() : '';
-
-        if (!email || !pass || !pass2 || !first || !last) { errEl.innerHTML = '❌ Alle Pflichtfelder ausfüllen'; errEl.style.display = 'block'; return; }
-        if (pass !== pass2) { errEl.innerHTML = '❌ Passwörter stimmen nicht überein'; errEl.style.display = 'block'; return; }
-        if (pass.length < 6) { errEl.innerHTML = '❌ Mindestens 6 Zeichen'; errEl.style.display = 'block'; return; }
-
-        try {
-          const res = await fetch(SUPABASE_URL + '/auth/v1/signup', {
-            method: 'POST',
-            headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password: pass })
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.msg || data.error_description || 'Registrierung fehlgeschlagen');
-
-          const uid = data.id || (data.user && data.user.id);
-          if (uid) {
-            await fetch(SUPABASE_URL + '/rest/v1/user_profiles', {
-              method: 'POST',
-              headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-              body: JSON.stringify({ 
-                id: uid, email, name: (first + ' ' + last).trim(),
-                first_name: first, last_name: last,
-                type: isFirma ? 'firma' : 'privat',
-                company_name: company, contact_person: contact,
-                role: '', status: 'pending'
-              })
-            });
-          }
-
-          sucEl.innerHTML = '✅ Registrierung erfolgreich!<br><span style="font-size:0.7rem;">Wir haben dir eine Bestätigungs-Email gesendet. Klick den Link, dann kannst du dich anmelden.</span>';
-                sucEl.style.display = 'block';
-                document.getElementById('reg-pass').value = '';
-                document.getElementById('reg-pass2').value = '';
-
-                // Kein Auto-Login — User muss Email bestätigen
-              } catch(e) {
-                          errEl.innerHTML = '❌ ' + e.message;
-                          errEl.style.display = 'block';
-                        }
-                      }
-
-          function toggleProfile() {
-            const dd = document.getElementById('profile-dropdown');
-            dd.classList.toggle('show');
-          }
-
-          // Close dropdown when clicking outside
-          document.addEventListener('click', function(e) {
-            const wrap = document.getElementById('profile-wrap');
-            const dd = document.getElementById('profile-dropdown');
-            if (wrap && !wrap.contains(e.target) && dd) {
-              dd.classList.remove('show');
-            }
-          });
-
-          function doLogout() {
+function logout() {
   localStorage.removeItem('drexoss_session');
-  currentUser = null;
-  showLogin();
+  document.getElementById('hub-screen').classList.remove('show');
+  document.getElementById('login-screen').classList.remove('hidden');
 }
 
-let projects = [], tasks = [], taskMessages = [];
-let currentProjectId = null;
-let editingProjectId = null;
-let currentTaskId = null;
-let editingTaskField = null;
-
-async function api(endpoint, opts) {
-  const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' };
-  const res = await fetch(SUPABASE_URL + '/rest/v1/' + endpoint, { headers, ...opts });
-  if (!res.ok) { try { const err = await res.text(); throw new Error(err.substring(0,80)); } catch(e) { throw new Error('HTTP ' + res.status); } }
-  return opts && opts.method === 'PATCH' || opts && opts.method === 'POST' && endpoint.startsWith('tasks') ? null : res.json();
-}
-
-async function loadAll() {
-  try {
-    projects = await api('projects?select=*&order=id');
-    tasks = await api('tasks?select=*&order=id');
-    taskMessages = await api('task_messages?select=*&order=id');
-    renderSidebar();
-    renderKanban();
-  } catch(e) {
-    document.getElementById('kanban-board').innerHTML = '<div class="error">❌ ' + e.message + '</div>';
-  }
-}
-
-function renderSidebar() {
-  let html = '';
-  for (const p of projects) {
-    const dotClass = p.status === 'active' ? 'green' : p.status === 'planning' ? 'gray' : 'blue';
-    html += '<div class="sb-item ' + (currentProjectId === p.id ? 'active' : '') + '" onclick="selectProject(' + p.id + ')">' +
-      '<span class="sb-dot ' + dotClass + '"></span>' + escHtml(p.name) +
-      '<span class="sb-progress">' + (p.number || '') + ' ' + p.progress + '%</span></div>';
-  }
-  document.getElementById('sb-list').innerHTML = html;
-}
-
-// ====== NAVIGATION ======
-function showKanban() {
-  currentProjectId = null; editingProjectId = null; currentTaskId = null;
-  document.getElementById('breadcrumb').textContent = 'DrexOSS';
-  document.getElementById('page-title').textContent = '📋 Übersicht';
-  document.getElementById('kanban-view').style.display = 'block';
-  document.getElementById('project-detail').classList.remove('active');
-  document.getElementById('task-detail-view').classList.remove('active');
-  resetChatHeader();
-  renderSidebar();
-}
-
-function selectProject(id) {
-  if (id !== currentProjectId) editingProjectId = null;
-  currentProjectId = id; currentTaskId = null;
-  renderSidebar();
-  const p = projects.find(x => x.id === id);
-  if (p) {
-    document.getElementById('breadcrumb').textContent = 'DrexOSS / Projekte';
-    document.getElementById('page-title').textContent = (p.icon || '📁') + ' ' + p.name;
-    document.getElementById('kanban-view').style.display = 'none';
-    document.getElementById('task-detail-view').classList.remove('active');
-    document.getElementById('project-detail').classList.add('active');
-    resetChatHeader();
-    renderProjectDetail(p);
-  }
-}
-
-function selectTask(id) {
-  currentTaskId = id;
-  const t = tasks.find(x => x.id === id);
-  if (!t) return;
-  const proj = projects.find(p => p.id === t.project_id);
-  document.getElementById('breadcrumb').textContent = (proj ? proj.number + ' ' + escHtml(proj.name) : 'Task') + ' / ' + t.number;
-  document.getElementById('page-title').textContent = '📌 ' + escHtml(t.title);
-  document.getElementById('kanban-view').style.display = 'none';
-  document.getElementById('project-detail').classList.remove('active');
-  document.getElementById('task-detail-view').classList.add('active');
-  renderTaskDetail(t);
-  setTaskChat(id, t);
-}
-
-function resetChatHeader() {
-  document.getElementById('chat-header').innerHTML = '💬 Projekt-Chat';
-}
-
-function setTaskChat(taskId, t) {
-  document.getElementById('chat-header').innerHTML = '<span class="back-btn" onclick="goBackFromTask()">←</span> 💬 ' + (t ? escHtml(t.number) : 'Task') + ' <span class="chat-type">Task-Chat</span>';
-  renderTaskChat(taskId);
-}
-
-function goBackFromTask() {
-  const t = tasks.find(x => x.id === currentTaskId);
-  if (t && t.project_id) { selectProject(t.project_id); }
-  else { showKanban(); }
-}
-
-// ====== PROJECT DETAIL ======
-function parseDescription(desc) {
-  let story = '', goal = '', scope = '';
-  const lines = (desc || '').split('\n');
-  for (const line of lines) {
-    if (line.startsWith('**User Story:**')) story = line.replace('**User Story:**', '').trim();
-    else if (line.startsWith('**Ziel:**')) goal = line.replace('**Ziel:**', '').trim();
-    else if (line.startsWith('**Scope:**')) scope = line.replace('**Scope:**', '').trim();
-  }
-  return { story, goal, scope };
-}
-
-function renderProjectDetail(p) {
-  const projTasks = tasks.filter(t => t.project_id === p.id);
-  const { story, goal, scope } = parseDescription(p.description);
-  const isEditing = editingProjectId === p.id;
-  const ed = isEditing ? '' : 'style="display:none"';
-  const vd = isEditing ? 'style="display:none"' : '';
-  const open = projTasks.filter(t => t.status === 'open');
-  const inProg = projTasks.filter(t => t.status === 'in_progress');
-  const done = projTasks.filter(t => t.status === 'done');
-
-  document.getElementById('pd-content').innerHTML = `
-    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;">
-      <div style="flex:1;min-width:280px;">
-        <div class="proj-header">
-          <h2>${p.icon || '📁'} ${escHtml(p.name)} <span style="font-size:0.7rem;color:#5e5ce6;font-weight:500;">${p.number || ''}</span></h2>
-          <div class="meta">
-            <span>📌 ${p.phase || '-'}</span><span>🕐 ${p.progress}%</span><span>📋 ${projTasks.length} Tasks</span>
-          </div>
-        </div>
-      </div>
-      <button onclick="openNewTask(${p.id})" style="padding:0.4rem 0.9rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.78rem;cursor:pointer;font-family:inherit;white-space:nowrap;">➕ Neuer Task</button>
-    </div>
-    <div style="margin-top:0.5rem;display:flex;gap:0.5rem;justify-content:flex-end;">
-      <button ${vd} onclick="startEdit(${p.id})" style="padding:0.3rem 0.7rem;background:rgba(94,92,230,0.1);border:1px solid rgba(94,92,230,0.2);border-radius:6px;color:#5e5ce6;font-size:0.7rem;cursor:pointer;font-family:inherit;">✏️ Bearbeiten</button>
-      <button ${ed} onclick="saveProject(${p.id})" style="padding:0.3rem 0.7rem;background:#34d399;border:none;border-radius:6px;color:#fff;font-size:0.7rem;cursor:pointer;font-family:inherit;">💾 Speichern</button>
-      <button ${ed} onclick="cancelEdit(${p.id})" style="padding:0.3rem 0.7rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#94a3b8;font-size:0.7rem;cursor:pointer;font-family:inherit;">Abbrechen</button>
-    </div>
-    <div style="margin-top:0.5rem;">
-      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-        <div style="flex:2;min-width:280px;">
-          <div style="font-size:0.7rem;color:#5e5ce6;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:0.5rem;">📖 User Story</div>
-          <div style="background:rgba(94,92,230,0.05);border:1px solid rgba(94,92,230,0.15);border-radius:10px;padding:1.25rem;">
-            <div ${vd} style="font-size:0.9rem;color:#e2e8f0;line-height:1.7;font-style:italic;">"${escHtml(story)}"</div>
-            <textarea ${ed} id="edit-story" style="width:100%;background:transparent;border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#e2e8f0;font-size:0.9rem;padding:0.75rem;font-family:inherit;line-height:1.7;resize:vertical;min-height:80px;outline:none;">${escHtml(story)}</textarea>
-          </div>
-        </div>
-        <div style="flex:1;min-width:180px;">
-          <div style="font-size:0.7rem;color:#8888a0;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:0.5rem;">🎯 Ziel</div>
-          <div ${vd} style="font-size:0.82rem;color:#c4c4d4;line-height:1.6;margin-bottom:1.25rem;">${escHtml(goal)}</div>
-          <textarea ${ed} id="edit-goal" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#c4c4d4;font-size:0.82rem;padding:0.5rem;font-family:inherit;line-height:1.6;resize:vertical;min-height:60px;outline:none;margin-bottom:1rem;">${escHtml(goal)}</textarea>
-          <div style="font-size:0.7rem;color:#8888a0;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:0.5rem;">📦 Scope</div>
-          <div ${vd} style="font-size:0.82rem;color:#c4c4d4;line-height:1.6;">${escHtml(scope)}</div>
-          <textarea ${ed} id="edit-scope" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#c4c4d4;font-size:0.82rem;padding:0.5rem;font-family:inherit;line-height:1.6;resize:vertical;min-height:60px;outline:none;">${escHtml(scope)}</textarea>
-        </div>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:0.5rem;margin-top:1rem;">
-      <div style="background:#0f0f23;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:0.75rem;text-align:center;"><div style="font-size:1.2rem;font-weight:600;color:#34d399;">${done.length}</div><div style="font-size:0.65rem;color:#5c5c78;">Erledigt</div></div>
-      <div style="background:#0f0f23;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:0.75rem;text-align:center;"><div style="font-size:1.2rem;font-weight:600;color:#5e5ce6;">${inProg.length}</div><div style="font-size:0.65rem;color:#5c5c78;">In Arbeit</div></div>
-      <div style="background:#0f0f23;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:0.75rem;text-align:center;"><div style="font-size:1.2rem;font-weight:600;color:#94a3b8;">${open.length}</div><div style="font-size:0.65rem;color:#5c5c78;">Offen</div></div>
-    </div>
-    <div style="margin-top:1.5rem;font-size:0.75rem;color:#64748b;font-weight:500;display:flex;align-items:center;gap:0.5rem;">📋 Task-Board<div style="flex:1;height:1px;background:#1e293b;"></div></div>
-    <div class="kanban" style="margin-top:0.5rem;">
-      <div class="column" style="min-width:220px;max-width:280px;"><div class="col-h"><h3>📋 Offen</h3><span class="count">${open.length}</span></div><div class="col-body">${renderColumnHTML(open)}</div></div>
-      <div class="column" style="min-width:220px;max-width:280px;"><div class="col-h"><h3>🔄 In Arbeit</h3><span class="count">${inProg.length}</span></div><div class="col-body">${renderColumnHTML(inProg)}</div></div>
-      <div class="column" style="min-width:220px;max-width:280px;"><div class="col-h"><h3>✅ Erledigt</h3><span class="count">${done.length}</span></div><div class="col-body">${renderColumnHTML(done)}</div></div>
-    </div>`;
-}
-
-// ====== TASK DETAIL (inline, kein Modal) ======
-function renderTaskDetail(t) {
-  const time = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-  const editing = editingTaskField;
-  const showEdit = editing === 'detail' ? '' : 'style="display:none"';
-  const showView = editing === 'detail' ? 'style="display:none"' : '';
-
-  document.getElementById('td-content').innerHTML = `
-    <div class="task-detail">
-      <div class="task-detail-header">
-        <div>
-          <div class="task-detail-title">
-            <span ${showView}>${escHtml(t.title)}</span>
-            <input ${showEdit} id="td-edit-title" value="${escHtml(t.title)}" style="font-size:1.2rem;font-weight:600;background:rgba(255,255,255,0.02);border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#f1f1f9;padding:0.3rem 0.5rem;font-family:inherit;width:100%;">
-            <span class="badge ${t.status==='done'?'green':t.status==='in_progress'?'blue':'gray'}">${t.status}</span>
-          </div>
-          <div class="task-detail-meta">
-            <span>📌 ${t.number || 'T-?'}</span>
-            <span>👤 ${escHtml(t.created_by || '—')}</span>
-            <span>⏱ ${escHtml(t.effort || '—')}</span>
-            <span>👥 ${escHtml(t.assignee || '—')}</span>
-            <span>📅 ${new Date(t.created_at).toLocaleDateString()}</span>
-          </div>
-        </div>
-        <div style="display:flex;gap:0.5rem;">
-          <button ${showView} onclick="toggleTaskEdit()" style="padding:0.3rem 0.7rem;background:rgba(94,92,230,0.1);border:1px solid rgba(94,92,230,0.2);border-radius:6px;color:#5e5ce6;font-size:0.7rem;cursor:pointer;font-family:inherit;">✏️ Bearbeiten</button>
-          <button ${showEdit} onclick="saveTaskDetail(${t.id})" style="padding:0.3rem 0.7rem;background:#34d399;border:none;border-radius:6px;color:#fff;font-size:0.7rem;cursor:pointer;font-family:inherit;">💾 Speichern</button>
-          <button ${showEdit} onclick="cancelTaskEdit()" style="padding:0.3rem 0.7rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#94a3b8;font-size:0.7rem;cursor:pointer;font-family:inherit;">Abbrechen</button>
-        </div>
-      </div>
-
-      <!-- Status Wechsel (immer sichtbar) -->
-      <div style="margin-top:1rem;display:flex;align-items:center;gap:1rem;">
-        <div style="font-size:0.7rem;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;">Status:</div>
-        <div class="status-select">
-          <button class="status-btn s-open ${t.status==='open'?'active':''}" onclick="changeTaskStatus(${t.id},'open')">📋 Offen</button>
-          <button class="status-btn s-progress ${t.status==='in_progress'?'active':''}" onclick="changeTaskStatus(${t.id},'in_progress')">🔄 In Arbeit</button>
-          <button class="status-btn s-done ${t.status==='done'?'active':''}" onclick="changeTaskStatus(${t.id},'done')">✅ Erledigt</button>
-        </div>
-      </div>
-
-      <!-- Beschreibung -->
-      <div class="task-detail-body" style="margin-top:1rem;">
-        <div class="field">
-          <div class="field-label">📄 Beschreibung</div>
-          <div ${showView} class="field-value">${escHtml(t.description || 'Keine Beschreibung')}</div>
-          <textarea ${showEdit} id="td-edit-desc" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#c4c4d4;font-size:0.85rem;padding:0.5rem;font-family:inherit;line-height:1.6;resize:vertical;min-height:100px;outline:none;">${escHtml(t.description || '')}</textarea>
-        </div>
-        <div class="field" style="display:flex;gap:1rem;">
-          <div style="flex:1;">
-            <div class="field-label">👤 Ersteller</div>
-            <div ${showView} class="field-value">${escHtml(t.created_by || '—')}</div>
-            <input ${showEdit} id="td-edit-creator" value="${escHtml(t.created_by || '')}" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#f1f1f9;font-size:0.85rem;padding:0.4rem;font-family:inherit;outline:none;">
-          </div>
-          <div style="flex:1;">
-            <div class="field-label">⏱ Aufwand</div>
-            <div ${showView} class="field-value">${escHtml(t.effort || '—')}</div>
-            <input ${showEdit} id="td-edit-effort" value="${escHtml(t.effort || '')}" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#f1f1f9;font-size:0.85rem;padding:0.4rem;font-family:inherit;outline:none;">
-          </div>
-          <div style="flex:1;">
-            <div class="field-label">👥 Assignee</div>
-            <div ${showView} class="field-value">${escHtml(t.assignee || '—')}</div>
-            <input ${showEdit} id="td-edit-assignee" value="${escHtml(t.assignee || '')}" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#f1f1f9;font-size:0.85rem;padding:0.4rem;font-family:inherit;outline:none;">
-          </div>
-        </div>
-      </div>
-    </div>`;
-}
-
-// ====== TASK ACTIONS ======
-function toggleTaskEdit() { editingTaskField = editingTaskField === 'detail' ? null : 'detail'; if (currentTaskId) selectTask(currentTaskId); }
-function cancelTaskEdit() { editingTaskField = null; if (currentTaskId) selectTask(currentTaskId); }
-
-async function saveTaskDetail(id) {
-  const data = {
-    title: document.getElementById('td-edit-title').value.trim(),
-    description: document.getElementById('td-edit-desc').value.trim(),
-    created_by: document.getElementById('td-edit-creator').value.trim(),
-    effort: document.getElementById('td-edit-effort').value.trim(),
-    assignee: document.getElementById('td-edit-assignee').value.trim()
-  };
-  if (!data.title) { alert('Titel erforderlich!'); return; }
-  try {
-    await api('tasks?id=eq.' + id, { method: 'PATCH', body: JSON.stringify(data) });
-    const t = tasks.find(x => x.id === id);
-    if (t) Object.assign(t, data);
-    editingTaskField = null;
-    selectTask(id);
-  } catch(e) { alert('❌ ' + e.message); }
-}
-
-async function changeTaskStatus(id, newStatus) {
-  try {
-    await api('tasks?id=eq.' + id, { method: 'PATCH', body: JSON.stringify({ status: newStatus }) });
-    const t = tasks.find(x => x.id === id);
-    if (t) t.status = newStatus;
-    if (currentTaskId === id) selectTask(id);
-    else if (currentProjectId) selectProject(currentProjectId);
-    else renderKanban();
-  } catch(e) { alert('❌ ' + e.message); }
-}
-
-// ====== TASK CHAT ======
-async function renderTaskChat(taskId) {
-  const msgs = document.getElementById('chat-msgs');
-  const msgsFiltered = taskMessages.filter(m => m.task_id === taskId);
-  if (!msgsFiltered.length) {
-    msgs.innerHTML = '<div class="c-msg"><div class="who">Drexoss <span class="time">-</span></div><div class="txt ai">Task-Chat gestartet. Schreibe eine Nachricht.</div></div>';
-    return;
-  }
-  let html = '';
-  for (const m of msgsFiltered) {
-    const time = new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-    const isAi = m.sender === 'drexoss' || m.sender === 'agent';
-    html += '<div class="c-msg"><div class="who">' + escHtml(m.sender) + ' <span class="time">' + time + '</span></div><div class="txt' + (isAi ? ' ai' : '') + '">' + escHtml(m.message) + '</div></div>';
-  }
-  msgs.innerHTML = html;
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-// ====== KANBAN ======
-function renderKanban() {
-  const open = tasks.filter(t => t.status === 'open');
-  const progress = tasks.filter(t => t.status === 'in_progress');
-  const done = tasks.filter(t => t.status === 'done');
-
-  document.getElementById('kanban-board').innerHTML = `
-    <div class="column"><div class="col-h"><h3>📋 Offen</h3><span class="count">${open.length}</span></div><div class="col-body">${renderColumnHTML(open)}</div></div>
-    <div class="column"><div class="col-h"><h3>🔄 In Arbeit</h3><span class="count">${progress.length}</span></div><div class="col-body">${renderColumnHTML(progress)}</div></div>
-    <div class="column"><div class="col-h"><h3>✅ Erledigt</h3><span class="count">${done.length}</span></div><div class="col-body">${renderColumnHTML(done)}</div></div>`;
-}
-
-function renderColumnHTML(items) {
-  if (!items.length) return '<div class="empty" style="padding:1rem 0;">Leer</div>';
-  let html = '';
-  for (const t of items) {
-    const effort = t.effort ? '<span style="color:#fbbf24;">⏱ ' + escHtml(t.effort) + '</span>' : '';
-    html += '<div class="task-card" onclick="selectTask(' + t.id + ')">' +
-      '<div class="t-title">' + escHtml(t.title) + '</div>' +
-      '<div class="t-desc">' + escHtml(t.description || '') + '</div>' +
-      '<div class="t-meta"><span class="t-num">' + (t.number || 'T-?') + '</span>' +
-      '<span class="t-assignee">' + (t.assignee || '—') + '</span>' + effort + '</div></div>';
-  }
-  return html;
-}
-
-// ====== EDIT PROJECT ======
-function startEdit(id) { editingProjectId = id; selectProject(id); }
-function cancelEdit(id) { editingProjectId = null; selectProject(id); }
-async function saveProject(id) {
-  const story = document.getElementById('edit-story').value.trim();
-  const goal = document.getElementById('edit-goal').value.trim();
-  const scope = document.getElementById('edit-scope').value.trim();
-  const description = '**User Story:** ' + story + '\n**Ziel:** ' + goal + '\n**Scope:** ' + scope;
-  try {
-    await api('projects?id=eq.' + id, { method: 'PATCH', body: JSON.stringify({ description: description }) });
-    const p = projects.find(x => x.id === id);
-    if (p) p.description = description;
-    editingProjectId = null; selectProject(id);
-  } catch(e) { alert('❌ ' + e.message); }
-}
-
-// ====== TASK CRUD (Modal für neue Tasks) ======
-function openNewTask(projectId) {
-  document.getElementById('modal-title').textContent = '➕ Neuer Task';
-  document.getElementById('edit-task-id').value = '';
-  document.getElementById('task-title').value = '';
-  document.getElementById('task-desc').value = '';
-  document.getElementById('task-status').value = 'open';
-  document.getElementById('task-creator').value = 'Rason';
-  document.getElementById('task-effort').value = '';
-  document.getElementById('task-assignee').value = 'drexoss';
-  const sel = document.getElementById('task-project');
-  sel.innerHTML = '';
-  for (const p of projects) sel.innerHTML += '<option value="' + p.id + '"' + (p.id === projectId ? ' selected' : '') + '>' + (p.number || '') + ' · ' + escHtml(p.name) + '</option>';
-  if (!projectId && sel.options.length > 0) sel.selectedIndex = 0;
-  document.getElementById('task-modal').classList.add('show');
-}
-function closeModal() { document.getElementById('task-modal').classList.remove('show'); }
-
-async function saveTask() {
-  const editId = document.getElementById('edit-task-id').value;
-  const title = document.getElementById('task-title').value.trim();
-  if (!title) { alert('Titel erforderlich!'); return; }
-  const data = {
-    project_id: parseInt(document.getElementById('task-project').value),
-    title, description: document.getElementById('task-desc').value.trim(),
-    status: document.getElementById('task-status').value,
-    created_by: document.getElementById('task-creator').value.trim() || 'Rason',
-    effort: document.getElementById('task-effort').value.trim(),
-    assignee: document.getElementById('task-assignee').value.trim() || 'drexoss'
-  };
-  try {
-    if (editId) {
-      await api('tasks?id=eq.' + editId, { method: 'PATCH', body: JSON.stringify(data) });
-      const t = tasks.find(x => x.id === parseInt(editId));
-      if (t) Object.assign(t, data);
-    } else {
-      const maxNum = tasks.reduce((m, t) => { const n = parseInt((t.number || 'T-0').replace('T-','')); return n > m ? n : m; }, 0);
-      data.number = 'T-' + String(maxNum + 1).padStart(3, '0');
-      data.created_at = new Date().toISOString();
-      await api('tasks', { method: 'POST', body: JSON.stringify(data) });
-      tasks = await api('tasks?select=*&order=id');
-    }
-    closeModal();
-    if (currentProjectId) selectProject(currentProjectId);
-    else renderKanban();
-  } catch(e) { alert('❌ ' + e.message); }
-}
-
-// ====== CHAT ======
-const BACKEND_URL = 'http://localhost:8000';
-
-async function sendChat() {
+// ===== CHAT =====
+function sendMsg() {
   const input = document.getElementById('chat-input');
-  const msg = input.value.trim();
-  if (!msg) return;
-
+  const text = input.value.trim();
+  if (!text) return;
+  
+  const hr = new Date().getHours();
+  let greet;
+  if (hr < 12) greet = 'Morgen';
+  else if (hr < 18) greet = 'Tag';
+  else greet = 'Abend';
+  const greetings = [
+    'Guten ' + greet + ' Boss! Ready to build.',
+    'Moinsen! Was steht an?',
+    'Hey Boss, alles klar?',
+    greet + ' Boss! Woran hacken wir heute?',
+    'Servus! Bin bereit.'
+  ];
+  const msg = greetings[Math.floor(Math.random() * greetings.length)];
+  
+  const empty = document.getElementById('empty-state');
   const msgs = document.getElementById('chat-msgs');
-  const time = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-
-  if (currentTaskId) {
-    // Task-Chat: speichern in task_messages
-    try {
-      await api('task_messages', { method: 'POST', body: JSON.stringify({ task_id: currentTaskId, sender: 'Rason', message: msg }) });
-      taskMessages = await api('task_messages?select=*&order=id');
-      renderTaskChat(currentTaskId);
-    } catch(e) { alert('❌ ' + e.message); }
-    input.value = '';
-    return;
-  }
-
-  // Projekt-Chat: mit Stockfish Backend
-  msgs.innerHTML += '<div class="c-msg"><div class="who">Du <span class="time">' + time + '</span></div><div class="txt">' + escHtml(msg) + '</div></div>';
+  empty.style.display = 'none';
+  msgs.style.display = 'flex';
+  
+  const userMsg = document.createElement('div');
+  userMsg.className = 'msg user';
+  userMsg.innerHTML = '<div class="msg-bubble"><p>' + escHtml(text) + '</p></div>';
+  msgs.appendChild(userMsg);
+  
   input.value = '';
+  input.style.height = 'auto';
   msgs.scrollTop = msgs.scrollHeight;
-
-  // Loading-Indikator
-  msgs.innerHTML += '<div class="c-msg" id="thinking"><div class="who">Stockfish <span class="time">' + time + '</span></div><div class="txt ai">⏳ Denke nach...</div></div>';
-  msgs.scrollTop = msgs.scrollHeight;
-
-  try {
-    const res = await fetch(BACKEND_URL + '/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: msg, user_id: 'Rason' })
-    });
-
-    document.getElementById('thinking')?.remove();
-
-    if (!res.ok) {
-      const err = await res.text();
-      if (res.status === 0 || res.status >= 500) {
-        msgs.innerHTML += '<div class="c-msg"><div class="who">Stockfish <span class="time">' + time + '</span></div><div class="txt ai">🔌 Backend nicht erreichbar. Starte es mit: cd stockfish-chat-backend && .venv\\Scripts\\python main.py</div></div>';
-      } else {
-        msgs.innerHTML += '<div class="c-msg"><div class="who">Stockfish <span class="time">' + time + '</span></div><div class="txt ai">❌ Fehler: ' + escHtml(err.substring(0,100)) + '</div></div>';
-      }
-    } else {
-      const data = await res.json();
-      const reply = data.reply || 'Keine Antwort.';
-      msgs.innerHTML += '<div class="c-msg"><div class="who">Stockfish <span class="time">' + time + '</span></div><div class="txt ai">' + escHtml(reply) + '</div></div>';
-    }
-  } catch(e) {
-    document.getElementById('thinking')?.remove();
-    msgs.innerHTML += '<div class="c-msg"><div class="who">Stockfish <span class="time">' + time + '</span></div><div class="txt ai">🔌 Backend nicht erreichbar. Starte: cd stockfish-chat-backend && .venv\\Scripts\\python main.py</div></div>';
-  }
-  msgs.scrollTop = msgs.scrollHeight;
+  
+  setTimeout(function() {
+    const aiMsg = document.createElement('div');
+    aiMsg.className = 'msg ai';
+    aiMsg.innerHTML = '<div class="msg-bubble"><p>' + msg + '</p></div>';
+    msgs.appendChild(aiMsg);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 800);
 }
 
-// ====== PASSWORT ÄNDERN ======
-function openPasswordModal() {
-  document.getElementById('pw-current').value = '';
-  document.getElementById('pw-new').value = '';
-  document.getElementById('pw-confirm').value = '';
-  document.getElementById('pw-error').style.display = 'none';
-  document.getElementById('pw-modal').classList.add('show');
-}
-function closePWModal() {
-  document.getElementById('pw-modal').classList.remove('show');
-}
-
-async function changePassword() {
-  const current = document.getElementById('pw-current').value;
-  const newPw = document.getElementById('pw-new').value;
-  const confirm = document.getElementById('pw-confirm').value;
-  const errEl = document.getElementById('pw-error');
-
-  if (!current || !newPw) { errEl.textContent = '❌ Alle Felder ausfüllen'; errEl.style.display = 'block'; return; }
-  if (newPw !== confirm) { errEl.textContent = '❌ Neue Passwörter stimmen nicht überein'; errEl.style.display = 'block'; return; }
-  if (newPw.length < 6) { errEl.textContent = '❌ Mindestens 6 Zeichen'; errEl.style.display = 'block'; return; }
-
-  try {
-    // First re-authenticate with current password to get a fresh session
-    const loginRes = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
-      method: 'POST',
-      headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: currentUser.email, password: current })
-    });
-    const loginData = await loginRes.json();
-    if (!loginRes.ok) throw new Error('Aktuelles Passwort falsch');
-
-    // Update password
-    const updateRes = await fetch(SUPABASE_URL + '/auth/v1/user', {
-      method: 'PUT',
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + loginData.access_token, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: newPw })
-    });
-    const updateData = await updateRes.json();
-    if (!updateRes.ok) throw new Error(updateData.msg || 'Fehler beim Ändern');
-
-    errEl.textContent = '✅ Passwort geändert!';
-    errEl.style.color = '#34d399';
-    errEl.style.display = 'block';
-    setTimeout(() => closePWModal(), 1500);
-  } catch(e) {
-    errEl.textContent = '❌ ' + e.message;
-    errEl.style.color = '#ef4444';
-    errEl.style.display = 'block';
-  }
-}
-
-// ====== API-KEY ======
-function openAPIKeyModal() {
-  const saved = localStorage.getItem('openrouter_key') || '';
-  document.getElementById('api-key-input').value = saved;
-  document.getElementById('api-key-status').style.display = 'none';
-  document.getElementById('api-key-modal').classList.add('show');
-}
-function closeAPIKeyModal() {
-  document.getElementById('api-key-modal').classList.remove('show');
-}
-function saveAPIKey() {
-  const key = document.getElementById('api-key-input').value.trim();
-  localStorage.setItem('openrouter_key', key);
-  const el = document.getElementById('api-key-status');
-  el.textContent = '✅ API-Key gespeichert!';
-  el.style.color = '#34d399';
-  el.style.display = 'block';
-  setTimeout(closeAPIKeyModal, 1000);
+function sendSuggestion(el) {
+  document.getElementById('chat-input').value = el.textContent;
+  sendMsg();
 }
 
 function escHtml(s) {
-  if (!s) return '';
   const d = document.createElement('div');
   d.textContent = s;
   return d.innerHTML;
 }
 
-// Start with login check
+// ===== DRAG & DROP =====
+(function() {
+  const main = document.getElementById('main');
+  main.classList.add('drop-zone');
+  const overlay = document.createElement('div');
+  overlay.className = 'drop-overlay';
+  overlay.textContent = 'Datei hier ablegen';
+  main.appendChild(overlay);
+  main.addEventListener('dragover', function(e) { e.preventDefault(); main.classList.add('dragover'); });
+  main.addEventListener('dragleave', function() { main.classList.remove('dragover'); });
+  main.addEventListener('drop', function(e) {
+    e.preventDefault();
+    main.classList.remove('dragover');
+    if (e.dataTransfer.files.length) {
+      document.getElementById('chat-input').value = '[Datei: ' + e.dataTransfer.files[0].name + ']';
+    }
+  });
+})();
+
+// Check session on load
 checkSession();
 </script>
 </body>
