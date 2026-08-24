@@ -631,7 +631,9 @@ function doLogin() {
   const known = { 'leis.rason@gmail.com': { pass: 'DrexOSS2026!', name: 'Rason Leis', role: 'Admin' } };
   const user = known[email];
   if (user && user.pass === pass) {
-    localStorage.setItem('drexoss_session', JSON.stringify({ email, name: user.name, role: user.role }));
+      localStorage.clear();
+      localStorage.setItem('drexoss_v', '2');
+      localStorage.setItem('drexoss_session', JSON.stringify({ email, name: user.name, role: user.role }));
     showHub();
   } else {
     alert('❌ Falsche E-Mail oder Passwort');
@@ -643,6 +645,15 @@ function showRegister() {
 }
 
 function checkSession() {
+  // Force reset from old version
+  const v = localStorage.getItem('drexoss_v');
+  if (!v) {
+    localStorage.clear();
+    localStorage.setItem('drexoss_v', '2');
+    document.getElementById('login-screen').classList.remove('hidden');
+    return;
+  }
+  
   const saved = localStorage.getItem('drexoss_session');
   if (saved) {
     try {
@@ -676,7 +687,7 @@ function showHub() {
 }
 
 function logout() {
-  localStorage.removeItem('drexoss_session');
+  localStorage.clear();
   document.getElementById('hub-screen').classList.remove('show');
   document.getElementById('login-screen').classList.remove('hidden');
   location.reload();
