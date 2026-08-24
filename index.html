@@ -664,8 +664,8 @@ function checkSession() {
       }
     } catch(e) {}
   }
-  // Clear bad session and show login
-  localStorage.removeItem('drexoss_session');
+  // Clear bad session
+  localStorage.clear();
   document.getElementById('login-screen').classList.remove('hidden');
 }
 
