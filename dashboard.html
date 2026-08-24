@@ -183,7 +183,7 @@ body { font-family:'Inter',system-ui,sans-serif; background:#0a0a1a; color:#f1f1
             <span class="profile-name" id="profile-name">Rason</span>
             <div class="profile-dropdown" id="profile-dropdown">
               <div class="pd-header">
-                              <div class="pd-avatar" id="pd-avatar" style="cursor:pointer;position:relative;overflow:hidden;">R
+                              <div class="pd-avatar" id="pd-avatar" style="cursor:pointer;position:relative;overflow:hidden;" onclick="event.stopPropagation();document.getElementById('af').click()" title="Profilbild ändern">R
                                                                           <div class="cam-overlay">📷</div>
                                                                         </div>
                                                             <div class="pd-info">
@@ -192,7 +192,7 @@ body { font-family:'Inter',system-ui,sans-serif; background:#0a0a1a; color:#f1f1
                                                               <span class="pd-role admin" id="pd-role-badge">Admin</span>
                                                               <label style="display:inline-flex;align-items:center;gap:4px;margin-top:0.3rem;font-size:0.65rem;color:#5e5ce6;cursor:pointer;text-decoration:underline;text-underline-offset:2px;">
                                                                 <span>👤 Bild ändern</span>
-                                                                <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" onchange="uploadAvatar(this)" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">
+                                                                <input type="file" id="af" accept="image/png,image/jpeg,image/webp,image/gif" onchange="uploadAvatar(this)" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">
                                                               </label>
                               </div>
                             </div>
