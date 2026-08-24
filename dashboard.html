@@ -183,16 +183,17 @@ body { font-family:'Inter',system-ui,sans-serif; background:#0a0a1a; color:#f1f1
             <span class="profile-name" id="profile-name">Rason</span>
             <div class="profile-dropdown" id="profile-dropdown">
               <div class="pd-header">
-                <div class="pd-avatar" id="pd-avatar" style="cursor:pointer;position:relative;overflow:hidden;" onclick="event.stopPropagation();document.getElementById('avatar-input').click()" title="Profilbild ändern">R
-                              <div class="cam-overlay">📷</div>
-                              <input type="file" id="avatar-input" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="uploadAvatar(this)" onclick="event.stopPropagation();">
+                              <div class="pd-avatar" id="pd-avatar" style="cursor:pointer;position:relative;overflow:hidden;" onclick="event.stopPropagation();document.getElementById('avatar-input').click()" title="Profilbild ändern">R
+                                            <div class="cam-overlay">📷</div>
+                                            <input type="file" id="avatar-input" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="uploadAvatar(this)" onclick="event.stopPropagation();">
+                                          </div>
+                              <div class="pd-info">
+                                <h4 id="pd-name">Rason</h4>
+                                <span id="pd-email">leis.rason@gmail.com</span>
+                                <span class="pd-role admin" id="pd-role-badge">Admin</span>
+                                <div style="margin-top:0.3rem;font-size:0.65rem;color:#5e5ce6;cursor:pointer;text-decoration:underline;text-underline-offset:2px;" onclick="event.stopPropagation();document.getElementById('avatar-input').click()">👤 Bild ändern</div>
+                              </div>
                             </div>
-                <div class="pd-info">
-                  <h4 id="pd-name">Rason</h4>
-                  <span id="pd-email">leis.rason@gmail.com</span>
-                  <span class="pd-role admin" id="pd-role-badge">Admin</span>
-                </div>
-              </div>
               <div class="pd-row"><span class="label">Rolle</span><span id="pd-role-text">Admin</span></div>
               <div class="pd-row"><span class="label">Status</span><span id="pd-status" style="color:#34d399;">Aktiv</span></div>
               <div class="pd-actions">
@@ -277,22 +278,31 @@ body { font-family:'Inter',system-ui,sans-serif; background:#0a0a1a; color:#f1f1
 
   <!-- ====== PASSWORT MODAL ====== -->
   <div class="modal-overlay" id="pw-modal">
-    <div class="modal">
-      <h3>🔑 Passwort ändern</h3>
-      <div class="form-group">
-        <label>Aktuelles Passwort</label>
-        <input id="pw-current" type="password" placeholder="••••••••">
-      </div>
-      <div class="form-row">
+      <div class="modal">
+        <h3>🔑 Passwort ändern</h3>
         <div class="form-group">
-          <label>Neues Passwort</label>
-          <input id="pw-new" type="password" placeholder="••••••••">
+          <label>Aktuelles Passwort</label>
+          <div style="position:relative;">
+            <input id="pw-current" type="password" placeholder="••••••••" style="width:100%;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;padding-right:2rem;">
+            <span onclick="togglePW('pw-current',this)" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:1rem;color:#64748b;user-select:none;">👁️</span>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Bestätigen</label>
-          <input id="pw-confirm" type="password" placeholder="••••••••">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Neues Passwort</label>
+            <div style="position:relative;">
+              <input id="pw-new" type="password" placeholder="••••••••" style="width:100%;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;padding-right:2rem;">
+              <span onclick="togglePW('pw-new',this)" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:1rem;color:#64748b;user-select:none;">👁️</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Bestätigen</label>
+            <div style="position:relative;">
+              <input id="pw-confirm" type="password" placeholder="••••••••" style="width:100%;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;padding-right:2rem;">
+              <span onclick="togglePW('pw-confirm',this)" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:1rem;color:#64748b;user-select:none;">👁️</span>
+            </div>
+          </div>
         </div>
-      </div>
       <div id="pw-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.5rem;display:none;"></div>
       <div class="modal-actions">
         <button class="btn btn-ghost" onclick="closePWModal()">Abbrechen</button>
@@ -410,66 +420,59 @@ async function loadProfile() {
   
     // Avatar image
     const avatarUrl = currentUser.profile && currentUser.profile.avatar_url;
-    if (avatarUrl) {
-      const fullUrl = avatarUrl.startsWith('http') ? avatarUrl : SUPABASE_URL + '/storage/v1/object/public/' + avatarUrl;
+        if (avatarUrl) {
+          const fullUrl = avatarUrl.startsWith('http') || avatarUrl.startsWith('data:') ? avatarUrl : SUPABASE_URL + '/storage/v1/object/public/' + avatarUrl;
       document.getElementById('profile-avatar').style.backgroundImage = 'url(' + fullUrl + ')';
       document.getElementById('profile-avatar').textContent = '';
       document.getElementById('pd-avatar').style.backgroundImage = 'url(' + fullUrl + ')';
       document.getElementById('pd-avatar').textContent = '';
           }
           return true;
-        }
+                  }
 
-  async function uploadAvatar(input) {
-    const file = input.files[0];
-    if (!file) return;
+            function togglePW(id, el) {
+              const inp = document.getElementById(id);
+              if (inp.type === 'password') { inp.type = 'text'; el.textContent = '🙈'; }
+              else { inp.type = 'password'; el.textContent = '👁️'; }
+            }
+
+            async function uploadAvatar(input) {
+      const file = input.files[0];
+      if (!file) return;
   
-    if (file.size > 5 * 1024 * 1024) { alert('❌ Bild zu groß (max 5MB)'); return; }
+      if (file.size > 5 * 1024 * 1024) { alert('❌ Bild zu groß (max 5MB)'); return; }
+      if (!file.type.match('image/(png|jpeg|webp|gif)')) { alert('❌ Nur PNG/JPG/WebP/GIF erlaubt'); return; }
   
-    try {
-      const ext = file.name.split('.').pop();
-      const fileName = 'avatar_' + currentUser.email.replace(/[^a-zA-Z0-9]/g, '_') + '.' + ext;
-    
-      // Upload to Supabase Storage
-      const formData = new FormData();
-      formData.append('file', file);
-    
-      const res = await fetch(SUPABASE_URL + '/storage/v1/object/avatars/' + fileName, {
-        method: 'POST',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY },
-        body: file
-      });
-    
-      if (!res.ok) {
-        const err = await res.text();
-        throw new Error(err.substring(0,100));
+      try {
+        // Read as base64 data URL
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          const dataUrl = e.target.result;
+      
+          // Save to user_profiles (base64 data URL in avatar_url field)
+          await fetch(SUPABASE_URL + '/rest/v1/user_profiles?email=eq.' + encodeURIComponent(currentUser.email), {
+            method: 'PATCH',
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+            body: JSON.stringify({ avatar_url: dataUrl })
+          });
+      
+          // Update local
+          if (currentUser.profile) currentUser.profile.avatar_url = dataUrl;
+          localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
+      
+          // Show image
+          document.getElementById('profile-avatar').style.backgroundImage = 'url(' + dataUrl + ')';
+          document.getElementById('profile-avatar').textContent = '';
+          document.getElementById('pd-avatar').style.backgroundImage = 'url(' + dataUrl + ')';
+          document.getElementById('pd-avatar').textContent = '';
+      
+          input.value = '';
+        };
+        reader.readAsDataURL(file);
+      } catch(e) {
+        alert('❌ Upload fehlgeschlagen: ' + e.message);
       }
-    
-      const avatarPath = 'avatars/' + fileName;
-      const fullUrl = SUPABASE_URL + '/storage/v1/object/public/' + avatarPath;
-    
-      // Save to user_profiles
-      await fetch(SUPABASE_URL + '/rest/v1/user_profiles?email=eq.' + encodeURIComponent(currentUser.email), {
-        method: 'PATCH',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ avatar_url: avatarPath })
-      });
-    
-      // Update local
-      if (currentUser.profile) currentUser.profile.avatar_url = avatarPath;
-      localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
-    
-      // Show image
-      document.getElementById('profile-avatar').style.backgroundImage = 'url(' + fullUrl + ')';
-      document.getElementById('profile-avatar').textContent = '';
-      document.getElementById('pd-avatar').style.backgroundImage = 'url(' + fullUrl + ')';
-      document.getElementById('pd-avatar').textContent = '';
-    
-      input.value = '';
-    } catch(e) {
-      alert('❌ Upload fehlgeschlagen: ' + e.message);
     }
-  }
 
 function showLogin() {
   const full = document.querySelector('.full-layout') || document.body;
@@ -488,9 +491,12 @@ function showLogin() {
                   <input id="login-email" type="email" value="leis.rason@gmail.com" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
                 </div>
                 <div style="margin-bottom:1.25rem;">
-                  <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">PASSWORT</label>
-                  <input id="login-pass" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;box-sizing:border-box;">
-                </div>
+                                  <label style="display:block;font-size:0.7rem;color:#8888a0;margin-bottom:0.25rem;">PASSWORT</label>
+                                  <div style="position:relative;">
+                                    <input id="login-pass" type="password" placeholder="••••••••" style="width:100%;padding:0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.85rem;font-family:inherit;outline:none;box-sizing:border-box;padding-right:2rem;">
+                                    <span onclick="togglePW('login-pass',this)" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:1rem;color:#64748b;user-select:none;">👁️</span>
+                                  </div>
+                                </div>
                 <button type="submit" style="width:100%;padding:0.6rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.85rem;cursor:pointer;font-family:inherit;font-weight:500;">Anmelden</button>
                 </form>
         <div style="text-align:center;margin-top:1rem;font-size:0.78rem;color:#64748b;">
@@ -565,15 +571,21 @@ async function doLogin() {
             </div>
 
             <div style="display:flex;gap:0.5rem;margin-bottom:0.6rem;">
-              <div style="flex:1;">
-                <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">PASSWORT</label>
-                <input id="reg-pass" type="password" placeholder="••••••••" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;">
-              </div>
-              <div style="flex:1;">
-                <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">PASSWORT BESTÄTIGEN</label>
-                <input id="reg-pass2" type="password" placeholder="••••••••" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;">
-              </div>
-            </div>
+                          <div style="flex:1;">
+                            <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">PASSWORT</label>
+                            <div style="position:relative;">
+                              <input id="reg-pass" type="password" placeholder="••••••••" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;padding-right:1.8rem;">
+                              <span onclick="togglePW('reg-pass',this)" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:0.85rem;color:#64748b;user-select:none;">👁️</span>
+                            </div>
+                          </div>
+                          <div style="flex:1;">
+                            <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">PASSWORT BESTÄTIGEN</label>
+                            <div style="position:relative;">
+                              <input id="reg-pass2" type="password" placeholder="••••••••" style="width:100%;padding:0.4rem 0.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#f1f1f9;font-size:0.82rem;font-family:inherit;outline:none;box-sizing:border-box;padding-right:1.8rem;">
+                              <span onclick="togglePW('reg-pass2',this)" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:0.85rem;color:#64748b;user-select:none;">👁️</span>
+                            </div>
+                          </div>
+                        </div>
 
             <div style="margin-bottom:0.6rem;">
               <label style="display:block;font-size:0.65rem;color:#8888a0;margin-bottom:0.2rem;">TYP</label>
