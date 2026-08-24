@@ -182,18 +182,19 @@ body { font-family:'Inter',system-ui,sans-serif; background:#0a0a1a; color:#f1f1
             <div class="profile-avatar" id="profile-avatar">R</div>
             <span class="profile-name" id="profile-name">Rason</span>
             <div class="profile-dropdown" id="profile-dropdown">
-              <div class="pd-header">
-                              <div class="pd-avatar" id="pd-avatar" style="cursor:pointer;position:relative;overflow:hidden;" onclick="event.stopPropagation();document.getElementById('af').click()" title="Profilbild ändern">R
-                                                                          <div class="cam-overlay">📷</div>
-                                                                        </div>
-                                                            <div class="pd-info">
-                                                              <h4 id="pd-name">Rason</h4>
-                                                              <span id="pd-email">leis.rason@gmail.com</span>
-                                                              <span class="pd-role admin" id="pd-role-badge">Admin</span>
-                                                              <label style="display:inline-flex;align-items:center;gap:4px;margin-top:0.3rem;font-size:0.65rem;color:#5e5ce6;cursor:pointer;text-decoration:underline;text-underline-offset:2px;">
-                                                                <span>👤 Bild ändern</span>
-                                                                <input type="file" id="af" accept="image/png,image/jpeg,image/webp,image/gif" onchange="uploadAvatar(this)" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">
-                                                              </label>
+              <div class="pd-header" style="position:relative;">
+                                            <div class="pd-avatar" id="pd-avatar" style="width:66px;height:66px;border-radius:50%;background:#1e1e3a;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:600;color:#f1f1f9;position:relative;overflow:hidden;flex-shrink:0;background-size:cover;background-position:center;">R
+                                                          <div class="cam-overlay" style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.5);text-align:center;font-size:0.7rem;padding:2px 0;">📷</div>
+                                                          <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" onchange="uploadAvatar(this)" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;">
+                                                        </div>
+                                            <div class="pd-info">
+                                              <h4 id="pd-name">Rason</h4>
+                                              <span id="pd-email">leis.rason@gmail.com</span>
+                                              <span class="pd-role admin" id="pd-role-badge">Admin</span>
+                                              <label style="display:inline-block;margin-top:0.3rem;font-size:0.65rem;color:#5e5ce6;cursor:pointer;text-decoration:underline;text-underline-offset:2px;">
+                                                👤 Bild ändern
+                                                <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" onchange="uploadAvatar(this)" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">
+                                              </label>
                               </div>
                             </div>
               <div class="pd-row"><span class="label">Rolle</span><span id="pd-role-text">Admin</span></div>
