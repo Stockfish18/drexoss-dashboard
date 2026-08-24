@@ -153,6 +153,16 @@ body { font-family:'Inter',system-ui,sans-serif; background:#0a0a1a; color:#f1f1
 .pd-logout { width:100%; padding:0.45rem; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); border-radius:6px; color:#ef4444; font-size:0.78rem; cursor:pointer; font-family:inherit; transition:all 0.12s; }
 .pd-logout:hover { background:rgba(239,68,68,0.2); }
 
+/* ====== HUB VIEW ====== */
+.hub-view { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:70vh; text-align:center; }
+.hub-view h1 { font-size:1.8rem; font-weight:700; margin-bottom:0.5rem; background:linear-gradient(135deg,#5e5ce6,#7c7aff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.hub-view p { font-size:0.9rem; color:#64748b; margin-bottom:2rem; }
+.hub-cards { display:flex; gap:1.5rem; flex-wrap:wrap; justify-content:center; }
+.hub-card { width:260px; background:#0f0f23; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:2rem 1.5rem; cursor:pointer; transition:all 0.2s; text-align:center; }
+.hub-card:hover { border-color:#5e5ce6; transform:translateY(-3px); box-shadow:0 8px 30px rgba(94,92,230,0.15); }
+.hub-card .icon { font-size:3rem; margin-bottom:1rem; }
+.hub-card h3 { font-size:1.1rem; font-weight:600; color:#f1f1f9; margin-bottom:0.4rem; }
+.hub-card p { font-size:0.78rem; color:#64748b; margin-bottom:0; }
 @media(max-width:900px) { .sidebar { display:none; } .chat-panel { display:none; } .column { min-width:200px; } }
 </style>
 </head>
@@ -343,7 +353,11 @@ function checkSession() {
   if (saved) {
     try {
       currentUser = JSON.parse(saved);
-      loadProfile().then(hasAccess => { if (hasAccess) loadAll(); });
+      loadProfile().then(result => { 
+        if (result === 'hub') showHub();
+        else if (result === 'dashboard') loadAll();
+        // false = blocked page (handled in loadProfile)
+      });
     } catch(e) { showLogin(); }
   } else {
     showLogin();
@@ -430,8 +444,9 @@ async function loadProfile() {
       document.getElementById('pd-avatar').style.backgroundImage = 'url(' + fullUrl + ')';
       document.getElementById('pd-avatar').textContent = '';
           }
-          return true;
-                  }
+          // Hub for team roles, dashboard for customer
+                    return (role === 'customer') ? 'dashboard' : 'hub';
+                            }
 
             function togglePW(id, el) {
               const inp = document.getElementById(id);
@@ -477,6 +492,45 @@ async function loadProfile() {
         alert('❌ Upload fehlgeschlagen: ' + e.message);
       }
     }
+
+            function showHub() {
+              document.getElementById('page-title').textContent = 'Start';
+              document.getElementById('kanban-view').innerHTML = `
+                <div class="hub-view">
+                  <h1>Willkommen, ${currentUser?.profile?.first_name || 'User'} 👋</h1>
+                  <p>Wohin möchtest du gehen?</p>
+                  <div class="hub-cards">
+                    <div class="hub-card" onclick="showStockfishChat()">
+                      <div class="icon">🤖</div>
+                      <h3>Stockfish Chat</h3>
+                      <p>Chatte mit dem KI-Assistenten — kontextbasiert und intelligent.</p>
+                    </div>
+                    <div class="hub-card" onclick="loadAll()">
+                      <div class="icon">📊</div>
+                      <h3>Dashboard</h3>
+                      <p>Projekte, Tasks, Kanban und Administration.</p>
+                    </div>
+                  </div>
+                </div>
+              `;
+              document.getElementById('project-detail').style.display = 'none';
+              document.getElementById('task-detail-view').style.display = 'none';
+            }
+
+            function showStockfishChat() {
+              document.getElementById('page-title').textContent = 'Stockfish Chat';
+              document.getElementById('kanban-view').innerHTML = `
+                <div class="hub-view">
+                  <h1>🤖 Stockfish Chat</h1>
+                  <p style="color:#64748b;max-width:500px;">Hier entsteht der persönliche KI-Assistent mit vollem Kontext — Memory, Projekte und Tasks. Bald verfügbar!</p>
+                  <div style="margin-top:2rem;">
+                    <button class="btn btn-primary" onclick="showHub()">← Zurück zur Startseite</button>
+                  </div>
+                </div>
+              `;
+              document.getElementById('project-detail').style.display = 'none';
+              document.getElementById('task-detail-view').style.display = 'none';
+            }
 
 function showLogin() {
   const full = document.querySelector('.full-layout') || document.body;
