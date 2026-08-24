@@ -185,7 +185,7 @@ body { font-family:'Inter',system-ui,sans-serif; background:#0a0a1a; color:#f1f1
               <div class="pd-header">
                               <div class="pd-avatar" id="pd-avatar" style="cursor:pointer;position:relative;overflow:hidden;" onclick="event.stopPropagation();document.getElementById('avatar-input').click()" title="Profilbild ändern">R
                                             <div class="cam-overlay">📷</div>
-                                            <input type="file" id="avatar-input" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="uploadAvatar(this)" onclick="event.stopPropagation();">
+                                            <input type="file" id="avatar-input" accept="image/png,image/jpeg,image.webp,image/gif" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none;" onchange="uploadAvatar(this)" onclick="event.stopPropagation();">
                                           </div>
                               <div class="pd-info">
                                 <h4 id="pd-name">Rason</h4>
@@ -450,11 +450,12 @@ async function loadProfile() {
           const dataUrl = e.target.result;
       
           // Save to user_profiles (base64 data URL in avatar_url field)
-          await fetch(SUPABASE_URL + '/rest/v1/user_profiles?email=eq.' + encodeURIComponent(currentUser.email), {
-            method: 'PATCH',
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-            body: JSON.stringify({ avatar_url: dataUrl })
-          });
+                    const res = await fetch(SUPABASE_URL + '/rest/v1/user_profiles?email=eq.' + encodeURIComponent(currentUser.email), {
+                      method: 'PATCH',
+                      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+                      body: JSON.stringify({ avatar_url: dataUrl })
+                    });
+                    if (!res.ok) { throw new Error('Speichern fehlgeschlagen (HTTP ' + res.status + ')'); }
       
           // Update local
           if (currentUser.profile) currentUser.profile.avatar_url = dataUrl;
