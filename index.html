@@ -540,7 +540,7 @@
     <div class="sb-item">Cronjobs</div>
     <div class="sb-item">Einstellungen</div>
         <div class="sb-item" onclick="logout()" style="color:#ef4444;">Abmelden</div>
-        <div class="sb-user" style="cursor:pointer;" onclick="logout()">
+        <div class="sb-user" onclick="logout()" style="cursor:pointer;display:flex;align-items:center;gap:0.5rem;padding:0.65rem 0.75rem;border-top:1px solid #141414;">
               <span class="sb-dot"></span>
               <div class="sb-avatar">R</div>
               <div class="sb-user-info">
@@ -765,7 +765,7 @@ function escHtml(s) {
 })();
 
 // Check session on load
-const DEPLOY_TS = "20260824_214500";
+const DEPLOY_TS = "20260824_215000";
 checkSession();
 </script>
 </body>
