@@ -647,9 +647,14 @@ function checkSession() {
   if (saved) {
     try {
       const data = JSON.parse(saved);
-      if (data.email) { showHub(); return; }
+      if (data && data.email && data.email.includes('@')) {
+        showHub();
+        return;
+      }
     } catch(e) {}
   }
+  // Clear bad session and show login
+  localStorage.removeItem('drexoss_session');
   document.getElementById('login-screen').classList.remove('hidden');
 }
 
@@ -674,6 +679,7 @@ function logout() {
   localStorage.removeItem('drexoss_session');
   document.getElementById('hub-screen').classList.remove('show');
   document.getElementById('login-screen').classList.remove('hidden');
+  location.reload();
 }
 
 // ===== CHAT =====
