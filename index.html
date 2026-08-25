@@ -244,12 +244,12 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
         <div class="cs-admin-item" onclick="alert('Einstellungen folgt')">⚙️ Einstellungen</div>
       </div>
     </div>
-    <div class="cs-user" onclick="logout()">
+    <div class="cs-user" onclick="openAccountModal()">
       <span class="cs-dot"></span>
       <div class="cs-avatar" id="cs-avatar-letter">R</div>
       <div class="cs-user-info">
         <div class="cs-user-name" id="cs-user-name">Rason Leis</div>
-        <div class="cs-user-role" id="cs-user-role">Admin · Abmelden</div>
+        <div class="cs-user-role" id="cs-user-role">Admin</div>
       </div>
     </div>
   </div>
@@ -347,6 +347,32 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
   </div>
 </div>
 
+<!-- ===== ACCOUNT MODAL ===== -->
+<div class="modal-overlay" id="account-modal" onclick="if(event.target===this)closeAccountModal()">
+  <div class="modal" style="text-align:center;">
+    <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#5e5ce6,#7c7aff);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:#fff;margin:0 auto 1rem;cursor:pointer;" id="ac-avatar" onclick="document.getElementById('ac-avatar-input').click()">
+      <span id="ac-avatar-letter">R</span>
+    </div>
+    <input type="file" id="ac-avatar-input" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
+    <div style="font-size:0.7rem;color:#5e5ce6;cursor:pointer;margin-bottom:1.5rem;" onclick="document.getElementById('ac-avatar-input').click()">Profilbild ändern</div>
+
+    <div style="text-align:left;max-width:320px;margin:0 auto;">
+      <div class="form-group"><label>Name</label><input id="ac-name" value="" style="font-weight:500;" oninput="document.getElementById('ac-save-btn').style.display=this.value.trim()&&this.value.trim()!==(currentUser?.name||'')?'block':'none'"></div>
+      <div class="form-group"><label>E-Mail</label><input id="ac-email" value="" readonly style="color:#8888a0;cursor:not-allowed;"></div>
+      <div class="form-group"><label>Rolle</label><input id="ac-role" value="" readonly style="color:#5e5ce6;cursor:not-allowed;"></div>
+    </div>
+
+    <div style="margin-top:1.5rem;display:flex;flex-direction:column;gap:0.5rem;">
+      <button class="btn btn-primary-sm" onclick="closeAccountModal();openPasswordModal()" style="padding:0.5rem;width:100%;">🔑 Passwort ändern</button>
+      <button class="btn btn-ghost" onclick="saveAccountName()" style="padding:0.5rem;width:100%;display:none;" id="ac-save-btn">💾 Name speichern</button>
+    </div>
+
+    <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #1a1a1a;">
+      <button onclick="closeAccountModal();logout()" style="background:transparent;border:none;color:#ef4444;font-size:0.8rem;cursor:pointer;font-family:inherit;padding:0.3rem 0.5rem;">🚪 Abmelden</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const SUPABASE_URL = 'https://rmveqbegqfthwdopzykh.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ByDyItDAH-NvgMLIitjl9w_VdNJZqtp';
@@ -430,7 +456,7 @@ function showHub() {
   if (!allowedRoles.includes(currentRole)) { openDashboard(); return; }
   hub.classList.add('show');
   document.getElementById('cs-user-name').textContent = currentUser.name || currentUser.email;
-  document.getElementById('cs-user-role').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1) + ' · Abmelden';
+  document.getElementById('cs-user-role').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1);
   document.getElementById('cs-avatar-letter').textContent = (currentUser.name || currentUser.email).charAt(0).toUpperCase();
   loadAllData();
 }
@@ -744,6 +770,46 @@ async function loadKPIs() {
 }
 
 function escHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+// ===== ACCOUNT MODAL =====
+function openAccountModal() {
+  document.getElementById('ac-name').value = currentUser?.name || '';
+  document.getElementById('ac-email').value = currentUser?.email || '';
+  document.getElementById('ac-role').value = currentRole.charAt(0).toUpperCase() + currentRole.slice(1);
+  document.getElementById('ac-avatar-letter').textContent = (currentUser?.name || currentUser?.email || '?').charAt(0).toUpperCase();
+  document.getElementById('ac-save-btn').style.display = 'none';
+  document.getElementById('account-modal').classList.add('show');
+}
+function closeAccountModal() { document.getElementById('account-modal').classList.remove('show'); }
+
+function saveAccountName() {
+  const newName = document.getElementById('ac-name').value.trim();
+  if (!newName || newName === currentUser?.name) { document.getElementById('ac-save-btn').style.display = 'none'; return; }
+  // Update in Supabase
+  supabaseApi('user_profiles?email=eq.' + encodeURIComponent(currentUser.email), {
+    method: 'PATCH', body: JSON.stringify({ name: newName })
+  }).then(() => {
+    currentUser.name = newName;
+    localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
+    document.getElementById('cs-user-name').textContent = newName;
+    document.getElementById('ac-save-btn').style.display = 'none';
+  }).catch(() => { alert('Fehler beim Speichern'); });
+}
+
+function uploadAvatar(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('ac-avatar-letter').textContent = '📷';
+    document.getElementById('ac-avatar').style.backgroundImage = 'url(' + e.target.result + ')';
+    document.getElementById('ac-avatar').style.backgroundSize = 'cover';
+    document.getElementById('ac-avatar-letter').style.display = 'none';
+    // Save to localStorage for now (Supabase Storage später)
+    localStorage.setItem('drexoss_avatar', e.target.result);
+  };
+  reader.readAsDataURL(file);
+}
 
 // ===== INIT =====
 checkSession();
