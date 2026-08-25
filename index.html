@@ -132,47 +132,63 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 /* Dashboard View */
 .dashboard-view { display:none; flex-direction:column; flex:1; overflow:hidden; }
 .dashboard-view.active { display:flex; }
-.dash-topbar { display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1.25rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+.dash-topbar { display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1.25rem; border-bottom:1px solid #141414; }
 .dash-topbar-left { display:flex; align-items:center; gap:0.5rem; }
-.dash-topbar-left h2 { font-size:0.9rem; font-weight:600; }
-.dash-topbar-left .bread { color:#5c5c78; font-size:0.78rem; cursor:pointer; }
-.dash-topbar-left .bread:hover { color:#888; }
+.dash-topbar-left h2 { font-size:0.9rem; font-weight:600; color:#e8e8e8; }
+.dash-topbar-left .bread { color:#666; font-size:0.78rem; cursor:pointer; transition:color 0.12s; }
+.dash-topbar-left .bread:hover { color:#e8e8e8; }
 .dash-content { flex:1; padding:1.25rem; overflow-y:auto; }
-.kanban { display:flex; gap:0.75rem; overflow-x:auto; padding-bottom:0.5rem; min-height:200px; }
-.column { min-width:240px; max-width:300px; background:#0f0f23; border-radius:10px; border:1px solid rgba(255,255,255,0.06); display:flex; flex-direction:column; max-height:calc(100vh - 300px); }
-.col-h { padding:0.75rem 1rem; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
-.col-h h3 { font-size:0.8rem; font-weight:500; }
-.col-h .count { font-size:0.65rem; color:#5c5c78; background:rgba(255,255,255,0.04); padding:0.1rem 0.4rem; border-radius:999px; }
-.col-body { flex:1; padding:0.5rem; overflow-y:auto; }
-.task-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:0.6rem 0.75rem; margin-bottom:0.4rem; cursor:pointer; transition:all 0.12s; }
-.task-card:hover { border-color:rgba(94,92,230,0.3); }
-.task-card .t-title { font-size:0.78rem; font-weight:500; margin-bottom:0.15rem; }
-.task-card .t-desc { font-size:0.65rem; color:#8888a0; margin-bottom:0.2rem; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; }
-.task-card .t-meta { display:flex; align-items:center; gap:0.4rem; font-size:0.6rem; color:#5c5c78; flex-wrap:wrap; }
-.task-card .t-num { color:#5e5ce6; }
-.task-card .t-assignee { padding:0.05rem 0.3rem; background:rgba(94,92,230,0.1); color:#5e5ce6; border-radius:4px; }
-.task-card .t-effort { color:#fbbf24; }
+
+/* Project Cards (Overview) */
+.proj-card { padding:1rem 1rem; border-bottom:1px solid #0d0d0d; cursor:pointer; transition:all 0.12s; }
+.proj-card:hover { background:#080808; }
+.proj-card:last-child { border-bottom:none; }
+.proj-card-top { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.3rem; }
+.proj-card-code { font-family:'Orbitron',sans-serif; font-size:0.65rem; color:#5e5ce6; font-weight:700; letter-spacing:0.06em; min-width:48px; }
+.proj-card-name { font-size:0.9rem; font-weight:600; color:#e8e8e8; }
+.proj-card-progress { font-size:0.65rem; color:#555; }
+.proj-card-story { font-size:0.75rem; color:#666; line-height:1.5; margin-bottom:0.4rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.proj-card-meta { display:flex; gap:0.75rem; font-size:0.65rem; color:#555; flex-wrap:wrap; }
+
+/* Task List (inside project) */
+.task-item { display:flex; align-items:center; gap:0.75rem; padding:0.5rem 0; border-bottom:1px solid #0d0d0d; cursor:pointer; transition:all 0.12s; }
+.task-item:hover { background:#080808; }
+.task-item:last-child { border-bottom:none; }
+.task-item-code { font-size:0.65rem; color:#5e5ce6; font-weight:600; min-width:80px; flex-shrink:0; }
+.task-item-title { flex:1; font-size:0.82rem; color:#ccc; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.task-item-title:hover { color:#e8e8e8; }
+.task-item-status { font-size:0.6rem; min-width:70px; text-align:right; }
+.task-item-status.open { color:#666; }
+.task-item-status.progress { color:#888; }
+.task-item-status.done { color:#34d399; }
+.task-item-assignee { font-size:0.6rem; color:#444; min-width:60px; text-align:right; }
+
+/* Project Detail Header */
 .proj-detail, .task-detail-view { display:none; }
 .proj-detail.active, .task-detail-view.active { display:block; }
-.proj-header { margin-bottom:0.5rem; }
-.proj-header h2 { font-size:1.3rem; font-weight:600; display:flex; align-items:center; gap:0.5rem; }
-.proj-header .meta { font-size:0.75rem; color:#8888a0; display:flex; gap:0.75rem; flex-wrap:wrap; }
+.proj-header { margin-bottom:0.75rem; padding-bottom:0.75rem; border-bottom:1px solid #141414; }
+.proj-header h2 { font-size:1.1rem; font-weight:600; display:flex; align-items:center; gap:0.5rem; color:#e8e8e8; }
+.proj-header .meta { font-size:0.72rem; color:#555; display:flex; gap:1rem; flex-wrap:wrap; margin-top:0.25rem; }
+.proj-section-title { font-size:0.68rem; color:#555; text-transform:uppercase; letter-spacing:0.08em; margin:1rem 0 0.5rem; }
+.proj-story { font-size:0.85rem; color:#888; line-height:1.7; font-style:italic; padding:0.75rem 0; border-bottom:1px solid #0d0d0d; }
+.proj-kpi { display:flex; gap:1.5rem; margin:0.5rem 0 1rem; }
+.proj-kpi-item { font-size:0.72rem; color:#666; }
+
+/* Task Detail */
 .task-detail { margin-bottom:1.5rem; }
-.task-detail-header { display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap; justify-content:space-between; }
-.task-detail-title { font-size:1.2rem; font-weight:600; display:flex; align-items:center; gap:0.5rem; }
-.status-select { display:flex; gap:0.3rem; }
-.status-btn { padding:0.25rem 0.6rem; border-radius:6px; font-size:0.7rem; cursor:pointer; border:1px solid transparent; font-family:inherit; transition:all 0.12s; }
-.status-btn.s-open { background:rgba(148,163,184,0.1); color:#94a3b8; border-color:rgba(148,163,184,0.2); }
-.status-btn.s-progress { background:rgba(94,92,230,0.1); color:#5e5ce6; border-color:rgba(94,92,230,0.2); }
-.status-btn.s-done { background:rgba(52,211,153,0.1); color:#34d399; border-color:rgba(52,211,153,0.2); }
-.status-btn.active { border-width:2px; }
-.badge { font-size:0.65rem; padding:0.15rem 0.5rem; border-radius:999px; white-space:nowrap; }
-.badge.green { background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3); }
-.badge.gray { background:rgba(148,163,184,0.15); color:#94a3b8; border:1px solid rgba(148,163,184,0.3); }
-.badge.blue { background:rgba(94,92,230,0.15); color:#5e5ce6; border:1px solid rgba(94,92,230,0.3); }
-.loading { color:#5c5c78; font-size:0.8rem; padding:1rem; text-align:center; }
+.task-detail-header { margin-bottom:0.75rem; padding-bottom:0.75rem; border-bottom:1px solid #141414; }
+.task-detail-title { font-size:1rem; font-weight:600; color:#e8e8e8; margin-bottom:0.25rem; }
+.task-detail-code { font-size:0.68rem; color:#5e5ce6; font-weight:600; }
+.task-detail-desc { font-size:0.82rem; color:#888; line-height:1.6; padding:0.75rem 0; }
+.task-detail-meta { display:flex; gap:1rem; font-size:0.72rem; color:#555; margin-bottom:0.75rem; }
+.status-dot { display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:0.3rem; }
+.status-dot.open { background:#666; }
+.status-dot.progress { background:#888; }
+.status-dot.done { background:#34d399; }
+
+.loading { color:#555; font-size:0.8rem; padding:1rem; text-align:center; }
 .error { color:#ef4444; font-size:0.8rem; padding:1rem; }
-.empty { color:#5c5c78; font-size:0.8rem; padding:1rem; text-align:center; }
+.empty { color:#444; font-size:0.78rem; padding:1rem; text-align:center; }
 
 /* Modals */
 .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center; }
@@ -361,8 +377,8 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
     <div class="dashboard-view" id="dashboard-view">
       <div class="dash-topbar">
         <div class="dash-topbar-left">
-          <span class="bread" id="dash-bread" onclick="showKanbanOverview()">DrexOSS</span>
-          <h2 id="dash-title">📋 Übersicht</h2>
+          <span class="bread" id="dash-bread" onclick="showProjectOverview()">DrexOSS</span>
+          <h2 id="dash-title">Projekte</h2>
         </div>
         <div style="display:flex;gap:0.5rem;">
           <button onclick="openNewTask(null)" style="padding:0.4rem 0.9rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.78rem;cursor:pointer;font-family:inherit;">➕ Neuer Task</button>
@@ -370,7 +386,7 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
         </div>
       </div>
       <div class="dash-content" id="dash-content">
-        <div id="kanban-overview"><div class="kanban" id="kanban-board"></div></div>
+        <div id="project-overview"></div>
         <div id="proj-detail" class="proj-detail"></div>
         <div id="task-detail-view" class="task-detail-view"></div>
       </div>
@@ -508,7 +524,7 @@ let currentUser = null;
 let currentRole = 'customer';
 let chatHistory = [];
 let projects = [], tasks = [], taskMessages = [];
-let currentProjectId = null, currentTaskId = null, editingProjectId = null, editingTaskField = null;
+let currentProjectId = null, currentTaskId = null;
 let recoveryToken = null;
 
 // ===== AUTH =====
@@ -621,26 +637,23 @@ let projectFilter = '';
 
 function renderProjectSidebar() {
   let html = '';
-  const filtered = projects.filter(p => !projectFilter || p.name.toLowerCase().includes(projectFilter.toLowerCase()) || (p.number || '').toLowerCase().includes(projectFilter.toLowerCase()));
+  const filtered = projects.filter(p => !projectFilter || p.name.toLowerCase().includes(projectFilter.toLowerCase()) || (p.code || '').toLowerCase().includes(projectFilter.toLowerCase()));
   for (const p of filtered) {
-    const dotClass = p.status === 'active' ? 'green' : p.status === 'planning' ? 'gray' : 'blue';
     const isActive = currentProjectId === p.id;
+    const open = tasks.filter(t => t.project_id === p.id && t.status === 'open').length;
+    const prog = tasks.filter(t => t.project_id === p.id && t.status === 'in_progress').length;
     html += '<div class="cs-thread ' + (isActive ? 'active' : '') + '" onclick="selectProject(' + p.id + ')">' +
-      '<span class="t-icon">' + (p.icon || '📁') + '</span>' +
-      '<div class="t-info"><div class="t-name">' + escHtml(p.name) + '</div>' +
-      '<div class="t-preview">' + (p.number || '') + ' · ' + (p.progress || 0) + '%</div></div>' +
-      '<span class="sb-dot ' + dotClass + '" style="flex-shrink:0;"></span></div>';
+      '<div class="t-info"><div class="t-name">' + (p.code || '') + ' ' + escHtml(p.name) + '</div>' +
+      '<div class="t-preview">' + prog + '/' + open + ' in Arbeit</div></div></div>';
   }
-  document.getElementById('pj-list').innerHTML = html || '<div style="font-size:0.7rem;color:#5c5c78;padding:0.5rem;text-align:center;">Keine Projekte</div>';
+  document.getElementById('pj-list').innerHTML = html || '<div style="font-size:0.7rem;color:#444;padding:0.5rem;text-align:center;">Keine Projekte</div>';
 }
 
 function filterProjects() {
   projectFilter = document.getElementById('pj-search').value.trim();
   renderProjectSidebar();
 }
-function openDashboard() {
-  showDashboardView();
-}
+function openDashboard() { showDashboardView(); }
 function closeDashboard() {
   document.getElementById('dashboard-view').classList.remove('active');
   document.getElementById('chat-view').style.display = 'flex';
@@ -654,17 +667,17 @@ function showDashboardView() {
   document.getElementById('sidebar-chat').style.display = 'none';
   document.getElementById('sidebar-projects').style.display = 'flex';
   renderProjectSidebar();
-  showKanbanOverview();
+  showProjectOverview();
 }
-function showKanbanOverview() {
-  currentProjectId = null; currentTaskId = null; editingProjectId = null;
+function showProjectOverview() {
+  currentProjectId = null; currentTaskId = null;
   renderProjectSidebar();
   document.getElementById('dash-bread').textContent = 'DrexOSS';
-  document.getElementById('dash-title').textContent = '📋 Übersicht';
-  document.getElementById('kanban-overview').style.display = 'block';
+  document.getElementById('dash-title').textContent = 'Projekte';
+  document.getElementById('project-overview').style.display = 'block';
   document.getElementById('proj-detail').classList.remove('active');
   document.getElementById('task-detail-view').classList.remove('active');
-  renderKanban();
+  renderProjectOverview();
 }
 
 // ===== CHAT =====
@@ -686,7 +699,7 @@ function sendMsg() {
   const typingDiv = document.createElement('div');
   typingDiv.className = 'msg ai';
   typingDiv.id = 'typing-indicator';
-  typingDiv.innerHTML = '<div class="msg-bubble"><p>⌨️ Denke nach...</p></div>';
+  typingDiv.innerHTML = '<div class="msg-bubble"><p>Denke nach...</p></div>';
   msgs.appendChild(typingDiv);
   msgs.scrollTop = msgs.scrollHeight;
   callBackend(text, function(reply) {
@@ -700,7 +713,6 @@ function sendMsg() {
     chatHistory.push({ role: 'assistant', content: reply });
   });
 }
-
 function callBackend(text, callback) {
   const greetings = ['Guten ' + getGreeting() + ' Boss! Ready to build.', 'Moinsen! Was steht an?', 'Hey Boss, alles klar?', getGreeting() + ' Boss! Woran hacken wir heute?', 'Servus! Bin bereit.'];
   fetch(CHAT_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text, user_id: currentUser?.email || 'rason' }) })
@@ -713,101 +725,140 @@ function callBackend(text, callback) {
       callback(responses[Math.floor(Math.random() * responses.length)]);
     });
 }
-
 function sendSuggestion(el) { document.getElementById('chat-input').value = el.textContent; sendMsg(); }
 function newChat() { chatHistory = []; const msgs = document.getElementById('chat-msgs'); msgs.innerHTML = ''; msgs.classList.remove('show'); document.getElementById('empty-state').classList.remove('hidden'); }
 function filterChats() {}
-function showTicketForm() { alert('📝 Ticket-System folgt in Kürze.'); }
+function showTicketForm() { alert('Ticket-System folgt in Kuerze.'); }
 function getGreeting() { const hr = new Date().getHours(); if (hr < 12) return 'Morgen'; if (hr < 18) return 'Tag'; return 'Abend'; }
 
-// ===== KANBAN =====
-function renderKanban() {
-  const open = tasks.filter(t => t.status === 'open');
-  const progress = tasks.filter(t => t.status === 'in_progress');
-  const done = tasks.filter(t => t.status === 'done');
-  document.getElementById('kanban-board').innerHTML =
-    '<div class="column"><div class="col-h"><h3>📋 Offen</h3><span class="count">' + open.length + '</span></div><div class="col-body">' + renderColumnHTML(open) + '</div></div>' +
-    '<div class="column"><div class="col-h"><h3>🔄 In Arbeit</h3><span class="count">' + progress.length + '</span></div><div class="col-body">' + renderColumnHTML(progress) + '</div></div>' +
-    '<div class="column"><div class="col-h"><h3>✅ Erledigt</h3><span class="count">' + done.length + '</span></div><div class="col-body">' + renderColumnHTML(done) + '</div></div>';
-}
-function renderColumnHTML(items) {
-  if (!items.length) return '<div class="empty">Leer</div>';
+// ===== DASHBOARD OVERVIEW: Project Cards =====
+function renderProjectOverview() {
   let html = '';
-  for (const t of items) {
-    html += '<div class="task-card" onclick="selectTask(' + t.id + ')">' +
-      '<div class="t-title">' + escHtml(t.title) + '</div>' +
-      '<div class="t-desc">' + escHtml(t.description || '') + '</div>' +
-      '<div class="t-meta"><span class="t-num">' + (t.number || 'T-?') + '</span>' +
-      '<span class="t-assignee">' + (t.assignee || '—') + '</span>' + (t.effort ? '<span class="t-effort">⏱ ' + escHtml(t.effort) + '</span>' : '') + '</div></div>';
+  for (const p of projects) {
+    const projTasks = tasks.filter(t => t.project_id === p.id);
+    const open = projTasks.filter(t => t.status === 'open').length;
+    const inProg = projTasks.filter(t => t.status === 'in_progress').length;
+    const done = projTasks.filter(t => t.status === 'done').length;
+    const story = parseDescription(p.description).story;
+    const lastTask = projTasks.sort((a,b) => new Date(b.created_at||0) - new Date(a.created_at||0))[0];
+    html += '<div class="proj-card" onclick="selectProject(' + p.id + ')">' +
+      '<div class="proj-card-top">' +
+      '<span class="proj-card-code">' + (p.code || '') + '</span>' +
+      '<span class="proj-card-name">' + escHtml(p.name) + '</span>' +
+      '<span class="proj-card-progress">' + (p.progress || 0) + '%</span></div>' +
+      '<div class="proj-card-story">' + escHtml(story) + '</div>' +
+      '<div class="proj-card-meta">' +
+      '<span>' + open + ' offen</span>' +
+      '<span>' + inProg + ' in Arbeit</span>' +
+      '<span>' + done + ' erledigt</span>' +
+      '<span>· ' + projTasks.length + ' Tasks</span>' +
+      '</div></div>';
   }
-  return html;
+  document.getElementById('project-overview').innerHTML = html || '<div class="empty">Keine Projekte vorhanden</div>';
 }
 
+// ===== PROJECT DETAIL: Task List =====
 function selectProject(id) {
   showDashboardView();
-  currentProjectId = id; currentTaskId = null; editingProjectId = null;
+  currentProjectId = id; currentTaskId = null;
   renderProjectSidebar();
   const p = projects.find(x => x.id === id);
   if (p) {
     document.getElementById('dash-bread').textContent = 'DrexOSS / Projekte';
-    document.getElementById('dash-title').textContent = (p.icon || '📁') + ' ' + p.name;
-    document.getElementById('kanban-overview').style.display = 'none';
+    document.getElementById('dash-title').textContent = (p.code || '') + '  ' + escHtml(p.name);
+    document.getElementById('project-overview').style.display = 'none';
     document.getElementById('task-detail-view').classList.remove('active');
     document.getElementById('proj-detail').classList.add('active');
     renderProjectDetail(p);
   }
 }
 
+function renderProjectDetail(p) {
+  const projTasks = tasks.filter(t => t.project_id === p.id);
+  const { story, goal, scope } = parseDescription(p.description);
+  const open = projTasks.filter(t => t.status === 'open').length;
+  const inProg = projTasks.filter(t => t.status === 'in_progress').length;
+  const done = projTasks.filter(t => t.status === 'done').length;
+
+  // Sort tasks: open first, then in_progress, then done; by number
+  const sorted = [...projTasks].sort((a,b) => {
+    const order = { open: 0, in_progress: 1, done: 2 };
+    const oa = order[a.status] || 0, ob = order[b.status] || 0;
+    if (oa !== ob) return oa - ob;
+    return (a.number || '').localeCompare(b.number || '');
+  });
+
+  document.getElementById('proj-detail').innerHTML =
+    '<div class="proj-header"><h2>' + (p.code || '') + '  ' + escHtml(p.name) + '</h2>' +
+    '<div class="meta">' + (p.phase || '') + ' · ' + (p.progress || 0) + '% · ' + projTasks.length + ' Tasks</div></div>' +
+    '<div class="proj-story">"' + escHtml(story) + '"</div>' +
+    '<div class="proj-kpi">' +
+    '<span class="proj-kpi-item">' + open + ' offen</span>' +
+    '<span class="proj-kpi-item">' + inProg + ' in Arbeit</span>' +
+    '<span class="proj-kpi-item">' + done + ' erledigt</span></div>' +
+    '<div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;">' +
+    '<div class="ac-pop-item" onclick="openNewTask(' + p.id + ')" style="padding:0.3rem 0.6rem;font-size:0.72rem;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Neuer Task</div></div>' +
+    '<div class="proj-section-title">Tasks</div>' +
+    renderTaskList(p.id);
+}
+
+function renderTaskList(projectId) {
+  const projTasks = tasks.filter(t => t.project_id === projectId);
+  if (!projTasks.length) return '<div class="empty">Keine Tasks</div>';
+  const sorted = [...projTasks].sort((a,b) => {
+    const order = { open: 0, in_progress: 1, done: 2 };
+    const oa = order[a.status] || 0, ob = order[b.status] || 0;
+    if (oa !== ob) return oa - ob;
+    return (a.number || '').localeCompare(b.number || '');
+  });
+  let html = '';
+  for (const t of sorted) {
+    const statusClass = t.status === 'done' ? 'done' : t.status === 'in_progress' ? 'progress' : 'open';
+    const statusLabel = t.status === 'done' ? 'erledigt' : t.status === 'in_progress' ? 'in Arbeit' : 'offen';
+    html += '<div class="task-item" onclick="selectTask(' + t.id + ')">' +
+      '<span class="task-item-code">' + (t.number || '') + '</span>' +
+      '<span class="task-item-title">' + escHtml(t.title) + '</span>' +
+      '<span class="task-item-status ' + statusClass + '"><span class="status-dot ' + statusClass + '"></span>' + statusLabel + '</span>' +
+      '<span class="task-item-assignee">' + escHtml(t.assignee || '') + '</span></div>';
+  }
+  return html;
+}
+
+// ===== TASK DETAIL =====
 function selectTask(id) {
   currentTaskId = id;
   const t = tasks.find(x => x.id === id);
   if (!t) return;
   showDashboardView();
   const proj = projects.find(p => p.id === t.project_id);
-  document.getElementById('dash-bread').textContent = (proj ? proj.number + ' ' + escHtml(proj.name) : 'Task') + ' / ' + t.number;
-  document.getElementById('dash-title').textContent = '📌 ' + escHtml(t.title);
-  document.getElementById('kanban-overview').style.display = 'none';
+  document.getElementById('dash-bread').textContent = (proj ? proj.code + ' ' + escHtml(proj.name) : 'Task');
+  document.getElementById('dash-title').textContent = t.number + ' ' + escHtml(t.title);
+  document.getElementById('project-overview').style.display = 'none';
   document.getElementById('proj-detail').classList.remove('active');
   document.getElementById('task-detail-view').classList.add('active');
   renderTaskDetail(t);
 }
 
-function renderProjectDetail(p) {
-  const projTasks = tasks.filter(t => t.project_id === p.id);
-  const { story, goal, scope } = parseDescription(p.description);
-  const isEditing = editingProjectId === p.id;
-  const ed = isEditing ? '' : 'style="display:none"';
-  const vd = isEditing ? 'style="display:none"' : '';
-  const open = projTasks.filter(t => t.status === 'open');
-  const inProg = projTasks.filter(t => t.status === 'in_progress');
-  const done = projTasks.filter(t => t.status === 'done');
-  document.getElementById('proj-detail').innerHTML =
-    '<div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;"><div style="flex:1;min-width:280px;"><div class="proj-header"><h2>' + (p.icon || '📁') + ' ' + escHtml(p.name) + ' <span style="font-size:0.7rem;color:#5e5ce6;font-weight:500;">' + (p.number || '') + '</span></h2>' +
-    '<div class="meta"><span>📌 ' + (p.phase || '-') + '</span><span>🕐 ' + (p.progress || 0) + '%</span><span>📋 ' + projTasks.length + ' Tasks</span></div></div></div>' +
-    '<button onclick="openNewTask(' + p.id + ')" style="padding:0.4rem 0.9rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.78rem;cursor:pointer;">➕ Neuer Task</button></div>' +
-    '<div style="margin-top:0.5rem;display:flex;gap:0.5rem;justify-content:flex-end;">' +
-    '<button ' + vd + ' onclick="startEdit(' + p.id + ')" style="padding:0.3rem 0.7rem;background:rgba(94,92,230,0.1);border:1px solid rgba(94,92,230,0.2);border-radius:6px;color:#5e5ce6;font-size:0.7rem;cursor:pointer;">✏️ Bearbeiten</button>' +
-    '<button ' + ed + ' onclick="saveProject(' + p.id + ')" style="padding:0.3rem 0.7rem;background:#34d399;border:none;border-radius:6px;color:#fff;font-size:0.7rem;cursor:pointer;">💾 Speichern</button>' +
-    '<button ' + ed + ' onclick="cancelEdit(' + p.id + ')" style="padding:0.3rem 0.7rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#94a3b8;font-size:0.7rem;cursor:pointer;">Abbrechen</button></div>' +
-    '<div style="margin-top:0.5rem;"><div style="display:flex;gap:1rem;flex-wrap:wrap;"><div style="flex:2;min-width:280px;"><div style="font-size:0.7rem;color:#5e5ce6;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:0.5rem;">📖 User Story</div>' +
-    '<div style="background:rgba(94,92,230,0.05);border:1px solid rgba(94,92,230,0.15);border-radius:10px;padding:1.25rem;">' +
-    '<div ' + vd + ' style="font-size:0.9rem;color:#e2e8f0;line-height:1.7;font-style:italic;">"' + escHtml(story) + '"</div>' +
-    '<textarea ' + ed + ' id="edit-story" style="width:100%;background:transparent;border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#e2e8f0;font-size:0.9rem;padding:0.75rem;font-family:inherit;line-height:1.7;resize:vertical;min-height:80px;outline:none;">' + escHtml(story) + '</textarea></div></div>' +
-    '<div style="flex:1;min-width:180px;"><div style="font-size:0.7rem;color:#8888a0;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:0.5rem;">🎯 Ziel</div>' +
-    '<div ' + vd + ' style="font-size:0.82rem;color:#c4c4d4;line-height:1.6;margin-bottom:1.25rem;">' + escHtml(goal) + '</div>' +
-    '<textarea ' + ed + ' id="edit-goal" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#c4c4d4;font-size:0.82rem;padding:0.5rem;font-family:inherit;line-height:1.6;resize:vertical;min-height:60px;outline:none;margin-bottom:1rem;">' + escHtml(goal) + '</textarea>' +
-    '<div style="font-size:0.7rem;color:#8888a0;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:0.5rem;">📦 Scope</div>' +
-    '<div ' + vd + ' style="font-size:0.82rem;color:#c4c4d4;line-height:1.6;">' + escHtml(scope) + '</div>' +
-    '<textarea ' + ed + ' id="edit-scope" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#c4c4d4;font-size:0.82rem;padding:0.5rem;font-family:inherit;line-height:1.6;resize:vertical;min-height:60px;outline:none;">' + escHtml(scope) + '</textarea></div></div></div>' +
-    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:0.5rem;margin-top:1rem;">' +
-    '<div style="background:#0f0f23;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:0.75rem;text-align:center;"><div style="font-size:1.2rem;font-weight:600;color:#34d399;">' + done.length + '</div><div style="font-size:0.65rem;color:#5c5c78;">Erledigt</div></div>' +
-    '<div style="background:#0f0f23;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:0.75rem;text-align:center;"><div style="font-size:1.2rem;font-weight:600;color:#5e5ce6;">' + inProg.length + '</div><div style="font-size:0.65rem;color:#5c5c78;">In Arbeit</div></div>' +
-    '<div style="background:#0f0f23;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:0.75rem;text-align:center;"><div style="font-size:1.2rem;font-weight:600;color:#94a3b8;">' + open.length + '</div><div style="font-size:0.65rem;color:#5c5c78;">Offen</div></div></div>' +
-    '<div style="margin-top:1.5rem;font-size:0.75rem;color:#64748b;font-weight:500;display:flex;align-items:center;gap:0.5rem;">📋 Task-Board<div style="flex:1;height:1px;background:#1e293b;"></div></div>' +
-    '<div class="kanban" style="margin-top:0.5rem;">' +
-    '<div class="column" style="min-width:220px;max-width:280px;"><div class="col-h"><h3>📋 Offen</h3><span class="count">' + open.length + '</span></div><div class="col-body">' + renderColumnHTML(open) + '</div></div>' +
-    '<div class="column" style="min-width:220px;max-width:280px;"><div class="col-h"><h3>🔄 In Arbeit</h3><span class="count">' + inProg.length + '</span></div><div class="col-body">' + renderColumnHTML(inProg) + '</div></div>' +
-    '<div class="column" style="min-width:220px;max-width:280px;"><div class="col-h"><h3>✅ Erledigt</h3><span class="count">' + done.length + '</span></div><div class="col-body">' + renderColumnHTML(done) + '</div></div></div>';
+function renderTaskDetail(t) {
+  const projName = projects.find(p => p.id === t.project_id)?.code || '';
+  const statusClass = t.status === 'done' ? 'done' : t.status === 'in_progress' ? 'progress' : 'open';
+  const statusLabel = t.status === 'done' ? 'erledigt' : t.status === 'in_progress' ? 'in Arbeit' : 'offen';
+  document.getElementById('task-detail-view').innerHTML =
+    '<div class="task-detail"><div class="task-detail-header">' +
+    '<div class="task-detail-code">' + (t.number || '') + ' · ' + escHtml(projName) + '</div>' +
+    '<div class="task-detail-title">' + escHtml(t.title) + '</div></div>' +
+    '<div class="task-detail-meta">' +
+    '<span><span class="status-dot ' + statusClass + '"></span>' + statusLabel + '</span>' +
+    '<span>' + escHtml(t.assignee || 'Kein Assignee') + '</span></div>' +
+    '<div class="task-detail-desc">' + escHtml(t.description || 'Keine Beschreibung') + '</div>' +
+    '<div style="display:flex;gap:0.5rem;border-top:1px solid #141414;padding-top:0.5rem;">' +
+    '<div class="ac-pop-item" onclick="changeTaskStatus(' + t.id + ',\'open\')" style="padding:0.25rem 0.5rem;font-size:0.68rem;' + (t.status==='open'?'color:#e8e8e8;':'') + '">Offen</div>' +
+    '<div class="ac-pop-item" onclick="changeTaskStatus(' + t.id + ',\'in_progress\')" style="padding:0.25rem 0.5rem;font-size:0.68rem;' + (t.status==='in_progress'?'color:#e8e8e8;':'') + '">In Arbeit</div>' +
+    '<div class="ac-pop-item" onclick="changeTaskStatus(' + t.id + ',\'done\')" style="padding:0.25rem 0.5rem;font-size:0.68rem;' + (t.status==='done'?'color:#34d399;':'') + '">Erledigt</div></div></div>';
+}
+
+async function changeTaskStatus(id, newStatus) {
+  try { await supabaseApi('tasks?id=eq.' + id, { method: 'PATCH', body: JSON.stringify({ status: newStatus }) }); const t = tasks.find(x => x.id === id); if (t) t.status = newStatus; if (currentTaskId === id) selectTask(id); else if (currentProjectId) selectProject(currentProjectId); else showProjectOverview(); } catch(e) { alert('Fehler: ' + e.message); }
 }
 
 function parseDescription(desc) {
@@ -819,51 +870,6 @@ function parseDescription(desc) {
     else if (line.startsWith('**Scope:**')) scope = line.replace('**Scope:**', '').trim();
   }
   return { story, goal, scope };
-}
-
-function renderTaskDetail(t) {
-  const editing = editingTaskField;
-  const showEdit = editing === 'detail' ? '' : 'style="display:none"';
-  const showView = editing === 'detail' ? 'style="display:none"' : '';
-  document.getElementById('task-detail-view').innerHTML =
-    '<div class="task-detail"><div class="task-detail-header"><div><div class="task-detail-title">' +
-    '<span ' + showView + '>' + escHtml(t.title) + '</span>' +
-    '<input ' + showEdit + ' id="td-edit-title" value="' + escHtml(t.title) + '" style="font-size:1.2rem;font-weight:600;background:rgba(255,255,255,0.02);border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#f1f1f9;padding:0.3rem 0.5rem;font-family:inherit;width:100%;">' +
-    '<span class="badge ' + (t.status==='done'?'green':t.status==='in_progress'?'blue':'gray') + '">' + t.status + '</span></div>' +
-    '<div style="font-size:0.75rem;color:#8888a0;display:flex;gap:0.75rem;flex-wrap:wrap;margin:0.5rem 0;"><span>📌 ' + (t.number || 'T-?') + '</span><span>👤 ' + escHtml(t.created_by || '—') + '</span><span>⏱ ' + escHtml(t.effort || '—') + '</span><span>👥 ' + escHtml(t.assignee || '—') + '</span></div></div>' +
-    '<div style="display:flex;gap:0.5rem;">' +
-    '<button ' + showView + ' onclick="toggleTaskEdit()" style="padding:0.3rem 0.7rem;background:rgba(94,92,230,0.1);border:1px solid rgba(94,92,230,0.2);border-radius:6px;color:#5e5ce6;font-size:0.7rem;cursor:pointer;">✏️ Bearbeiten</button>' +
-    '<button ' + showEdit + ' onclick="saveTaskDetail(' + t.id + ')" style="padding:0.3rem 0.7rem;background:#34d399;border:none;border-radius:6px;color:#fff;font-size:0.7rem;cursor:pointer;">💾 Speichern</button>' +
-    '<button ' + showEdit + ' onclick="cancelTaskEdit()" style="padding:0.3rem 0.7rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#94a3b8;font-size:0.7rem;cursor:pointer;">Abbrechen</button></div></div>' +
-    '<div style="margin-top:1rem;display:flex;align-items:center;gap:1rem;"><div style="font-size:0.7rem;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;">Status:</div>' +
-    '<div class="status-select">' +
-    '<button class="status-btn s-open ' + (t.status==='open'?'active':'') + '" onclick="changeTaskStatus(' + t.id + ',\'open\')">📋 Offen</button>' +
-    '<button class="status-btn s-progress ' + (t.status==='in_progress'?'active':'') + '" onclick="changeTaskStatus(' + t.id + ',\'in_progress\')">🔄 In Arbeit</button>' +
-    '<button class="status-btn s-done ' + (t.status==='done'?'active':'') + '" onclick="changeTaskStatus(' + t.id + ',\'done\')">✅ Erledigt</button></div></div>' +
-    '<div class="task-detail-body" style="margin-top:1rem;">' +
-    '<div class="field"><div class="field-label">📄 Beschreibung</div>' +
-    '<div ' + showView + ' style="font-size:0.85rem;color:#c4c4d4;line-height:1.6;white-space:pre-wrap;">' + escHtml(t.description || 'Keine Beschreibung') + '</div>' +
-    '<textarea ' + showEdit + ' id="td-edit-desc" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#c4c4d4;font-size:0.85rem;padding:0.5rem;font-family:inherit;line-height:1.6;resize:vertical;min-height:100px;outline:none;">' + escHtml(t.description || '') + '</textarea></div></div></div>';
-}
-
-function toggleTaskEdit() { editingTaskField = editingTaskField === 'detail' ? null : 'detail'; if (currentTaskId) selectTask(currentTaskId); }
-function cancelTaskEdit() { editingTaskField = null; if (currentTaskId) selectTask(currentTaskId); }
-async function saveTaskDetail(id) {
-  const data = { title: document.getElementById('td-edit-title').value.trim(), description: document.getElementById('td-edit-desc').value.trim(), created_by: document.getElementById('td-edit-creator').value.trim(), effort: document.getElementById('td-edit-effort').value.trim(), assignee: document.getElementById('td-edit-assignee').value.trim() };
-  if (!data.title) { alert('Titel erforderlich!'); return; }
-  try { await supabaseApi('tasks?id=eq.' + id, { method: 'PATCH', body: JSON.stringify(data) }); const t = tasks.find(x => x.id === id); if (t) Object.assign(t, data); editingTaskField = null; selectTask(id); } catch(e) { alert('❌ ' + e.message); }
-}
-async function changeTaskStatus(id, newStatus) {
-  try { await supabaseApi('tasks?id=eq.' + id, { method: 'PATCH', body: JSON.stringify({ status: newStatus }) }); const t = tasks.find(x => x.id === id); if (t) t.status = newStatus; if (currentTaskId === id) selectTask(id); else if (currentProjectId) selectProject(currentProjectId); else showKanbanOverview(); } catch(e) { alert('❌ ' + e.message); }
-}
-function startEdit(id) { editingProjectId = id; selectProject(id); }
-function cancelEdit(id) { editingProjectId = null; selectProject(id); }
-async function saveProject(id) {
-  const story = document.getElementById('edit-story').value.trim();
-  const goal = document.getElementById('edit-goal').value.trim();
-  const scope = document.getElementById('edit-scope').value.trim();
-  const description = '**User Story:** ' + story + '\n**Ziel:** ' + goal + '\n**Scope:** ' + scope;
-  try { await supabaseApi('projects?id=eq.' + id, { method: 'PATCH', body: JSON.stringify({ description: description }) }); const p = projects.find(x => x.id === id); if (p) p.description = description; editingProjectId = null; selectProject(id); } catch(e) { alert('❌ ' + e.message); }
 }
 
 function openNewTask(projectId) {
@@ -889,8 +895,8 @@ async function saveTask() {
   const data = { project_id: parseInt(document.getElementById('task-project').value), title, description: document.getElementById('task-desc').value.trim(), status: document.getElementById('task-status').value, created_by: document.getElementById('task-creator').value.trim() || 'Rason', effort: document.getElementById('task-effort').value.trim(), assignee: document.getElementById('task-assignee').value.trim() || 'drexoss' };
   try {
     if (editId) { await supabaseApi('tasks?id=eq.' + editId, { method: 'PATCH', body: JSON.stringify(data) }); const t = tasks.find(x => x.id === parseInt(editId)); if (t) Object.assign(t, data); }
-    else { const maxNum = tasks.reduce((m, t) => { const n = parseInt((t.number || 'T-0').replace('T-','')); return n > m ? n : m; }, 0); data.number = 'T-' + String(maxNum + 1).padStart(3, '0'); data.created_at = new Date().toISOString(); await supabaseApi('tasks', { method: 'POST', body: JSON.stringify(data) }); tasks = await supabaseApi('tasks?select=*&order=id'); }
-    closeModal(); if (currentProjectId) selectProject(currentProjectId); else showKanbanOverview();
+    else { const pid = data.project_id; const code = projects.find(p=>p.id===pid)?.code || 'PROJ'; const projNums = tasks.filter(t=>t.project_id===pid).map(t=>parseInt((t.number||'').split('-')[1]||'0')); const nextNum = Math.max(0, ...projNums) + 1; data.number = code + '-' + String(nextNum).padStart(3,'0'); data.created_at = new Date().toISOString(); await supabaseApi('tasks', { method: 'POST', body: JSON.stringify(data) }); tasks = await supabaseApi('tasks?select=*&order=id'); }
+    closeModal(); if (currentProjectId) selectProject(currentProjectId); else showProjectOverview();
   } catch(e) { alert('❌ ' + e.message); }
 }
 
