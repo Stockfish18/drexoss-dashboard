@@ -268,26 +268,26 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
         <div class="cs-user-name" id="cs-user-name">Rason Leis</div>
         <div class="cs-user-role" id="cs-user-role">Admin</div>
       </div>
-    </div>
-    <!-- Account Popover -->
-    <div class="ac-popover" id="ac-popover">
-      <div class="ac-avatar-wrap">
-        <div class="ac-avatar" id="ac-avatar-pic" onclick="document.getElementById('ac-avatar-input').click()">
-          <span id="ac-avatar-initials">R</span>
-          <div class="ac-camera">📷</div>
+      <!-- Account Popover -->
+      <div class="ac-popover" id="ac-popover">
+        <div class="ac-avatar-wrap">
+          <div class="ac-avatar" id="ac-avatar-pic" onclick="document.getElementById('ac-avatar-input').click()">
+            <span id="ac-avatar-initials">R</span>
+            <div class="ac-camera">📷</div>
+          </div>
+          <input type="file" id="ac-avatar-input" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
         </div>
-        <input type="file" id="ac-avatar-input" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
+        <div class="ac-name" id="ac-name-display">Rason Leis</div>
+        <div class="ac-role" id="ac-role-display">Admin</div>
+        <div class="ac-divider"></div>
+        <input class="ac-name-input" id="ac-name-input" maxlength="30" value="Rason Leis" oninput="document.getElementById('ac-save-btn').style.display=(this.value.trim()&&this.value.trim()!==(currentUser?.name||''))?'flex':'none'">
+        <div style="display:flex;gap:0.4rem;margin-top:0.3rem;">
+          <button class="ac-btn" id="ac-save-btn" onclick="saveAccountName()" style="display:none;flex:1;">💾 Name ändern</button>
+          <button class="ac-btn" onclick="openPasswordModal()" style="flex:1;">🔑 Passwort</button>
+        </div>
+        <div class="ac-divider"></div>
+        <button class="ac-logout-btn" onclick="logout()">🚪 Abmelden</button>
       </div>
-      <div class="ac-name" id="ac-name-display">Rason Leis</div>
-      <div class="ac-role" id="ac-role-display">Admin</div>
-      <div class="ac-divider"></div>
-      <input class="ac-name-input" id="ac-name-input" maxlength="30" value="Rason Leis" oninput="document.getElementById('ac-save-btn').style.display=(this.value.trim()&&this.value.trim()!==(currentUser?.name||''))?'flex':'none'">
-      <div style="display:flex;gap:0.4rem;margin-top:0.3rem;">
-        <button class="ac-btn" id="ac-save-btn" onclick="saveAccountName()" style="display:none;flex:1;">💾 Name ändern</button>
-        <button class="ac-btn" onclick="openPasswordModal()" style="flex:1;">🔑 Passwort</button>
-      </div>
-      <div class="ac-divider"></div>
-      <button class="ac-logout-btn" onclick="logout()">🚪 Abmelden</button>
     </div>
   </div>
 
