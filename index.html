@@ -383,7 +383,10 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
     <div class="modal-actions"><button class="btn btn-ghost" onclick="closePWModal()">Abbrechen</button><button class="btn btn-primary-sm" onclick="changePassword()">💾 Ändern</button></div>
   </div>
 </div>
-
+<script>
+const SUPABASE_URL = 'https://rmveqbegqfthwdopzykh.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ByDyItDAH-NvgMLIitjl9w_VdNJZqtp';
+const CHAT_API_URL = 'http://localhost:8000/chat';
 
 let currentUser = null;
 let currentRole = 'customer';
