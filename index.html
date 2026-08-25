@@ -832,7 +832,7 @@ function uploadAvatar(event) {
 document.addEventListener('click', function(e) {
   const pop = document.getElementById('ac-popover');
   const user = document.querySelector('.cs-user');
-  if (pop && pop.classList.contains('show') && user && !user.contains(e.target)) {
+  if (pop && pop.classList.contains('show') && user && !user.contains(e.target) && !pop.contains(e.target)) {
     closeAccountPopover();
   }
 });
