@@ -180,7 +180,6 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 .rp-kpi-sub { font-size:0.6rem; color:#555; }
 
 /* Role banner */
-.role-banner { display:none; align-items:center; justify-content:center; gap:0.5rem; padding:0.5rem; background:#0d0d0d; border-bottom:1px solid #1a1a1a; font-size:0.72rem; color:#888; }
 
 ::-webkit-scrollbar { width:6px; }
 ::-webkit-scrollbar-track { background:transparent; }
@@ -227,7 +226,6 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 
 <!-- ===== HUB ===== -->
 <div class="hub-screen" id="hub-screen">
-  <div class="role-banner" id="role-banner"><span id="role-banner-text"></span></div>
 
   <!-- CHAT SIDEBAR (links) -->
   <div class="chat-sidebar">
@@ -434,8 +432,6 @@ function showHub() {
   document.getElementById('cs-user-name').textContent = currentUser.name || currentUser.email;
   document.getElementById('cs-user-role').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1) + ' · Abmelden';
   document.getElementById('cs-avatar-letter').textContent = (currentUser.name || currentUser.email).charAt(0).toUpperCase();
-  document.getElementById('role-banner').style.display = 'flex';
-  document.getElementById('role-banner-text').textContent = '▸ Angemeldet als ' + currentUser.name + ' (' + currentRole + ')';
   loadAllData();
 }
 
