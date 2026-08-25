@@ -63,8 +63,25 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 .cs-admin-area { padding:0 0.3rem; }
 .cs-admin-item { display:flex; align-items:center; gap:0.5rem; padding:0.45rem 0.5rem; border-radius:6px; cursor:pointer; font-size:0.78rem; color:#e0e0e0; transition:all 0.1s; }
 .cs-admin-item:hover { background:#141414; color:#fff; }
-.cs-user { display:flex; align-items:center; gap:0.5rem; padding:0.65rem 0.75rem; border-top:1px solid #141414; cursor:pointer; }
+.cs-user { display:flex; align-items:center; gap:0.5rem; padding:0.65rem 0.75rem; border-top:1px solid #141414; cursor:pointer; position:relative; }
 .cs-user:hover { background:#0a0a0a; }
+
+/* Account Popover */
+.ac-popover { display:none; position:absolute; bottom:calc(100% + 4px); left:0; right:0; background:#141414; border:1px solid #2a2a2a; border-radius:10px; padding:1rem; z-index:100; margin:0 0.3rem; }
+.ac-popover.show { display:block; }
+.ac-avatar-wrap { text-align:center; margin-bottom:0.5rem; }
+.ac-avatar { width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#5e5ce6,#7c7aff);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:#fff;cursor:pointer;margin:0 auto;position:relative; }
+.ac-avatar:hover .ac-camera { opacity:1; }
+.ac-camera { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);border-radius:50%;font-size:0.9rem;opacity:0;transition:opacity 0.12s; }
+.ac-name { font-size:0.9rem;font-weight:600;color:#f1f1f9;text-align:center; }
+.ac-role { font-size:0.7rem;color:#5e5ce6;text-align:center;font-weight:500;margin-bottom:0.25rem; }
+.ac-divider { height:1px;background:#222;margin:0.5rem 0; }
+.ac-name-input { width:100%;padding:0.4rem 0.5rem;background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;color:#e8e8e8;font-size:0.78rem;font-family:inherit;outline:none; }
+.ac-name-input:focus { border-color:#333; }
+.ac-btn { padding:0.3rem 0.5rem;border-radius:6px;font-size:0.7rem;cursor:pointer;font-family:inherit;border:none;background:rgba(94,92,230,0.1);color:#5e5ce6;font-weight:500; }
+.ac-btn:hover { background:rgba(94,92,230,0.2); }
+.ac-logout-btn { width:100%;padding:0.4rem;border-radius:6px;font-size:0.75rem;cursor:pointer;font-family:inherit;background:transparent;border:1px solid #2a2a2a;color:#ef4444;font-weight:500;transition:all 0.1s; }
+.ac-logout-btn:hover { background:rgba(239,68,68,0.1);border-color:#ef4444; }
 .cs-avatar { width:28px; height:28px; border-radius:50%; background:#1a1a1a; display:flex; align-items:center; justify-content:center; font-size:0.65rem; font-weight:600; color:#fff; flex-shrink:0; }
 .cs-user-info { flex:1; min-width:0; }
 .cs-user-name { font-size:0.75rem; color:#eee; font-weight:500; }
@@ -244,13 +261,33 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
         <div class="cs-admin-item" onclick="alert('Einstellungen folgt')">⚙️ Einstellungen</div>
       </div>
     </div>
-    <div class="cs-user" onclick="openAccountModal()">
+    <div class="cs-user" onclick="toggleAccountPopover()">
       <span class="cs-dot"></span>
       <div class="cs-avatar" id="cs-avatar-letter">R</div>
       <div class="cs-user-info">
         <div class="cs-user-name" id="cs-user-name">Rason Leis</div>
         <div class="cs-user-role" id="cs-user-role">Admin</div>
       </div>
+    </div>
+    <!-- Account Popover -->
+    <div class="ac-popover" id="ac-popover">
+      <div class="ac-avatar-wrap">
+        <div class="ac-avatar" id="ac-avatar-pic" onclick="document.getElementById('ac-avatar-input').click()">
+          <span id="ac-avatar-initials">R</span>
+          <div class="ac-camera">📷</div>
+        </div>
+        <input type="file" id="ac-avatar-input" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
+      </div>
+      <div class="ac-name" id="ac-name-display">Rason Leis</div>
+      <div class="ac-role" id="ac-role-display">Admin</div>
+      <div class="ac-divider"></div>
+      <input class="ac-name-input" id="ac-name-input" maxlength="30" value="Rason Leis" oninput="document.getElementById('ac-save-btn').style.display=(this.value.trim()&&this.value.trim()!==(currentUser?.name||''))?'flex':'none'">
+      <div style="display:flex;gap:0.4rem;margin-top:0.3rem;">
+        <button class="ac-btn" id="ac-save-btn" onclick="saveAccountName()" style="display:none;flex:1;">💾 Name ändern</button>
+        <button class="ac-btn" onclick="openPasswordModal()" style="flex:1;">🔑 Passwort</button>
+      </div>
+      <div class="ac-divider"></div>
+      <button class="ac-logout-btn" onclick="logout()">🚪 Abmelden</button>
     </div>
   </div>
 
@@ -347,36 +384,6 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
   </div>
 </div>
 
-<!-- ===== ACCOUNT MODAL ===== -->
-<div class="modal-overlay" id="account-modal" onclick="if(event.target===this)closeAccountModal()">
-  <div class="modal" style="text-align:center;">
-    <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#5e5ce6,#7c7aff);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:#fff;margin:0 auto 1rem;cursor:pointer;" id="ac-avatar" onclick="document.getElementById('ac-avatar-input').click()">
-      <span id="ac-avatar-letter">R</span>
-    </div>
-    <input type="file" id="ac-avatar-input" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
-    <div style="font-size:0.7rem;color:#5e5ce6;cursor:pointer;margin-bottom:1.5rem;" onclick="document.getElementById('ac-avatar-input').click()">Profilbild ändern</div>
-
-    <div style="text-align:left;max-width:320px;margin:0 auto;">
-      <div class="form-group"><label>Name</label><input id="ac-name" value="" style="font-weight:500;" oninput="document.getElementById('ac-save-btn').style.display=this.value.trim()&&this.value.trim()!==(currentUser?.name||'')?'block':'none'"></div>
-      <div class="form-group"><label>E-Mail</label><input id="ac-email" value="" readonly style="color:#8888a0;cursor:not-allowed;"></div>
-      <div class="form-group"><label>Rolle</label><input id="ac-role" value="" readonly style="color:#5e5ce6;cursor:not-allowed;"></div>
-    </div>
-
-    <div style="margin-top:1.5rem;display:flex;flex-direction:column;gap:0.5rem;">
-      <button class="btn btn-primary-sm" onclick="closeAccountModal();openPasswordModal()" style="padding:0.5rem;width:100%;">🔑 Passwort ändern</button>
-      <button class="btn btn-ghost" onclick="saveAccountName()" style="padding:0.5rem;width:100%;display:none;" id="ac-save-btn">💾 Name speichern</button>
-    </div>
-
-    <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #1a1a1a;">
-      <button onclick="closeAccountModal();logout()" style="background:transparent;border:none;color:#ef4444;font-size:0.8rem;cursor:pointer;font-family:inherit;padding:0.3rem 0.5rem;">🚪 Abmelden</button>
-    </div>
-  </div>
-</div>
-
-<script>
-const SUPABASE_URL = 'https://rmveqbegqfthwdopzykh.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_ByDyItDAH-NvgMLIitjl9w_VdNJZqtp';
-const CHAT_API_URL = 'http://localhost:8000/chat';
 
 let currentUser = null;
 let currentRole = 'customer';
@@ -771,27 +778,33 @@ async function loadKPIs() {
 
 function escHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 
-// ===== ACCOUNT MODAL =====
-function openAccountModal() {
-  document.getElementById('ac-name').value = currentUser?.name || '';
-  document.getElementById('ac-email').value = currentUser?.email || '';
-  document.getElementById('ac-role').value = currentRole.charAt(0).toUpperCase() + currentRole.slice(1);
-  document.getElementById('ac-avatar-letter').textContent = (currentUser?.name || currentUser?.email || '?').charAt(0).toUpperCase();
+// ===== ACCOUNT POPOVER =====
+function toggleAccountPopover() {
+  const pop = document.getElementById('ac-popover');
+  if (pop.classList.contains('show')) { closeAccountPopover(); return; }
+  document.getElementById('ac-name-display').textContent = currentUser?.name || currentUser?.email || '';
+  document.getElementById('ac-role-display').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1);
+  document.getElementById('ac-name-input').value = currentUser?.name || '';
+  document.getElementById('ac-avatar-initials').textContent = (currentUser?.name || currentUser?.email || '?').charAt(0).toUpperCase();
   document.getElementById('ac-save-btn').style.display = 'none';
-  document.getElementById('account-modal').classList.add('show');
+  pop.classList.add('show');
 }
-function closeAccountModal() { document.getElementById('account-modal').classList.remove('show'); }
+function closeAccountPopover() {
+  document.getElementById('ac-popover').classList.remove('show');
+}
 
 function saveAccountName() {
-  const newName = document.getElementById('ac-name').value.trim();
+  const newName = document.getElementById('ac-name-input').value.trim();
   if (!newName || newName === currentUser?.name) { document.getElementById('ac-save-btn').style.display = 'none'; return; }
-  // Update in Supabase
   supabaseApi('user_profiles?email=eq.' + encodeURIComponent(currentUser.email), {
     method: 'PATCH', body: JSON.stringify({ name: newName })
   }).then(() => {
     currentUser.name = newName;
     localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
     document.getElementById('cs-user-name').textContent = newName;
+    document.getElementById('ac-name-display').textContent = newName;
+    document.getElementById('ac-avatar-initials').textContent = newName.charAt(0).toUpperCase();
+    document.getElementById('cs-avatar-letter').textContent = newName.charAt(0).toUpperCase();
     document.getElementById('ac-save-btn').style.display = 'none';
   }).catch(() => { alert('Fehler beim Speichern'); });
 }
@@ -801,15 +814,25 @@ function uploadAvatar(event) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = function(e) {
-    document.getElementById('ac-avatar-letter').textContent = '📷';
-    document.getElementById('ac-avatar').style.backgroundImage = 'url(' + e.target.result + ')';
-    document.getElementById('ac-avatar').style.backgroundSize = 'cover';
-    document.getElementById('ac-avatar-letter').style.display = 'none';
-    // Save to localStorage for now (Supabase Storage später)
+    const el = document.getElementById('ac-avatar-pic');
+    el.style.backgroundImage = 'url(' + e.target.result + ')';
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+    document.getElementById('ac-avatar-initials').style.display = 'none';
+    document.getElementById('ac-camera').style.opacity = '1';
     localStorage.setItem('drexoss_avatar', e.target.result);
   };
   reader.readAsDataURL(file);
 }
+
+// Close popover on outside click
+document.addEventListener('click', function(e) {
+  const pop = document.getElementById('ac-popover');
+  const user = document.querySelector('.cs-user');
+  if (pop && pop.classList.contains('show') && user && !user.contains(e.target)) {
+    closeAccountPopover();
+  }
+});
 
 // ===== INIT =====
 checkSession();
