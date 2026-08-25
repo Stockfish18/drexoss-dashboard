@@ -435,7 +435,7 @@ function showHub() {
   document.getElementById('cs-user-role').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1) + ' · Abmelden';
   document.getElementById('cs-avatar-letter').textContent = (currentUser.name || currentUser.email).charAt(0).toUpperCase();
   document.getElementById('role-banner').style.display = 'flex';
-  document.getElementById('role-banner-text').textContent = '👑 Angemeldet als ' + currentUser.name + ' (' + currentRole + ')';
+  document.getElementById('role-banner-text').textContent = '▸ Angemeldet als ' + currentUser.name + ' (' + currentRole + ')';
   loadAllData();
 }
 
