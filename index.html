@@ -60,9 +60,9 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 .cs-thread .t-info { flex:1; min-width:0; }
 .cs-thread .t-name { font-size:0.78rem; color:#e0e0e0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .cs-thread .t-preview { font-size:0.65rem; color:#5c5c78; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.cs-admin-area { padding:0 0.3rem; }
-.cs-admin-item { display:flex; align-items:center; gap:0.5rem; padding:0.45rem 0.5rem; border-radius:6px; cursor:pointer; font-size:0.78rem; color:#e0e0e0; transition:all 0.1s; }
-.cs-admin-item:hover { background:#141414; color:#fff; }
+.cs-admin-area { padding:0; }
+.cs-admin-item { display:flex; align-items:center; gap:0.6rem; padding:0.4rem 0.6rem; cursor:pointer; font-size:0.78rem; color:#888; transition:color 0.12s; text-decoration:none; }
+.cs-admin-item:hover { color:#e8e8e8; }
 .cs-user { display:flex; align-items:center; gap:0.5rem; padding:0.65rem 0.75rem; border-top:1px solid #141414; cursor:pointer; position:relative; }
 .cs-user:hover { background:#0a0a0a; }
 
@@ -254,11 +254,11 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
       <div id="cs-threads-list"></div>
       <div class="cs-section" style="border-top:1px solid #141414;margin-top:0.5rem;padding-top:0.5rem;">Administration</div>
       <div class="cs-admin-area">
-        <div class="cs-admin-item" onclick="openDashboard()">📊 Dashboard</div>
-        <div class="cs-admin-item" onclick="showTicketForm()">📝 Ticket anlegen</div>
-        <div class="cs-admin-item" onclick="alert('Projektverwaltung folgt')">📁 Projekte verwalten</div>
-        <div class="cs-admin-item" onclick="alert('Benutzerverwaltung folgt')">👥 Benutzer</div>
-        <div class="cs-admin-item" onclick="alert('Einstellungen folgt')">⚙️ Einstellungen</div>
+              <div class="cs-admin-item" onclick="openDashboard()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Dashboard</div>
+              <div class="cs-admin-item" onclick="showTicketForm()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Ticket anlegen</div>
+              <div class="cs-admin-item" onclick="alert('Projektverwaltung folgt')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Projekte verwalten</div>
+              <div class="cs-admin-item" onclick="alert('Benutzerverwaltung folgt')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Benutzer</div>
+              <div class="cs-admin-item" onclick="alert('Einstellungen folgt')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Einstellungen</div>
       </div>
     </div>
     <div class="cs-user" onclick="toggleAccountPopover()">
