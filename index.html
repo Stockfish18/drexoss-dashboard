@@ -18,517 +18,216 @@
   }
 
   /* ===== LOGIN SCREEN ===== */
-  .login-screen {
-    display: flex;
-    width: 100%;
-    height: 100vh;
-  }
-  .login-screen.hidden { display: none; }
-
-  .login-brand {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem;
-    text-align: center;
-  }
-
-  .login-logo {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 700;
-    font-size: 4rem;
-    letter-spacing: -0.02em;
-    color: #e8e8e8;
-    margin-bottom: 0.75rem;
-  }
-  .login-logo span { color: #5e5ce6; }
-
-  .login-slogan {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    color: #555;
-    margin-bottom: 2.5rem;
-  }
-
-  .login-tagline {
-    font-size: 0.85rem;
-    color: #555;
-    max-width: 380px;
-    line-height: 1.7;
-  }
-  .login-tagline span { color: #5e5ce6; }
-  .login-tagline .dot { color: #333; }
-
-  .login-features {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    font-size: 0.6rem;
-    color: #333;
-    letter-spacing: 0.05em;
-  }
-  .login-features span { display: flex; align-items: center; gap: 0.3rem; }
-
-  .login-form-wrap {
-    width: 440px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem;
-    border-left: 2px solid;
-    border-image: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.02)) 1;
-  }
-
-  .login-box { width: 100%; max-width: 340px; }
-
-  .login-box h2 {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 0.12em;
-    color: #888;
-    margin-bottom: 0.25rem;
-  }
-  .login-box .sub {
-    font-size: 0.78rem;
-    color: #555;
-    margin-bottom: 2rem;
-  }
-
-  .field { margin-bottom: 1rem; }
-  .field label {
-    display: block;
-    font-size: 0.6rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #666;
-    margin-bottom: 0.35rem;
-  }
-  .field input {
-    width: 100%;
-    padding: 0.65rem 0.75rem;
-    background: #0d0d0d;
-    border: 1px solid #1a1a1a;
-    border-radius: 8px;
-    color: #e8e8e8;
-    font-size: 0.85rem;
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.12s;
-  }
-  .field input:focus { border-color: #333; }
-  .field input::placeholder { color: #333; }
-
-  .btn-primary {
-    width: 100%;
-    padding: 0.65rem;
-    background: #5e5ce6;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background 0.12s;
-    margin-top: 0.5rem;
-  }
-  .btn-primary:hover { background: #6d6bf0; }
-  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  .login-error {
-    font-size: 0.75rem;
-    color: #ef4444;
-    margin-bottom: 0.75rem;
-    display: none;
-  }
-
-  .login-divider {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin: 1.5rem 0;
-    color: #222;
-    font-size: 0.6rem;
-  }
-  .login-divider::before, .login-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #141414;
-  }
-
-  .login-footer {
-    margin-top: 1.5rem;
-    text-align: center;
-    font-size: 0.72rem;
-    color: #444;
-  }
-  .login-footer a { color: #5e5ce6; text-decoration: none; cursor: pointer; }
-  .login-footer a:hover { text-decoration: underline; }
-
-  /* Register form */
-  #register-form { display: none; }
+  .login-screen { display:flex; width:100%; height:100vh; }
+  .login-screen.hidden { display:none; }
+  .login-brand { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:3rem; text-align:center; }
+  .login-logo { font-family:'Orbitron',sans-serif; font-weight:700; font-size:4rem; letter-spacing:-0.02em; color:#e8e8e8; margin-bottom:0.75rem; }
+  .login-logo span { color:#5e5ce6; }
+  .login-slogan { font-family:'Orbitron',sans-serif; font-size:0.7rem; letter-spacing:0.2em; color:#555; margin-bottom:2.5rem; }
+  .login-tagline { font-size:0.85rem; color:#555; max-width:380px; line-height:1.7; }
+  .login-tagline span { color:#5e5ce6; }
+  .login-features { display:flex; gap:1rem; margin-top:2rem; font-size:0.6rem; color:#333; letter-spacing:0.05em; }
+  .login-form-wrap { width:440px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:3rem; border-left:2px solid; border-image:linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.02)) 1; }
+  .login-box { width:100%; max-width:340px; }
+  .login-box h2 { font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.8rem; letter-spacing:0.12em; color:#888; margin-bottom:0.25rem; }
+  .login-box .sub { font-size:0.78rem; color:#555; margin-bottom:2rem; }
+  .field { margin-bottom:1rem; }
+  .field label { display:block; font-size:0.6rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#666; margin-bottom:0.35rem; }
+  .field input { width:100%; padding:0.65rem 0.75rem; background:#0d0d0d; border:1px solid #1a1a1a; border-radius:8px; color:#e8e8e8; font-size:0.85rem; font-family:inherit; outline:none; transition:border-color 0.12s; }
+  .field input:focus { border-color:#333; }
+  .btn-primary { width:100%; padding:0.65rem; background:#5e5ce6; border:none; border-radius:8px; color:#fff; font-size:0.85rem; font-weight:600; cursor:pointer; font-family:inherit; transition:background 0.12s; margin-top:0.5rem; }
+  .btn-primary:hover { background:#6d6bf0; }
+  .btn-primary:disabled { opacity:0.5; cursor:not-allowed; }
+  .login-error { font-size:0.75rem; color:#ef4444; margin-bottom:0.75rem; display:none; }
+  .login-divider { display:flex; align-items:center; gap:0.75rem; margin:1.5rem 0; color:#222; font-size:0.6rem; }
+  .login-divider::before, .login-divider::after { content:''; flex:1; height:1px; background:#141414; }
+  .login-footer { margin-top:1.5rem; text-align:center; font-size:0.72rem; color:#444; }
+  .login-footer a { color:#5e5ce6; text-decoration:none; cursor:pointer; }
+  .login-footer a:hover { text-decoration:underline; }
+  #register-form { display:none; }
 
   /* ===== HUB LAYOUT ===== */
-  .hub-screen { display: none; width: 100%; height: 100vh; }
-  .hub-screen.show { display: flex; }
+  .hub-screen { display:none; width:100%; height:100vh; }
+  .hub-screen.show { display:flex; }
 
   /* SIDEBAR */
-  .sidebar {
-    width: 250px;
-    background: #000;
-    border-right: 2px solid;
-    border-image: linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(255,255,255,0.1)) 1;
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-  }
-
-  .sb-header {
-    padding: 1.25rem 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-
-  .logo-anim {
-    display: inline-block;
-    font-family:'Orbitron',sans-serif;
-    font-weight:700;
-    font-size:1.25rem;
-    letter-spacing:0.06em;
-    color:#e8e8e8;
-    padding:0 0.6rem;
-  }
-  .logo-anim span {
-    display: inline-block;
-    animation: logoFade 0.35s ease-out both;
-  }
-  .logo-anim .drex { animation-delay: 0s; }
-  .logo-anim .o { animation-delay: 0.3s; color:#5e5ce6; }
-  .logo-anim .s1 { animation-delay: 0.6s; color:#5e5ce6; }
-  .logo-anim .s2 { animation-delay: 0.9s; color:#5e5ce6; }
-
-  @keyframes logoFade {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .sb-new-btn {
-    margin: 0.35rem 0.75rem 0.75rem;
-    padding: 0.55rem;
-    background: transparent;
-    border: 1px solid #1a1a1a;
-    border-radius: 8px;
-    color: #e0e0e0;
-    font-size: 0.78rem;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.12s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-  }
-  .sb-new-btn:hover { border-color: #2a2a2a; color: #fff; }
-
-  .sb-search {
-    margin: 0 0.75rem 0.5rem;
-    padding: 0.45rem 0.6rem;
-    background: #0a0a0a;
-    border: 1px solid #141414;
-    border-radius: 6px;
-    color: #d8d8d8;
-    font-size: 0.72rem;
-    font-family: inherit;
-    outline: none;
-  }
-  .sb-search:focus { border-color: #222; color: #fff; }
-  .sb-search::placeholder { color: #444; }
-
-  .sb-scroll { flex: 1; overflow-y: auto; min-height: 0; }
-
-  .sb-section {
-    font-size: 0.6rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #888;
-    padding: 0.75rem 0.6rem 0.3rem;
-  }
-
-  .sb-chat-item {
-    padding: 0.55rem 0.6rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.78rem;
-    color: #e0e0e0;
-    transition: all 0.1s;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .sb-chat-item:hover { background: #141414; }
-  .sb-chat-item.active { background: #141414; }
-
-  .sb-item {
-    padding: 0.55rem 0.6rem 0.55rem 1.2rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.78rem;
-    color: #e0e0e0;
-    transition: all 0.1s;
-  }
-  .sb-item:hover { background: #141414; }
-  .sb-item.active { background: #141414; }
-
-  .sb-admin-area { padding: 0; }
-
-  .sb-admin-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.45rem 0.5rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.78rem;
-    color: #e0e0e0;
-    transition: all 0.1s;
-  }
-  .sb-admin-item:hover { background: #141414; color: #fff; }
-
-  .sb-user {
-    display: flex; align-items: center; gap: 0.5rem;
-    padding: 0.65rem 0.75rem; border-top: 1px solid #141414;
-    cursor: pointer;
-  }
-  .sb-user:hover { background: #0a0a0a; }
-  .sb-avatar {
-    width: 28px; height: 28px; border-radius: 50%;
-    background: #1a1a1a; display: flex; align-items: center;
-    justify-content: center; font-size: 0.65rem; font-weight: 600;
-    color: #fff; flex-shrink: 0;
-  }
-  .sb-user-info { flex: 1; min-width: 0; }
-  .sb-user-name { font-size: 0.75rem; color: #eee; font-weight: 500; }
-  .sb-user-role { font-size: 0.6rem; color: #888; }
-  .sb-dot { width: 5px; height: 5px; border-radius: 50%; background: #34d399; flex-shrink: 0; }
+  .sidebar { width:250px; background:#000; border-right:2px solid; border-image:linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(255,255,255,0.1)) 1; display:flex; flex-direction:column; flex-shrink:0; }
+  .sb-header { padding:1.25rem 0.75rem; display:flex; align-items:center; gap:0.6rem; }
+  .logo-anim { display:inline-block; font-family:'Orbitron',sans-serif; font-weight:700; font-size:1.25rem; letter-spacing:0.06em; color:#e8e8e8; padding:0 0.6rem; }
+  .logo-anim span { display:inline-block; animation:logoFade 0.35s ease-out both; }
+  .logo-anim .drex { animation-delay:0s; }
+  .logo-anim .o { animation-delay:0.3s; color:#5e5ce6; }
+  .logo-anim .s1 { animation-delay:0.6s; color:#5e5ce6; }
+  .logo-anim .s2 { animation-delay:0.9s; color:#5e5ce6; }
+  @keyframes logoFade { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+  .sb-scroll { flex:1; overflow-y:auto; min-height:0; }
+  .sb-section { font-size:0.6rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#888; padding:0.75rem 0.6rem 0.3rem; }
+  .sb-project-item { padding:0.55rem 0.6rem; border-radius:6px; cursor:pointer; font-size:0.78rem; color:#e0e0e0; transition:all 0.1s; display:flex; align-items:center; gap:0.5rem; margin:0 0.3rem; }
+  .sb-project-item:hover { background:#141414; }
+  .sb-project-item.active { background:#141414; }
+  .sb-project-item .sb-progress { font-size:0.6rem; color:#5c5c78; margin-left:auto; }
+  .sb-project-item .sb-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .sb-dot.green { background:#34d399; }
+  .sb-dot.gray { background:#5c5c78; }
+  .sb-dot.blue { background:#5e5ce6; }
+  .sb-admin-item { display:flex; align-items:center; gap:0.5rem; padding:0.45rem 0.5rem; border-radius:6px; cursor:pointer; font-size:0.78rem; color:#e0e0e0; transition:all 0.1s; }
+  .sb-admin-item:hover { background:#141414; color:#fff; }
+  .sb-user { display:flex; align-items:center; gap:0.5rem; padding:0.65rem 0.75rem; border-top:1px solid #141414; cursor:pointer; }
+  .sb-user:hover { background:#0a0a0a; }
+  .sb-avatar { width:28px; height:28px; border-radius:50%; background:#1a1a1a; display:flex; align-items:center; justify-content:center; font-size:0.65rem; font-weight:600; color:#fff; flex-shrink:0; }
+  .sb-user-info { flex:1; min-width:0; }
+  .sb-user-name { font-size:0.75rem; color:#eee; font-weight:500; }
+  .sb-user-role { font-size:0.6rem; color:#888; }
+  .sb-dot { width:5px; height:5px; border-radius:50%; background:#34d399; flex-shrink:0; }
 
   /* MAIN */
-  .main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    background: #000;
-    position: relative;
-  }
+  .main { flex:1; display:flex; flex-direction:column; min-width:0; background:#000; position:relative; }
 
   /* Chat Messages */
-  .chat-msgs {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1.5rem 3rem 0.5rem;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .msg {
-    display: flex;
-    margin-bottom: 0.6rem;
-    width: 100%;
-    max-width: 780px;
-    padding: 0 0.5rem;
-  }
-  .msg.user { justify-content: flex-end; }
-  .msg.ai { justify-content: flex-start; }
-  .msg.system { justify-content: center; }
-  .msg.system .msg-bubble {
-    background: transparent;
-    color: #666;
-    font-size:0.75rem;
-    text-align:center;
-    max-width:100%;
-  }
-
-  .msg-bubble {
-    max-width: 75%;
-    padding: 0.55rem 1rem;
-    border-radius: 18px;
-    font-size: 0.88rem;
-    line-height: 1.5;
-    word-wrap: break-word;
-  }
-  .msg.user .msg-bubble {
-    background: #5e5ce6;
-    color: #fff;
-    border-bottom-right-radius: 4px;
-  }
-  .msg.ai .msg-bubble {
-    background: #1a1a1a;
-    color: #e8e8e8;
-    border-bottom-left-radius: 4px;
-  }
-  .msg-bubble code {
-    background: rgba(255,255,255,0.08);
-    border-radius: 4px;
-    padding: 0.1rem 0.35rem;
-    font-size: 0.8rem;
-  }
-  .msg-bubble pre {
-    background: rgba(0,0,0,0.3);
-    border-radius: 8px;
-    padding: 0.6rem;
-    margin: 0.4rem 0;
-    overflow-x: auto;
-    font-size: 0.8rem;
-  }
-  .msg-bubble p { margin-bottom: 0.4rem; }
-  .msg-bubble p:last-child { margin-bottom: 0; }
+  .chat-msgs { flex:1; overflow-y:auto; padding:1.5rem 3rem 0.5rem; display:none; flex-direction:column; align-items:center; }
+  .msg { display:flex; margin-bottom:0.6rem; width:100%; max-width:780px; padding:0 0.5rem; }
+  .msg.user { justify-content:flex-end; }
+  .msg.ai { justify-content:flex-start; }
+  .msg.system { justify-content:center; }
+  .msg.system .msg-bubble { background:transparent; color:#666; font-size:0.75rem; text-align:center; max-width:100%; }
+  .msg-bubble { max-width:75%; padding:0.55rem 1rem; border-radius:18px; font-size:0.88rem; line-height:1.5; word-wrap:break-word; }
+  .msg.user .msg-bubble { background:#5e5ce6; color:#fff; border-bottom-right-radius:4px; }
+  .msg.ai .msg-bubble { background:#1a1a1a; color:#e8e8e8; border-bottom-left-radius:4px; }
+  .msg-bubble code { background:rgba(255,255,255,0.08); border-radius:4px; padding:0.1rem 0.35rem; font-size:0.8rem; }
+  .msg-bubble pre { background:rgba(0,0,0,0.3); border-radius:8px; padding:0.6rem; margin:0.4rem 0; overflow-x:auto; font-size:0.8rem; }
+  .msg-bubble p { margin-bottom:0.4rem; }
+  .msg-bubble p:last-child { margin-bottom:0; }
 
   /* Empty State */
-  .empty-state {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 3rem;
-  }
-  .empty-center { text-align: center; max-width: 440px; }
-  .empty-center .brand { font-size: 3.2rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.5rem; color: #e8e8e8; font-family: 'Orbitron', sans-serif; }
-  .empty-center .brand span { color: #5e5ce6; }
-  .empty-center .slogan {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    color: #555;
-    margin-top: 0.75rem;
-    margin-bottom: 2.5rem;
-  }
-  .empty-center .suggestions { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
-  .empty-center .suggestions span {
-    padding: 0.4rem 0.85rem; background: #0d0d0d;
-    border: 1px solid #1a1a1a; border-radius: 999px;
-    font-size: 0.75rem; color: #d0d0d0; cursor: pointer; transition: all 0.1s;
-  }
-  .empty-center .suggestions span:hover { border-color: #2a2a2a; color: #fff; background: #141414; }
+  .empty-state { flex:1; display:flex; align-items:center; justify-content:center; padding:2rem 3rem; }
+  .empty-center { text-align:center; max-width:440px; }
+  .empty-center .brand { font-size:3.2rem; font-weight:700; letter-spacing:-0.03em; margin-bottom:0.5rem; color:#e8e8e8; font-family:'Orbitron',sans-serif; }
+  .empty-center .brand span { color:#5e5ce6; }
+  .empty-center .slogan { font-family:'Orbitron',sans-serif; font-size:0.7rem; letter-spacing:0.15em; color:#555; margin-top:0.75rem; margin-bottom:2.5rem; }
+  .empty-center .suggestions { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; }
+  .empty-center .suggestions span { padding:0.4rem 0.85rem; background:#0d0d0d; border:1px solid #1a1a1a; border-radius:999px; font-size:0.75rem; color:#d0d0d0; cursor:pointer; transition:all 0.1s; }
+  .empty-center .suggestions span:hover { border-color:#2a2a2a; color:#fff; background:#141414; }
 
   /* Input */
-  .input-wrap { padding: 0.5rem 3rem 2rem; display: flex; justify-content: center; }
+  .input-wrap { padding:0.5rem 3rem 2rem; display:flex; justify-content:center; }
+  .input-box { width:100%; max-width:780px; display:flex; align-items:center; gap:0.5rem; background:#1f1f1f; border:1px solid #2e2e2e; border-radius:40px; padding:0.5rem 0.6rem; transition:border-color 0.15s; }
+  .input-box:focus-within { border-color:#444; }
+  .input-box textarea { flex:1; background:transparent; border:none; outline:none; color:#cccccc; font-family:inherit; font-size:0.88rem; padding:0.35rem 0.5rem; resize:none; min-height:24px; max-height:160px; line-height:1.5; }
+  .input-box textarea::placeholder { color:#666; }
+  .input-actions { display:flex; align-items:center; gap:0.25rem; }
+  .input-btn { width:34px; height:34px; border-radius:8px; border:none; background:transparent; color:#ccc; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.85rem; transition:all 0.1s; flex-shrink:0; }
+  .input-btn:hover { background:#141414; color:#ccc; }
+  .input-btn.send-btn:hover { background:#4a48c4 !important; }
 
-  .input-box {
-    width: 100%;
-    max-width: 780px;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: #1f1f1f;
-    border: 1px solid #2e2e2e;
-    border-radius: 40px;
-    padding: 0.5rem 0.6rem;
-    transition: border-color 0.15s;
-  }
-  .input-box:focus-within { border-color: #444; }
+  /* DASHBOARD VIEW (ersetzt Chat im Main) */
+  .dashboard-view { display:none; flex-direction:column; flex:1; overflow:hidden; }
+  .dashboard-view.active { display:flex; }
+  .dash-topbar { display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1.25rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+  .dash-topbar-left { display:flex; align-items:center; gap:0.5rem; }
+  .dash-topbar-left h2 { font-size:0.9rem; font-weight:600; }
+  .dash-topbar-left .bread { color:#5c5c78; font-size:0.78rem; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:400px; }
+  .dash-topbar-left .bread:hover { color:#888; }
+  .dash-content { flex:1; padding:1.25rem; overflow-y:auto; min-width:0; }
 
-  .input-box textarea {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #cccccc;
-    font-family: inherit;
-    font-size: 0.88rem;
-    padding: 0.35rem 0.5rem;
-    resize: none;
-    min-height: 24px;
-    max-height: 160px;
-    line-height: 1.5;
-  }
-  .input-box textarea::placeholder { color: #666; }
+  /* Kanban */
+  .kanban { display:flex; gap:0.75rem; overflow-x:auto; padding-bottom:0.5rem; min-height:200px; }
+  .column { min-width:240px; max-width:300px; background:#0f0f23; border-radius:10px; border:1px solid rgba(255,255,255,0.06); display:flex; flex-direction:column; max-height:calc(100vh - 300px); }
+  .col-h { padding:0.75rem 1rem; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+  .col-h h3 { font-size:0.8rem; font-weight:500; }
+  .col-h .count { font-size:0.65rem; color:#5c5c78; background:rgba(255,255,255,0.04); padding:0.1rem 0.4rem; border-radius:999px; }
+  .col-body { flex:1; padding:0.5rem; overflow-y:auto; }
+  .task-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:0.6rem 0.75rem; margin-bottom:0.4rem; cursor:pointer; transition:all 0.12s; }
+  .task-card:hover { border-color:rgba(94,92,230,0.3); }
+  .task-card .t-title { font-size:0.78rem; font-weight:500; margin-bottom:0.15rem; display:flex; align-items:center; gap:0.4rem; }
+  .task-card .t-desc { font-size:0.65rem; color:#8888a0; margin-bottom:0.2rem; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; }
+  .task-card .t-meta { display:flex; align-items:center; gap:0.4rem; font-size:0.6rem; color:#5c5c78; flex-wrap:wrap; }
+  .task-card .t-num { color:#5e5ce6; }
+  .task-card .t-assignee { padding:0.05rem 0.3rem; background:rgba(94,92,230,0.1); color:#5e5ce6; border-radius:4px; }
+  .task-card .t-effort { color:#fbbf24; }
 
-  .input-actions { display: flex; align-items: center; gap: 0.25rem; }
+  /* Project Detail */
+  .proj-detail, .task-detail-view { display:none; }
+  .proj-detail.active, .task-detail-view.active { display:block; }
+  .proj-header { margin-bottom:0.5rem; }
+  .proj-header h2 { font-size:1.3rem; font-weight:600; display:flex; align-items:center; gap:0.5rem; }
+  .proj-header .meta { font-size:0.75rem; color:#8888a0; display:flex; gap:0.75rem; flex-wrap:wrap; }
+  .proj-header .meta span { display:flex; align-items:center; gap:0.3rem; }
 
-  .input-btn {
-    width: 34px; height: 34px; border-radius: 8px;
-    border: none; background: transparent; color: #ccc;
-    cursor: pointer; display: flex; align-items: center;
-    justify-content: center; font-size: 0.85rem;
-    transition: all 0.1s; flex-shrink: 0;
-  }
-  .input-btn:hover { background: #141414; color: #ccc; }
-  .input-btn.send-btn:hover { background: #4a48c4 !important; }
+  .task-detail { margin-bottom:1.5rem; }
+  .task-detail-header { display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap; justify-content:space-between; }
+  .task-detail-title { font-size:1.2rem; font-weight:600; display:flex; align-items:center; gap:0.5rem; }
+  .task-detail-meta { display:flex; gap:0.75rem; flex-wrap:wrap; font-size:0.75rem; color:#8888a0; margin:0.5rem 0; }
+  .task-detail-meta span { display:flex; align-items:center; gap:0.3rem; }
+  .task-detail-body { margin-top:0.75rem; }
+  .task-detail-body .field { margin-bottom:0.75rem; }
+  .task-detail-body .field-label { font-size:0.65rem; color:#5e5ce6; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.2rem; }
+  .task-detail-body .field-value { font-size:0.85rem; color:#c4c4d4; line-height:1.6; white-space:pre-wrap; }
+
+  .status-select { display:flex; gap:0.3rem; }
+  .status-btn { padding:0.25rem 0.6rem; border-radius:6px; font-size:0.7rem; cursor:pointer; border:1px solid transparent; font-family:inherit; transition:all 0.12s; }
+  .status-btn.s-open { background:rgba(148,163,184,0.1); color:#94a3b8; border-color:rgba(148,163,184,0.2); }
+  .status-btn.s-progress { background:rgba(94,92,230,0.1); color:#5e5ce6; border-color:rgba(94,92,230,0.2); }
+  .status-btn.s-done { background:rgba(52,211,153,0.1); color:#34d399; border-color:rgba(52,211,153,0.2); }
+  .status-btn.active { border-width:2px; }
+  .status-btn:hover { opacity:0.8; }
+
+  .badge { font-size:0.65rem; padding:0.15rem 0.5rem; border-radius:999px; white-space:nowrap; }
+  .badge.green { background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3); }
+  .badge.gray { background:rgba(148,163,184,0.15); color:#94a3b8; border:1px solid rgba(148,163,184,0.3); }
+  .badge.blue { background:rgba(94,92,230,0.15); color:#5e5ce6; border:1px solid rgba(94,92,230,0.3); }
+  .badge.yellow { background:rgba(251,191,36,0.15); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
+
+  .loading { color:#5c5c78; font-size:0.8rem; padding:1rem; text-align:center; }
+  .error { color:#ef4444; font-size:0.8rem; padding:1rem; }
+  .empty { color:#5c5c78; font-size:0.8rem; padding:1rem; text-align:center; }
+
+  /* Modal */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center; }
+  .modal-overlay.show { display:flex; }
+  .modal { background:#0f0f23; border:1px solid #1e1e3a; border-radius:12px; padding:1.5rem; width:480px; max-width:90vw; max-height:90vh; overflow-y:auto; }
+  .modal h3 { font-size:1rem; font-weight:600; margin-bottom:1rem; }
+  .form-group { margin-bottom:0.75rem; }
+  .form-group label { display:block; font-size:0.7rem; color:#8888a0; margin-bottom:0.25rem; text-transform:uppercase; letter-spacing:0.05em; }
+  .form-group input, .form-group select, .form-group textarea { width:100%; padding:0.45rem 0.6rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#f1f1f9; font-size:0.82rem; font-family:inherit; outline:none; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:rgba(94,92,230,0.4); }
+  .form-group textarea { resize:vertical; min-height:60px; }
+  .form-row { display:flex; gap:0.75rem; }
+  .form-row .form-group { flex:1; }
+  .modal-actions { display:flex; gap:0.5rem; justify-content:flex-end; margin-top:1rem; }
+  .btn { padding:0.45rem 1rem; border-radius:6px; font-size:0.8rem; cursor:pointer; font-family:inherit; border:none; transition:all 0.12s; }
+  .btn-primary-sm { background:#5e5ce6; color:#fff; }
+  .btn-primary-sm:hover { background:#6d6bf0; }
+  .btn-ghost { background:rgba(255,255,255,0.05); color:#94a3b8; border:1px solid rgba(255,255,255,0.1); }
+  .btn-ghost:hover { color:#f1f1f9; }
+  .btn-sm { padding:0.25rem 0.6rem; font-size:0.7rem; }
 
   /* RIGHT PANEL */
-  .right-panel {
-    width: 250px;
-    background: #000;
-    border-left: 2px solid;
-    border-image: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.02)) 1;
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    padding: 1rem;
-  }
-  .rp-header {
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #888;
-    margin-bottom: 1rem;
-    cursor: pointer;
-    transition: color 0.12s;
-  }
-  .rp-header:hover { color: #5e5ce6; }
-  .rp-kpi {
-    padding: 0.75rem;
-    background: #0d0d0d;
-    border: 1px solid #1a1a1a;
-    border-radius: 10px;
-    margin-bottom: 0.5rem;
-    cursor: pointer;
-    transition: all 0.12s;
-  }
-  .rp-kpi:hover { background: #141414; border-color: #2a2a2a; }
-  .rp-kpi-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.2rem; }
-  .rp-kpi-label { font-size: 0.7rem; color: #888; }
-  .rp-kpi-num { font-size: 1.3rem; font-weight: 700; color: #fff; }
-  .rp-kpi-num.accent { color: #5e5ce6; }
-  .rp-kpi-sub { font-size: 0.6rem; color: #555; }
+  .right-panel { width:250px; background:#000; border-left:2px solid; border-image:linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.02)) 1; display:flex; flex-direction:column; flex-shrink:0; padding:1rem; }
+  .rp-header { font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#888; margin-bottom:1rem; cursor:pointer; transition:color 0.12s; }
+  .rp-header:hover { color:#5e5ce6; }
+  .rp-kpi { padding:0.75rem; background:#0d0d0d; border:1px solid #1a1a1a; border-radius:10px; margin-bottom:0.5rem; cursor:pointer; transition:all 0.12s; }
+  .rp-kpi:hover { background:#141414; border-color:#2a2a2a; }
+  .rp-kpi-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.2rem; }
+  .rp-kpi-label { font-size:0.7rem; color:#888; }
+  .rp-kpi-num { font-size:1.3rem; font-weight:700; color:#fff; }
+  .rp-kpi-num.accent { color:#5e5ce6; }
+  .rp-kpi-sub { font-size:0.6rem; color:#555; }
+
+  /* Role banner */
+  .role-banner { display:none; align-items:center; justify-content:center; gap:0.5rem; padding:0.5rem; background:#0d0d0d; border-bottom:1px solid #1a1a1a; font-size:0.72rem; color:#888; }
 
   /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #141414; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #222; }
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:#141414; border-radius:3px; }
+  ::-webkit-scrollbar-thumb:hover { background:#222; }
 
-  /* Role info banner */
-  .role-banner {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    background: #0d0d0d;
-    border-bottom: 1px solid #1a1a1a;
-    font-size: 0.72rem;
-    color: #888;
-  }
-
-  @media (max-width: 800px) {
-    .login-screen { flex-direction: column; }
-    .login-form-wrap { width: 100%; border-left: none; border-top: 2px solid; }
-    .login-features { flex-wrap: wrap; justify-content: center; }
-    .sidebar, .right-panel { display: none; }
-    .chat-msgs { padding: 1rem; }
-    .input-wrap { padding: 0.5rem 1rem 1rem; }
+  @media (max-width:800px) {
+    .login-screen { flex-direction:column; }
+    .login-form-wrap { width:100%; border-left:none; border-top:2px solid; }
+    .sidebar, .right-panel { display:none; }
+    .chat-msgs { padding:1rem; }
+    .input-wrap { padding:0.5rem 1rem 1rem; }
   }
 </style>
 </head>
@@ -558,7 +257,7 @@
       <form onsubmit="doLogin();return false">
         <div class="field">
           <label>E-Mail</label>
-          <input id="login-email" type="email" placeholder="deine@email.de" value="">
+          <input id="login-email" type="email" placeholder="deine@email.de">
         </div>
         <div class="field">
           <label>Passwort</label>
@@ -609,17 +308,15 @@
     <div class="sb-header">
       <span class="logo-anim"><span class="drex">Drex</span><span class="o">O</span><span class="s1">S</span><span class="s2">S</span></span>
     </div>
-    <button class="sb-new-btn" onclick="newChat()">+ Neuer Chat</button>
-    <input class="sb-search" type="text" placeholder="Durchsuchen..." id="sb-search" oninput="filterChats()">
     <div class="sb-scroll" id="sb-scroll">
-      <div class="sb-section" id="sb-today-label">Heute</div>
-      <div id="sb-chats-list"></div>
+      <div class="sb-section">Projekte</div>
+      <div id="sb-projects-list"></div>
       <div class="sb-section" style="border-top:1px solid #141414;margin-top:0.5rem;padding-top:0.5rem;">Administration</div>
-      <div class="sb-item" onclick="window.location.href='/dashboard'">📊 Dashboard</div>
-      <div class="sb-item" onclick="showTicketForm()">📝 Ticket anlegen</div>
-      <div class="sb-item" onclick="alert('Projektverwaltung folgt')">📁 Projekte verwalten</div>
-      <div class="sb-item" onclick="alert('Benutzerverwaltung folgt')">👥 Benutzer</div>
-      <div class="sb-item" onclick="alert('Einstellungen folgt')">⚙️ Einstellungen</div>
+      <div class="sb-admin-item" onclick="showDashboardView()">📊 Dashboard</div>
+      <div class="sb-admin-item" onclick="showTicketForm()">📝 Ticket anlegen</div>
+      <div class="sb-admin-item" onclick="alert('Projektverwaltung folgt')">📁 Projekte verwalten</div>
+      <div class="sb-admin-item" onclick="alert('Benutzerverwaltung folgt')">👥 Benutzer</div>
+      <div class="sb-admin-item" onclick="alert('Einstellungen folgt')">⚙️ Einstellungen</div>
     </div>
     <div class="sb-user" onclick="logout()">
       <span class="sb-dot"></span>
@@ -631,64 +328,86 @@
     </div>
   </div>
 
-  <!-- MAIN -->
+  <!-- MAIN Chat + Dashboard -->
   <div class="main" id="main">
-    <div class="empty-state" id="empty-state">
-      <div class="empty-center">
-        <div class="brand">Drex<span>OSS</span></div>
-        <div class="slogan">Design · Refine · Execute</div>
-        <div class="suggestions" id="suggestion-list">
-          <span onclick="sendSuggestion(this)">Projekt-Update erstellen</span>
-          <span onclick="sendSuggestion(this)">Offene Tasks analysieren</span>
-          <span onclick="sendSuggestion(this)">Weekly Briefing</span>
-          <span onclick="sendSuggestion(this)">Dashboard erklären</span>
+    <!-- Chat View (default) -->
+    <div id="chat-view" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+      <div class="empty-state" id="empty-state">
+        <div class="empty-center">
+          <div class="brand">Drex<span>OSS</span></div>
+          <div class="slogan">Design · Refine · Execute</div>
+          <div class="suggestions" id="suggestion-list">
+            <span onclick="sendSuggestion(this)">Projekt-Update erstellen</span>
+            <span onclick="sendSuggestion(this)">Offene Tasks analysieren</span>
+            <span onclick="sendSuggestion(this)">Weekly Briefing</span>
+            <span onclick="sendSuggestion(this)">Dashboard erklären</span>
+          </div>
+        </div>
+      </div>
+      <div class="chat-msgs" id="chat-msgs"></div>
+      <div class="input-wrap" id="input-wrap">
+        <div class="input-box">
+          <textarea id="chat-input" rows="1" placeholder="Nachricht an Stockfish..."
+            oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,160)+'px'"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
+          <div class="input-actions">
+            <button class="input-btn send-btn" id="send-btn" onclick="sendMsg()" style="width:38px;height:38px;border-radius:50%;background:#5e5ce6;color:#fff;display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="chat-msgs" id="chat-msgs"></div>
-
-    <div class="input-wrap" id="input-wrap">
-      <div class="input-box">
-        <textarea id="chat-input" rows="1" placeholder="Nachricht an Stockfish..."
-          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,160)+'px'"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
-        <div class="input-actions">
-          <button class="input-btn send-btn" id="send-btn" onclick="sendMsg()" style="width:38px;height:38px;border-radius:50%;background:#5e5ce6;color:#fff;display:flex;align-items:center;justify-content:center;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-            </svg>
-          </button>
+    <!-- Dashboard View (kanban/project/task) -->
+    <div class="dashboard-view" id="dashboard-view">
+      <div class="dash-topbar">
+        <div class="dash-topbar-left">
+          <span class="bread" id="dash-bread" onclick="showKanbanOverview()">DrexOSS</span>
+          <h2 id="dash-title">📋 Übersicht</h2>
         </div>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <button onclick="openNewTask(null)" style="padding:0.4rem 0.9rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.78rem;cursor:pointer;font-family:inherit;">➕ Neuer Task</button>
+          <button onclick="showChatView()" style="padding:0.4rem 0.9rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#94a3b8;font-size:0.78rem;cursor:pointer;font-family:inherit;">💬 Chat</button>
+        </div>
+      </div>
+      <div class="dash-content" id="dash-content">
+        <div id="kanban-overview">
+          <div class="kanban" id="kanban-board"></div>
+        </div>
+        <div id="proj-detail" class="proj-detail"></div>
+        <div id="task-detail-view" class="task-detail-view"></div>
       </div>
     </div>
   </div>
 
   <!-- RIGHT PANEL -->
   <div class="right-panel">
-    <div class="rp-header" onclick="goToDashboard()">📊 Dashboard →</div>
-    <div class="rp-kpi" onclick="goToDashboard()">
+    <div class="rp-header" onclick="showDashboardView()">📊 Dashboard →</div>
+    <div class="rp-kpi" onclick="showDashboardView()">
       <div class="rp-kpi-top">
         <span class="rp-kpi-label">Projekte</span>
         <span class="rp-kpi-num" id="kpi-projects">—</span>
       </div>
       <div class="rp-kpi-sub" id="kpi-projects-sub">Lade...</div>
     </div>
-    <div class="rp-kpi" onclick="goToDashboard()">
+    <div class="rp-kpi" onclick="showDashboardView()">
       <div class="rp-kpi-top">
         <span class="rp-kpi-label">Offene Tasks</span>
         <span class="rp-kpi-num" id="kpi-open">—</span>
       </div>
       <div class="rp-kpi-sub" id="kpi-open-sub">Lade...</div>
     </div>
-    <div class="rp-kpi" onclick="goToDashboard()">
+    <div class="rp-kpi" onclick="showDashboardView()">
       <div class="rp-kpi-top">
         <span class="rp-kpi-label">In Arbeit</span>
         <span class="rp-kpi-num accent" id="kpi-progress">—</span>
       </div>
       <div class="rp-kpi-sub" id="kpi-progress-sub">Lade...</div>
     </div>
-    <div class="rp-kpi" onclick="goToDashboard()">
+    <div class="rp-kpi" onclick="showDashboardView()">
       <div class="rp-kpi-top">
         <span class="rp-kpi-label">Agent</span>
         <span class="rp-kpi-num" style="font-size:0.8rem;color:#34d399;" id="kpi-agent">Online</span>
@@ -698,36 +417,110 @@
   </div>
 </div>
 
+<!-- ===== MODAL: Neuer Task ===== -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <h3 id="modal-title">➕ Neuer Task</h3>
+    <input type="hidden" id="edit-task-id">
+    <div class="form-group">
+      <label>Titel *</label>
+      <input id="task-title" placeholder="Kurze Beschreibung">
+    </div>
+    <div class="form-group">
+      <label>Beschreibung</label>
+      <textarea id="task-desc" placeholder="Details..."></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Projekt</label>
+        <select id="task-project"></select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="task-status">
+          <option value="open">📋 Offen</option>
+          <option value="in_progress">🔄 In Arbeit</option>
+          <option value="done">✅ Erledigt</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Ersteller</label><input id="task-creator"></div>
+      <div class="form-group"><label>Aufwand</label><input id="task-effort" placeholder="z.B. 2h"></div>
+    </div>
+    <div class="form-group"><label>Assignee</label><input id="task-assignee"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Abbrechen</button>
+      <button class="btn btn-primary-sm" onclick="saveTask()">💾 Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: Passwort ändern ===== -->
+<div class="modal-overlay" id="pw-modal">
+  <div class="modal">
+    <h3>🔑 Passwort ändern</h3>
+    <div class="form-group">
+      <label>Aktuelles Passwort</label>
+      <input id="pw-current" type="password" placeholder="••••••••">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Neues Passwort</label>
+        <input id="pw-new" type="password" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label>Bestätigen</label>
+        <input id="pw-confirm" type="password" placeholder="••••••••">
+      </div>
+    </div>
+    <div id="pw-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.5rem;display:none;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closePWModal()">Abbrechen</button>
+      <button class="btn btn-primary-sm" onclick="changePassword()">💾 Ändern</button>
+    </div>
+  </div>
+</div>
+
 <script>
-// ===== SUPABASE CONFIG =====
 const SUPABASE_URL = 'https://rmveqbegqfthwdopzykh.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ByDyItDAH-NvgMLIitjl9w_VdNJZqtp';
-const CHAT_API_URL = '/api/chat'; // Will try localhost:8000/chat or this
+const CHAT_API_URL = 'http://localhost:8000/chat';
 
+// ===== SESSION / AUTH =====
 let currentUser = null;
-let currentRole = null;
+let currentRole = 'customer';
 let chatHistory = [];
+let projects = [], tasks = [], taskMessages = [];
+let currentProjectId = null, currentTaskId = null, editingProjectId = null, editingTaskField = null;
 
-// ===== AUTH =====
-async function api(endpoint, opts) {
-  const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' };
-  const res = await fetch(SUPABASE_URL + '/rest/v1/' + endpoint, { headers, ...opts });
-  if (!res.ok) {
-    try { const err = await res.text(); throw new Error(err.substring(0,80)); } catch(e) { throw new Error('HTTP ' + res.status); }
+function checkSession() {
+  const saved = localStorage.getItem('drexoss_session');
+  if (saved) {
+    try {
+      currentUser = JSON.parse(saved);
+      currentRole = currentUser.role || 'customer';
+      showHub();
+    } catch(e) {
+      showLoginScreen();
+    }
+  } else {
+    showLoginScreen();
   }
-  return opts && opts.method === 'PATCH' ? null : res.json();
+}
+
+function showLoginScreen() {
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('hub-screen').classList.remove('show');
 }
 
 function showLogin() {
-  document.getElementById('register-form').style.display = 'none';
   document.getElementById('login-form').style.display = 'block';
-  document.getElementById('login-error').style.display = 'none';
+  document.getElementById('register-form').style.display = 'none';
 }
-
 function showRegister() {
   document.getElementById('login-form').style.display = 'none';
   document.getElementById('register-form').style.display = 'block';
-  document.getElementById('register-error').style.display = 'none';
 }
 
 async function doLogin() {
@@ -738,7 +531,6 @@ async function doLogin() {
   errEl.style.display = 'none';
   btn.disabled = true;
   btn.textContent = 'Anmelden...';
-
   try {
     const res = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
       method: 'POST',
@@ -747,19 +539,16 @@ async function doLogin() {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error_description || data.error || 'Login fehlgeschlagen');
-
-    // Get user profile from our DB
-    let role = 'customer';
-    let name = data.user.email;
+    let role = 'customer', name = data.user.email;
     try {
-      const profiles = await api('user_profiles?select=role,name,status&email=eq.' + encodeURIComponent(data.user.email));
+      const profiles = await supabaseApi('user_profiles?select=role,name,status&email=eq.' + encodeURIComponent(data.user.email));
       if (profiles && profiles.length > 0) {
         role = profiles[0].role || 'customer';
         name = profiles[0].name || data.user.email;
       }
-    } catch(e) { /* fallback */ }
-
+    } catch(e) {}
     currentUser = { email: data.user.email, id: data.user.id, name, role };
+    currentRole = role;
     localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
     location.reload();
   } catch(e) {
@@ -779,7 +568,6 @@ async function doRegister() {
   errEl.style.display = 'none';
   btn.disabled = true;
   btn.textContent = 'Erstelle Account...';
-
   if (!email || !name || pass.length < 6) {
     errEl.textContent = '❌ Alle Felder ausfüllen, Passwort min. 6 Zeichen';
     errEl.style.display = 'block';
@@ -787,7 +575,6 @@ async function doRegister() {
     btn.textContent = 'Konto erstellen';
     return;
   }
-
   try {
     const res = await fetch(SUPABASE_URL + '/auth/v1/signup', {
       method: 'POST',
@@ -796,8 +583,7 @@ async function doRegister() {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.msg || data.error || 'Registrierung fehlgeschlagen');
-
-    alert('✅ Registrierung erfolgreich! Bitte bestätige deine E-Mail (Link im Postfach).');
+    alert('✅ Registrierung erfolgreich! Bitte bestätige deine E-Mail.');
     showLogin();
   } catch(e) {
     errEl.textContent = '❌ ' + e.message;
@@ -807,89 +593,388 @@ async function doRegister() {
   btn.textContent = 'Konto erstellen';
 }
 
-function checkSession() {
-  const saved = localStorage.getItem('drexoss_session');
-  if (saved) {
-    try {
-      currentUser = JSON.parse(saved);
-      currentRole = currentUser.role || 'customer';
-      showHub();
-    } catch(e) { showLoginScreen(); }
-  } else {
-    showLoginScreen();
-  }
-}
-
-function showLoginScreen() {
-  document.getElementById('login-screen').classList.remove('hidden');
-  document.getElementById('hub-screen').classList.remove('show');
-}
-
-function showHub() {
-  document.getElementById('login-screen').classList.add('hidden');
-  const hub = document.getElementById('hub-screen');
-
-  // Role check: Admin/Dev/Friend → Chat Hub, Customer → Dashboard
-  const allowedRoles = ['admin', 'dev', 'friend'];
-  if (!allowedRoles.includes(currentRole)) {
-    // Customer → redirect to dashboard
-    window.location.href = '/dashboard';
-    return;
-  }
-
-  hub.classList.add('show');
-
-  // Set user info
-  document.getElementById('sb-user-name').textContent = currentUser.name || currentUser.email;
-  document.getElementById('sb-user-role').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1) + ' · Abmelden';
-  document.getElementById('sb-avatar-letter').textContent = (currentUser.name || currentUser.email).charAt(0).toUpperCase();
-
-  // Role banner
-  const banner = document.getElementById('role-banner');
-  banner.style.display = 'flex';
-  document.getElementById('role-banner-text').textContent = '👑 Angemeldet als ' + currentUser.name + ' (' + currentRole + ')';
-
-  // Show/hide admin items based on role
-  if (currentRole === 'admin') {
-    // full access
-  } else {
-    // dev/friend - maybe hide some admin items
-  }
-
-  // Load KPIs
-  loadKPIs();
-}
-
-async function loadKPIs() {
-  try {
-    const projects = await api('projects?select=id,status,progress');
-    const tasks = await api('tasks?select=id,status');
-
-    const activeProj = projects.filter(p => p.status === 'active' || p.status === 'in_progress');
-    const planningProj = projects.filter(p => p.status === 'planning');
-    const openTasks = tasks.filter(t => t.status === 'open');
-    const inProgTasks = tasks.filter(t => t.status === 'in_progress');
-    const doneTasks = tasks.filter(t => t.status === 'done');
-
-    document.getElementById('kpi-projects').textContent = projects.length;
-    document.getElementById('kpi-projects-sub').textContent = activeProj.length + ' aktiv · ' + planningProj.length + ' Planung';
-    document.getElementById('kpi-open').textContent = openTasks.length;
-    document.getElementById('kpi-open-sub').textContent = inProgTasks.length + ' in Arbeit · ' + doneTasks.length + ' erledigt';
-    document.getElementById('kpi-progress').textContent = inProgTasks.length;
-    document.getElementById('kpi-progress-sub').textContent = openTasks.length + ' offen · ' + Math.round(doneTasks.length / Math.max(1, tasks.length) * 100) + '%';
-  } catch(e) {
-    document.getElementById('kpi-projects').textContent = '?';
-    document.getElementById('kpi-projects-sub').textContent = 'Fehler beim Laden';
-  }
-}
-
 function logout() {
   localStorage.removeItem('drexoss_session');
   window.location.href = window.location.pathname + '?v=' + Date.now();
 }
 
-function goToDashboard() {
-  window.location.href = '/dashboard';
+// ===== HUB =====
+function showHub() {
+  document.getElementById('login-screen').classList.add('hidden');
+  const hub = document.getElementById('hub-screen');
+  const allowedRoles = ['admin', 'dev', 'friend'];
+  if (!allowedRoles.includes(currentRole)) {
+    window.location.href = '/dashboard';
+    return;
+  }
+  hub.classList.add('show');
+  document.getElementById('sb-user-name').textContent = currentUser.name || currentUser.email;
+  document.getElementById('sb-user-role').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1) + ' · Abmelden';
+  document.getElementById('sb-avatar-letter').textContent = (currentUser.name || currentUser.email).charAt(0).toUpperCase();
+  document.getElementById('role-banner').style.display = 'flex';
+  document.getElementById('role-banner-text').textContent = '👑 Angemeldet als ' + currentUser.name + ' (' + currentRole + ')';
+  loadProjects();
+  loadKPIs();
+}
+
+async function supabaseApi(endpoint, opts) {
+  const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' };
+  const res = await fetch(SUPABASE_URL + '/rest/v1/' + endpoint, { headers, ...opts });
+  if (!res.ok) { try { const err = await res.text(); throw new Error(err.substring(0,80)); } catch(e) { throw new Error('HTTP ' + res.status); } }
+  return opts && opts.method === 'PATCH' || opts && opts.method === 'POST' && endpoint.startsWith('tasks') ? null : res.json();
+}
+
+// ===== SIDEBAR PROJEKTE =====
+async function loadProjects() {
+  try {
+    projects = await supabaseApi('projects?select=*&order=id');
+    tasks = await supabaseApi('tasks?select=*&order=id');
+    taskMessages = await supabaseApi('task_messages?select=*&order=id');
+    renderSidebarProjects();
+  } catch(e) {
+    document.getElementById('sb-projects-list').innerHTML = '<div style="font-size:0.7rem;color:#5c5c78;padding:0.5rem;">❌ ' + e.message + '</div>';
+  }
+}
+
+function renderSidebarProjects() {
+  let html = '';
+  for (const p of projects) {
+    const dotClass = p.status === 'active' ? 'green' : p.status === 'planning' ? 'gray' : 'blue';
+    const isActive = currentProjectId === p.id;
+    html += '<div class="sb-project-item ' + (isActive ? 'active' : '') + '" onclick="selectProject(' + p.id + ')">' +
+      '<span class="sb-dot ' + dotClass + '"></span>' + escHtml(p.name) +
+      '<span class="sb-progress">' + (p.number || '') + ' ' + (p.progress || 0) + '%</span></div>';
+  }
+  document.getElementById('sb-projects-list').innerHTML = html || '<div style="font-size:0.7rem;color:#5c5c78;padding:0.5rem;">Keine Projekte</div>';
+}
+
+// ===== VIEW SWITCHING =====
+function showChatView() {
+  document.getElementById('chat-view').style.display = 'flex';
+  document.getElementById('dashboard-view').classList.remove('active');
+  currentProjectId = null;
+  currentTaskId = null;
+  renderSidebarProjects();
+}
+
+function showDashboardView() {
+  document.getElementById('chat-view').style.display = 'none';
+  document.getElementById('dashboard-view').classList.add('active');
+  showKanbanOverview();
+}
+
+function showKanbanOverview() {
+  currentProjectId = null;
+  currentTaskId = null;
+  editingProjectId = null;
+  document.getElementById('dash-bread').textContent = 'DrexOSS';
+  document.getElementById('dash-title').textContent = '📋 Übersicht';
+  document.getElementById('kanban-overview').style.display = 'block';
+  document.getElementById('proj-detail').classList.remove('active');
+  document.getElementById('task-detail-view').classList.remove('active');
+  renderSidebarProjects();
+  renderKanban();
+}
+
+function selectProject(id) {
+  showDashboardView();
+  currentProjectId = id;
+  currentTaskId = null;
+  editingProjectId = null;
+  renderSidebarProjects();
+  const p = projects.find(x => x.id === id);
+  if (p) {
+    document.getElementById('dash-bread').textContent = 'DrexOSS / Projekte';
+    document.getElementById('dash-title').textContent = (p.icon || '📁') + ' ' + p.name;
+    document.getElementById('kanban-overview').style.display = 'none';
+    document.getElementById('task-detail-view').classList.remove('active');
+    document.getElementById('proj-detail').classList.add('active');
+    renderProjectDetail(p);
+  }
+}
+
+function selectTask(id) {
+  currentTaskId = id;
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  showDashboardView();
+  const proj = projects.find(p => p.id === t.project_id);
+  document.getElementById('dash-bread').textContent = (proj ? proj.number + ' ' + escHtml(proj.name) : 'Task') + ' / ' + t.number;
+  document.getElementById('dash-title').textContent = '📌 ' + escHtml(t.title);
+  document.getElementById('kanban-overview').style.display = 'none';
+  document.getElementById('proj-detail').classList.remove('active');
+  document.getElementById('task-detail-view').classList.add('active');
+  renderTaskDetail(t);
+}
+
+// ===== KANBAN =====
+function renderKanban() {
+  const open = tasks.filter(t => t.status === 'open');
+  const progress = tasks.filter(t => t.status === 'in_progress');
+  const done = tasks.filter(t => t.status === 'done');
+  document.getElementById('kanban-board').innerHTML =
+    '<div class="column"><div class="col-h"><h3>📋 Offen</h3><span class="count">' + open.length + '</span></div><div class="col-body">' + renderColumnHTML(open) + '</div></div>' +
+    '<div class="column"><div class="col-h"><h3>🔄 In Arbeit</h3><span class="count">' + progress.length + '</span></div><div class="col-body">' + renderColumnHTML(progress) + '</div></div>' +
+    '<div class="column"><div class="col-h"><h3>✅ Erledigt</h3><span class="count">' + done.length + '</span></div><div class="col-body">' + renderColumnHTML(done) + '</div></div>';
+}
+
+function renderColumnHTML(items) {
+  if (!items.length) return '<div class="empty">Leer</div>';
+  let html = '';
+  for (const t of items) {
+    const effort = t.effort ? '<span class="t-effort">⏱ ' + escHtml(t.effort) + '</span>' : '';
+    html += '<div class="task-card" onclick="selectTask(' + t.id + ')">' +
+      '<div class="t-title">' + escHtml(t.title) + '</div>' +
+      '<div class="t-desc">' + escHtml(t.description || '') + '</div>' +
+      '<div class="t-meta"><span class="t-num">' + (t.number || 'T-?') + '</span>' +
+      '<span class="t-assignee">' + (t.assignee || '—') + '</span>' + effort + '</div></div>';
+  }
+  return html;
+}
+
+// ===== PROJECT DETAIL =====
+function parseDescription(desc) {
+  let story = '', goal = '', scope = '';
+  const lines = (desc || '').split('\n');
+  for (const line of lines) {
+    if (line.startsWith('**User Story:**')) story = line.replace('**User Story:**', '').trim();
+    else if (line.startsWith('**Ziel:**')) goal = line.replace('**Ziel:**', '').trim();
+    else if (line.startsWith('**Scope:**')) scope = line.replace('**Scope:**', '').trim();
+  }
+  return { story, goal, scope };
+}
+
+function renderProjectDetail(p) {
+  const projTasks = tasks.filter(t => t.project_id === p.id);
+  const { story, goal, scope } = parseDescription(p.description);
+  const isEditing = editingProjectId === p.id;
+  const ed = isEditing ? '' : 'style="display:none"';
+  const vd = isEditing ? 'style="display:none"' : '';
+  const open = projTasks.filter(t => t.status === 'open');
+  const inProg = projTasks.filter(t => t.status === 'in_progress');
+  const done = projTasks.filter(t => t.status === 'done');
+  document.getElementById('proj-detail').innerHTML =
+    '<div style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;">' +
+    '<div style="flex:1;min-width:280px;"><div class="proj-header"><h2>' + (p.icon || '📁') + ' ' + escHtml(p.name) + ' <span style="font-size:0.7rem;color:#5e5ce6;font-weight:500;">' + (p.number || '') + '</span></h2>' +
+    '<div class="meta"><span>📌 ' + (p.phase || '-') + '</span><span>🕐 ' + (p.progress || 0) + '%</span><span>📋 ' + projTasks.length + ' Tasks</span></div></div></div>' +
+    '<button onclick="openNewTask(' + p.id + ')" style="padding:0.4rem 0.9rem;background:#5e5ce6;border:none;border-radius:6px;color:#fff;font-size:0.78rem;cursor:pointer;font-family:inherit;white-space:nowrap;">➕ Neuer Task</button></div>' +
+    '<div style="margin-top:0.5rem;display:flex;gap:0.5rem;justify-content:flex-end;">' +
+    '<button ' + vd + ' onclick="startEdit(' + p.id + ')" style="padding:0.3rem 0.7rem;background:rgba(94,92,230,0.1);border:1px solid rgba(94,92,230,0.2);border-radius:6px;color:#5e5ce6;font-size:0.7rem;cursor:pointer;font-family:inherit;">✏️ Bearbeiten</button>' +
+    '<button ' + ed + ' onclick="saveProject(' + p.id + ')" style="padding:0.3rem 0.7rem;background:#34d399;border:none;border-radius:6px;color:#fff;font-size:0.7rem;cursor:pointer;font-family:inherit;">💾 Speichern</button>' +
+    '<button ' + ed + ' onclick="cancelEdit(' + p.id + ')" style="padding:0.3rem 0.7rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#94a3b8;font-size:0.7rem;cursor:pointer;font-family:inherit;">Abbrechen</button></div>' +
+    '<div style="margin-top:0.5rem;"><div style="display:flex;gap:1rem;flex-wrap:wrap;">' +
+    '<div style="flex:2;min-width:280px;"><div style="font-size:0.7rem;color:#5e5ce6;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:0.5rem;">📖 User Story</div>' +
+    '<div style="background:rgba(94,92,230,0.05);border:1px solid rgba(94,92,230,0.15);border-radius:10px;padding:1.25rem;">' +
+    '<div ' + vd + ' style="font-size:0.9rem;color:#e2e8f0;line-height:1.7;font-style:italic;">"' + escHtml(story) + '"</div>' +
+    '<textarea ' + ed + ' id="edit-story" style="width:100%;background:transparent;border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#e2e8f0;font-size:0.9rem;padding:0.75rem;font-family:inherit;line-height:1.7;resize:vertical;min-height:80px;outline:none;">' + escHtml(story) + '</textarea></div></div>' +
+    '<div style="flex:1;min-width:180px;">' +
+    '<div style="font-size:0.7rem;color:#8888a0;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:0.5rem;">🎯 Ziel</div>' +
+    '<div ' + vd + ' style="font-size:0.82rem;color:#c4c4d4;line-height:1.6;margin-bottom:1.25rem;">' + escHtml(goal) + '</div>' +
+    '<textarea ' + ed + ' id="edit-goal" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#c4c4d4;font-size:0.82rem;padding:0.5rem;font-family:inherit;line-height:1.6;resize:vertical;min-height:60px;outline:none;margin-bottom:1rem;">' + escHtml(goal) + '</textarea>' +
+    '<div style="font-size:0.7rem;color:#8888a0;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:0.5rem;">📦 Scope</div>' +
+    '<div ' + vd + ' style="font-size:0.82rem;color:#c4c4d4;line-height:1.6;">' + escHtml(scope) + '</div>' +
+    '<textarea ' + ed + ' id="edit-scope" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#c4c4d4;font-size:0.82rem;padding:0.5rem;font-family:inherit;line-height:1.6;resize:vertical;min-height:60px;outline:none;">' + escHtml(scope) + '</textarea></div></div></div>' +
+    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:0.5rem;margin-top:1rem;">' +
+    '<div style="background:#0f0f23;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:0.75rem;text-align:center;"><div style="font-size:1.2rem;font-weight:600;color:#34d399;">' + done.length + '</div><div style="font-size:0.65rem;color:#5c5c78;">Erledigt</div></div>' +
+    '<div style="background:#0f0f23;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:0.75rem;text-align:center;"><div style="font-size:1.2rem;font-weight:600;color:#5e5ce6;">' + inProg.length + '</div><div style="font-size:0.65rem;color:#5c5c78;">In Arbeit</div></div>' +
+    '<div style="background:#0f0f23;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:0.75rem;text-align:center;"><div style="font-size:1.2rem;font-weight:600;color:#94a3b8;">' + open.length + '</div><div style="font-size:0.65rem;color:#5c5c78;">Offen</div></div></div>' +
+    '<div style="margin-top:1.5rem;font-size:0.75rem;color:#64748b;font-weight:500;display:flex;align-items:center;gap:0.5rem;">📋 Task-Board<div style="flex:1;height:1px;background:#1e293b;"></div></div>' +
+    '<div class="kanban" style="margin-top:0.5rem;">' +
+    '<div class="column" style="min-width:220px;max-width:280px;"><div class="col-h"><h3>📋 Offen</h3><span class="count">' + open.length + '</span></div><div class="col-body">' + renderColumnHTML(open) + '</div></div>' +
+    '<div class="column" style="min-width:220px;max-width:280px;"><div class="col-h"><h3>🔄 In Arbeit</h3><span class="count">' + inProg.length + '</span></div><div class="col-body">' + renderColumnHTML(inProg) + '</div></div>' +
+    '<div class="column" style="min-width:220px;max-width:280px;"><div class="col-h"><h3>✅ Erledigt</h3><span class="count">' + done.length + '</span></div><div class="col-body">' + renderColumnHTML(done) + '</div></div></div>';
+}
+
+// ===== TASK DETAIL =====
+function renderTaskDetail(t) {
+  const editing = editingTaskField;
+  const showEdit = editing === 'detail' ? '' : 'style="display:none"';
+  const showView = editing === 'detail' ? 'style="display:none"' : '';
+  document.getElementById('task-detail-view').innerHTML =
+    '<div class="task-detail"><div class="task-detail-header"><div>' +
+    '<div class="task-detail-title">' +
+    '<span ' + showView + '>' + escHtml(t.title) + '</span>' +
+    '<input ' + showEdit + ' id="td-edit-title" value="' + escHtml(t.title) + '" style="font-size:1.2rem;font-weight:600;background:rgba(255,255,255,0.02);border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#f1f1f9;padding:0.3rem 0.5rem;font-family:inherit;width:100%;">' +
+    '<span class="badge ' + (t.status==='done'?'green':t.status==='in_progress'?'blue':'gray') + '">' + t.status + '</span></div>' +
+    '<div class="task-detail-meta"><span>📌 ' + (t.number || 'T-?') + '</span><span>👤 ' + escHtml(t.created_by || '—') + '</span><span>⏱ ' + escHtml(t.effort || '—') + '</span><span>👥 ' + escHtml(t.assignee || '—') + '</span><span>📅 ' + new Date(t.created_at).toLocaleDateString() + '</span></div></div>' +
+    '<div style="display:flex;gap:0.5rem;">' +
+    '<button ' + showView + ' onclick="toggleTaskEdit()" style="padding:0.3rem 0.7rem;background:rgba(94,92,230,0.1);border:1px solid rgba(94,92,230,0.2);border-radius:6px;color:#5e5ce6;font-size:0.7rem;cursor:pointer;font-family:inherit;">✏️ Bearbeiten</button>' +
+    '<button ' + showEdit + ' onclick="saveTaskDetail(' + t.id + ')" style="padding:0.3rem 0.7rem;background:#34d399;border:none;border-radius:6px;color:#fff;font-size:0.7rem;cursor:pointer;font-family:inherit;">💾 Speichern</button>' +
+    '<button ' + showEdit + ' onclick="cancelTaskEdit()" style="padding:0.3rem 0.7rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#94a3b8;font-size:0.7rem;cursor:pointer;font-family:inherit;">Abbrechen</button></div></div>' +
+    '<div style="margin-top:1rem;display:flex;align-items:center;gap:1rem;"><div style="font-size:0.7rem;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;">Status:</div>' +
+    '<div class="status-select">' +
+    '<button class="status-btn s-open ' + (t.status==='open'?'active':'') + '" onclick="changeTaskStatus(' + t.id + ',\'open\')">📋 Offen</button>' +
+    '<button class="status-btn s-progress ' + (t.status==='in_progress'?'active':'') + '" onclick="changeTaskStatus(' + t.id + ',\'in_progress\')">🔄 In Arbeit</button>' +
+    '<button class="status-btn s-done ' + (t.status==='done'?'active':'') + '" onclick="changeTaskStatus(' + t.id + ',\'done\')">✅ Erledigt</button></div></div>' +
+    '<div class="task-detail-body" style="margin-top:1rem;">' +
+    '<div class="field"><div class="field-label">📄 Beschreibung</div>' +
+    '<div ' + showView + ' class="field-value">' + escHtml(t.description || 'Keine Beschreibung') + '</div>' +
+    '<textarea ' + showEdit + ' id="td-edit-desc" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#c4c4d4;font-size:0.85rem;padding:0.5rem;font-family:inherit;line-height:1.6;resize:vertical;min-height:100px;outline:none;">' + escHtml(t.description || '') + '</textarea></div>' +
+    '<div class="field" style="display:flex;gap:1rem;">' +
+    '<div style="flex:1;"><div class="field-label">👤 Ersteller</div><div ' + showView + ' class="field-value">' + escHtml(t.created_by || '—') + '</div><input ' + showEdit + ' id="td-edit-creator" value="' + escHtml(t.created_by || '') + '" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#f1f1f9;font-size:0.85rem;padding:0.4rem;font-family:inherit;outline:none;"></div>' +
+    '<div style="flex:1;"><div class="field-label">⏱ Aufwand</div><div ' + showView + ' class="field-value">' + escHtml(t.effort || '—') + '</div><input ' + showEdit + ' id="td-edit-effort" value="' + escHtml(t.effort || '') + '" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#f1f1f9;font-size:0.85rem;padding:0.4rem;font-family:inherit;outline:none;"></div>' +
+    '<div style="flex:1;"><div class="field-label">👥 Assignee</div><div ' + showView + ' class="field-value">' + escHtml(t.assignee || '—') + '</div><input ' + showEdit + ' id="td-edit-assignee" value="' + escHtml(t.assignee || '') + '" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(94,92,230,0.3);border-radius:6px;color:#f1f1f9;font-size:0.85rem;padding:0.4rem;font-family:inherit;outline:none;"></div></div></div></div>';
+}
+
+function toggleTaskEdit() { editingTaskField = editingTaskField === 'detail' ? null : 'detail'; if (currentTaskId) selectTask(currentTaskId); }
+function cancelTaskEdit() { editingTaskField = null; if (currentTaskId) selectTask(currentTaskId); }
+
+async function saveTaskDetail(id) {
+  const data = {
+    title: document.getElementById('td-edit-title').value.trim(),
+    description: document.getElementById('td-edit-desc').value.trim(),
+    created_by: document.getElementById('td-edit-creator').value.trim(),
+    effort: document.getElementById('td-edit-effort').value.trim(),
+    assignee: document.getElementById('td-edit-assignee').value.trim()
+  };
+  if (!data.title) { alert('Titel erforderlich!'); return; }
+  try {
+    await supabaseApi('tasks?id=eq.' + id, { method: 'PATCH', body: JSON.stringify(data) });
+    const t = tasks.find(x => x.id === id);
+    if (t) Object.assign(t, data);
+    editingTaskField = null;
+    selectTask(id);
+  } catch(e) { alert('❌ ' + e.message); }
+}
+
+async function changeTaskStatus(id, newStatus) {
+  try {
+    await supabaseApi('tasks?id=eq.' + id, { method: 'PATCH', body: JSON.stringify({ status: newStatus }) });
+    const t = tasks.find(x => x.id === id);
+    if (t) t.status = newStatus;
+    if (currentTaskId === id) selectTask(id);
+    else if (currentProjectId) selectProject(currentProjectId);
+    else showKanbanOverview();
+  } catch(e) { alert('❌ ' + e.message); }
+}
+
+// ===== PROJECT EDIT =====
+function startEdit(id) { editingProjectId = id; selectProject(id); }
+function cancelEdit(id) { editingProjectId = null; selectProject(id); }
+async function saveProject(id) {
+  const story = document.getElementById('edit-story').value.trim();
+  const goal = document.getElementById('edit-goal').value.trim();
+  const scope = document.getElementById('edit-scope').value.trim();
+  const description = '**User Story:** ' + story + '\n**Ziel:** ' + goal + '\n**Scope:** ' + scope;
+  try {
+    await supabaseApi('projects?id=eq.' + id, { method: 'PATCH', body: JSON.stringify({ description: description }) });
+    const p = projects.find(x => x.id === id);
+    if (p) p.description = description;
+    editingProjectId = null; selectProject(id);
+  } catch(e) { alert('❌ ' + e.message); }
+}
+
+// ===== TASK CRUD =====
+function openNewTask(projectId) {
+  document.getElementById('modal-title').textContent = '➕ Neuer Task';
+  document.getElementById('edit-task-id').value = '';
+  document.getElementById('task-title').value = '';
+  document.getElementById('task-desc').value = '';
+  document.getElementById('task-status').value = 'open';
+  document.getElementById('task-creator').value = currentUser?.name || 'Rason';
+  document.getElementById('task-effort').value = '';
+  document.getElementById('task-assignee').value = 'drexoss';
+  const sel = document.getElementById('task-project');
+  sel.innerHTML = '';
+  for (const p of projects) sel.innerHTML += '<option value="' + p.id + '"' + (p.id === projectId ? ' selected' : '') + '>' + (p.number || '') + ' · ' + escHtml(p.name) + '</option>';
+  if (!projectId && sel.options.length > 0) sel.selectedIndex = 0;
+  document.getElementById('task-modal').classList.add('show');
+}
+function closeModal() { document.getElementById('task-modal').classList.remove('show'); }
+
+async function saveTask() {
+  const editId = document.getElementById('edit-task-id').value;
+  const title = document.getElementById('task-title').value.trim();
+  if (!title) { alert('Titel erforderlich!'); return; }
+  const data = {
+    project_id: parseInt(document.getElementById('task-project').value),
+    title, description: document.getElementById('task-desc').value.trim(),
+    status: document.getElementById('task-status').value,
+    created_by: document.getElementById('task-creator').value.trim() || 'Rason',
+    effort: document.getElementById('task-effort').value.trim(),
+    assignee: document.getElementById('task-assignee').value.trim() || 'drexoss'
+  };
+  try {
+    if (editId) {
+      await supabaseApi('tasks?id=eq.' + editId, { method: 'PATCH', body: JSON.stringify(data) });
+      const t = tasks.find(x => x.id === parseInt(editId));
+      if (t) Object.assign(t, data);
+    } else {
+      const maxNum = tasks.reduce((m, t) => { const n = parseInt((t.number || 'T-0').replace('T-','')); return n > m ? n : m; }, 0);
+      data.number = 'T-' + String(maxNum + 1).padStart(3, '0');
+      data.created_at = new Date().toISOString();
+      await supabaseApi('tasks', { method: 'POST', body: JSON.stringify(data) });
+      tasks = await supabaseApi('tasks?select=*&order=id');
+    }
+    closeModal();
+    if (currentProjectId) selectProject(currentProjectId);
+    else showKanbanOverview();
+  } catch(e) { alert('❌ ' + e.message); }
+}
+
+// ===== PASSWORT =====
+function openPasswordModal() {
+  document.getElementById('pw-current').value = '';
+  document.getElementById('pw-new').value = '';
+  document.getElementById('pw-confirm').value = '';
+  document.getElementById('pw-error').style.display = 'none';
+  document.getElementById('pw-modal').classList.add('show');
+}
+function closePWModal() { document.getElementById('pw-modal').classList.remove('show'); }
+async function changePassword() {
+  const current = document.getElementById('pw-current').value;
+  const newPw = document.getElementById('pw-new').value;
+  const confirm = document.getElementById('pw-confirm').value;
+  const errEl = document.getElementById('pw-error');
+  if (!current || !newPw) { errEl.textContent = '❌ Alle Felder ausfüllen'; errEl.style.display = 'block'; return; }
+  if (newPw !== confirm) { errEl.textContent = '❌ Neue Passwörter stimmen nicht überein'; errEl.style.display = 'block'; return; }
+  if (newPw.length < 6) { errEl.textContent = '❌ Mindestens 6 Zeichen'; errEl.style.display = 'block'; return; }
+  try {
+    const loginRes = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: currentUser.email, password: current })
+    });
+    const loginData = await loginRes.json();
+    if (!loginRes.ok) throw new Error('Aktuelles Passwort falsch');
+    const updateRes = await fetch(SUPABASE_URL + '/auth/v1/user', {
+      method: 'PUT',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + loginData.access_token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: newPw })
+    });
+    const updateData = await updateRes.json();
+    if (!updateRes.ok) throw new Error(updateData.msg || 'Fehler beim Ändern');
+    errEl.textContent = '✅ Passwort geändert!';
+    errEl.style.color = '#34d399';
+    errEl.style.display = 'block';
+    setTimeout(() => closePWModal(), 1500);
+  } catch(e) {
+    errEl.textContent = '❌ ' + e.message;
+    errEl.style.color = '#ef4444';
+    errEl.style.display = 'block';
+  }
+}
+
+// ===== KPIs =====
+async function loadKPIs() {
+  try {
+    const allProjects = await supabaseApi('projects?select=id,status,progress');
+    const allTasks = await supabaseApi('tasks?select=id,status');
+    const activeProj = allProjects.filter(p => p.status === 'active' || p.status === 'in_progress');
+    const planningProj = allProjects.filter(p => p.status === 'planning');
+    const openTasks = allTasks.filter(t => t.status === 'open');
+    const inProgTasks = allTasks.filter(t => t.status === 'in_progress');
+    const doneTasks = allTasks.filter(t => t.status === 'done');
+    document.getElementById('kpi-projects').textContent = allProjects.length;
+    document.getElementById('kpi-projects-sub').textContent = activeProj.length + ' aktiv · ' + planningProj.length + ' Planung';
+    document.getElementById('kpi-open').textContent = openTasks.length;
+    document.getElementById('kpi-open-sub').textContent = inProgTasks.length + ' in Arbeit · ' + doneTasks.length + ' erledigt';
+    document.getElementById('kpi-progress').textContent = inProgTasks.length;
+    document.getElementById('kpi-progress-sub').textContent = openTasks.length + ' offen · ' + Math.round(doneTasks.length / Math.max(1, allTasks.length) * 100) + '%';
+  } catch(e) {
+    document.getElementById('kpi-projects').textContent = '?';
+    document.getElementById('kpi-projects-sub').textContent = 'Fehler beim Laden';
+  }
 }
 
 // ===== CHAT =====
@@ -897,13 +982,10 @@ function sendMsg() {
   const input = document.getElementById('chat-input');
   const text = input.value.trim();
   if (!text) return;
-
   const empty = document.getElementById('empty-state');
   const msgs = document.getElementById('chat-msgs');
   empty.style.display = 'none';
   msgs.style.display = 'flex';
-
-  // User message
   const userDiv = document.createElement('div');
   userDiv.className = 'msg user';
   userDiv.innerHTML = '<div class="msg-bubble"><p>' + escHtml(text) + '</p></div>';
@@ -911,23 +993,16 @@ function sendMsg() {
   input.value = '';
   input.style.height = 'auto';
   msgs.scrollTop = msgs.scrollHeight;
-
-  // Add to history
   chatHistory.push({ role: 'user', content: text });
-
-  // Show typing indicator
   const typingDiv = document.createElement('div');
   typingDiv.className = 'msg ai';
   typingDiv.id = 'typing-indicator';
   typingDiv.innerHTML = '<div class="msg-bubble"><p>⌨️ Denke nach...</p></div>';
   msgs.appendChild(typingDiv);
   msgs.scrollTop = msgs.scrollHeight;
-
-  // Try backend, fallback to mock
   callBackend(text, function(reply) {
     const typing = document.getElementById('typing-indicator');
     if (typing) typing.remove();
-
     const aiDiv = document.createElement('div');
     aiDiv.className = 'msg ai';
     aiDiv.innerHTML = '<div class="msg-bubble"><p>' + escHtml(reply) + '</p></div>';
@@ -938,81 +1013,26 @@ function sendMsg() {
 }
 
 function callBackend(text, callback) {
-  // Try the FastAPI backend (localhost:8000 won't work from Cloudflare, so fallback to mock)
-  const greetings = [
-    'Guten ' + getGreeting() + ' Boss! Ready to build.',
-    'Moinsen! Was steht an?',
-    'Hey Boss, alles klar?',
-    getGreeting() + ' Boss! Woran hacken wir heute?',
-    'Servus! Bin bereit.'
-  ];
-
-  // Attempt real backend call
-  fetch(CHAT_API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: text, user_id: currentUser?.email || 'rason' })
-  })
-  .then(r => r.json())
-  .then(data => {
-    if (data && data.reply) {
-      callback(data.reply);
-      return;
-    }
-    // Fallback
-    callback(greetings[Math.floor(Math.random() * greetings.length)]);
-  })
-  .catch(() => {
-    // Backend not reachable - use mock with context
-    const hr = new Date().getHours();
-    const greet = hr < 12 ? 'Morgen' : hr < 18 ? 'Tag' : 'Abend';
-    const responses = [
-      greet + ' Boss! Ich hab ' + (chatHistory.length/2) + ' Nachrichten im Kontext. Was machen wir?',
-      'Verstanden. Soll ich einen Task dafür anlegen oder direkt loslegen?',
-      'Gute Idee! Ich check die Datenbank und geb dir gleich Feedback.',
-      'Ja Bro, läuft. Wollen wir das direkt deployen oder erst testen?',
-      'Alles klar. Ich notier mir das für die Session.'
-    ];
-    callback(responses[Math.floor(Math.random() * responses.length)]);
-  });
+  const greetings = ['Guten ' + getGreeting() + ' Boss! Ready to build.', 'Moinsen! Was steht an?', 'Hey Boss, alles klar?', getGreeting() + ' Boss! Woran hacken wir heute?', 'Servus! Bin bereit.'];
+  fetch(CHAT_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text, user_id: currentUser?.email || 'rason' }) })
+    .then(r => r.json())
+    .then(data => { if (data && data.reply) { callback(data.reply); return; } callback(greetings[Math.floor(Math.random() * greetings.length)]); })
+    .catch(() => {
+      const hr = new Date().getHours();
+      const greet = hr < 12 ? 'Morgen' : hr < 18 ? 'Tag' : 'Abend';
+      const responses = [greet + ' Boss! Ich hab ' + (chatHistory.length/2) + ' Nachrichten im Kontext. Was machen wir?', 'Verstanden. Soll ich einen Task dafür anlegen oder direkt loslegen?', 'Gute Idee! Ich check die Datenbank und geb dir gleich Feedback.', 'Ja Bro, läuft. Wollen wir das direkt deployen oder erst testen?', 'Alles klar. Ich notier mir das für die Session.'];
+      callback(responses[Math.floor(Math.random() * responses.length)]);
+    });
 }
 
-function sendSuggestion(el) {
-  document.getElementById('chat-input').value = el.textContent;
-  sendMsg();
-}
-
-function newChat() {
-  chatHistory = [];
-  const msgs = document.getElementById('chat-msgs');
-  msgs.innerHTML = '';
-  msgs.style.display = 'none';
-  document.getElementById('empty-state').style.display = 'flex';
-}
-
-function filterChats() {
-  // Placeholder for chat search
-}
-
-function showTicketForm() {
-  alert('📝 Ticket-System folgt in Kürze.');
-}
-
-function getGreeting() {
-  const hr = new Date().getHours();
-  if (hr < 12) return 'Morgen';
-  if (hr < 18) return 'Tag';
-  return 'Abend';
-}
-
-function escHtml(s) {
-  const d = document.createElement('div');
-  d.textContent = s || '';
-  return d.innerHTML;
-}
+function sendSuggestion(el) { document.getElementById('chat-input').value = el.textContent; sendMsg(); }
+function newChat() { chatHistory = []; const msgs = document.getElementById('chat-msgs'); msgs.innerHTML = ''; msgs.style.display = 'none'; document.getElementById('empty-state').style.display = 'flex'; }
+function filterChats() {}
+function showTicketForm() { alert('📝 Ticket-System folgt in Kürze.'); }
+function getGreeting() { const hr = new Date().getHours(); if (hr < 12) return 'Morgen'; if (hr < 18) return 'Tag'; return 'Abend'; }
+function escHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 
 // ===== INIT =====
-const DEPLOY_TS = "20260825_093000";
 checkSession();
 </script>
 </body>
