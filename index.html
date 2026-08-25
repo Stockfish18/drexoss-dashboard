@@ -250,14 +250,29 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 <!-- ===== HUB ===== -->
 <div class="hub-screen" id="hub-screen">
 
-  <!-- CHAT SIDEBAR (links) -->
+  <!-- SIDEBAR -->
   <div class="chat-sidebar">
     <div class="cs-header"><span class="cs-logo">Drex<span>OSS</span></span></div>
-    <button class="cs-new-btn" onclick="newChat()">+ Neuer Chat</button>
-    <input class="cs-search" type="text" placeholder="Chats durchsuchen..." id="cs-search" oninput="filterChats()">
-    <div class="cs-scroll">
-      <div class="cs-section" id="cs-today-label">Heute</div>
-      <div id="cs-threads-list"></div>
+    <!-- Chat View (default) -->
+    <div id="sidebar-chat" style="display:flex;flex-direction:column;flex:1;min-height:0;">
+      <button class="cs-new-btn" onclick="newChat()">+ Neuer Chat</button>
+      <input class="cs-search" type="text" placeholder="Chats durchsuchen..." id="cs-search" oninput="filterChats()">
+      <div class="cs-scroll">
+        <div class="cs-section" id="cs-today-label">Heute</div>
+        <div id="cs-threads-list"></div>
+      </div>
+    </div>
+    <!-- Project View (visible in dashboard) -->
+    <div id="sidebar-projects" style="display:none;flex-direction:column;flex:1;min-height:0;">
+      <div style="display:flex;gap:0.3rem;margin:0 0.75rem 0.3rem;">
+        <button class="cs-new-btn" onclick="closeDashboard()" style="flex:1;margin:0;padding:0.35rem;">💬 Chat</button>
+        <button class="cs-new-btn" onclick="openNewTask(null)" style="flex:1;margin:0;padding:0.35rem;">+ Task</button>
+      </div>
+      <input class="cs-search" type="text" placeholder="Projekte filtern..." id="pj-search" oninput="filterProjects()">
+      <div class="cs-scroll">
+        <div class="cs-section">Projekte</div>
+        <div id="pj-list"></div>
+      </div>
     </div>
     <div class="cs-section" style="border-top:1px solid #141414;padding:0.5rem 0.6rem 0.3rem;">Administration</div>
     <div class="cs-admin-area">
@@ -522,26 +537,54 @@ async function loadAllData() {
     projects = await supabaseApi('projects?select=*&order=id');
     tasks = await supabaseApi('tasks?select=*&order=id');
     taskMessages = await supabaseApi('task_messages?select=*&order=id');
+    renderProjectSidebar();
     loadKPIs();
   } catch(e) {}
 }
 
 // ===== VIEW SWITCHING =====
+let projectFilter = '';
+
+function renderProjectSidebar() {
+  let html = '';
+  const filtered = projects.filter(p => !projectFilter || p.name.toLowerCase().includes(projectFilter.toLowerCase()) || (p.number || '').toLowerCase().includes(projectFilter.toLowerCase()));
+  for (const p of filtered) {
+    const dotClass = p.status === 'active' ? 'green' : p.status === 'planning' ? 'gray' : 'blue';
+    const isActive = currentProjectId === p.id;
+    html += '<div class="cs-thread ' + (isActive ? 'active' : '') + '" onclick="selectProject(' + p.id + ')">' +
+      '<span class="t-icon">' + (p.icon || '📁') + '</span>' +
+      '<div class="t-info"><div class="t-name">' + escHtml(p.name) + '</div>' +
+      '<div class="t-preview">' + (p.number || '') + ' · ' + (p.progress || 0) + '%</div></div>' +
+      '<span class="sb-dot ' + dotClass + '" style="flex-shrink:0;"></span></div>';
+  }
+  document.getElementById('pj-list').innerHTML = html || '<div style="font-size:0.7rem;color:#5c5c78;padding:0.5rem;text-align:center;">Keine Projekte</div>';
+}
+
+function filterProjects() {
+  projectFilter = document.getElementById('pj-search').value.trim();
+  renderProjectSidebar();
+}
 function openDashboard() {
   showDashboardView();
 }
 function closeDashboard() {
   document.getElementById('dashboard-view').classList.remove('active');
   document.getElementById('chat-view').style.display = 'flex';
+  document.getElementById('sidebar-chat').style.display = 'flex';
+  document.getElementById('sidebar-projects').style.display = 'none';
   currentProjectId = null; currentTaskId = null;
 }
 function showDashboardView() {
   document.getElementById('chat-view').style.display = 'none';
   document.getElementById('dashboard-view').classList.add('active');
+  document.getElementById('sidebar-chat').style.display = 'none';
+  document.getElementById('sidebar-projects').style.display = 'flex';
+  renderProjectSidebar();
   showKanbanOverview();
 }
 function showKanbanOverview() {
   currentProjectId = null; currentTaskId = null; editingProjectId = null;
+  renderProjectSidebar();
   document.getElementById('dash-bread').textContent = 'DrexOSS';
   document.getElementById('dash-title').textContent = '📋 Übersicht';
   document.getElementById('kanban-overview').style.display = 'block';
@@ -629,6 +672,7 @@ function renderColumnHTML(items) {
 function selectProject(id) {
   showDashboardView();
   currentProjectId = id; currentTaskId = null; editingProjectId = null;
+  renderProjectSidebar();
   const p = projects.find(x => x.id === id);
   if (p) {
     document.getElementById('dash-bread').textContent = 'DrexOSS / Projekte';
