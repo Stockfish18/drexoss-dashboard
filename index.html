@@ -603,10 +603,11 @@ function showHub() {
   document.getElementById('login-screen').classList.add('hidden');
   const hub = document.getElementById('hub-screen');
   const allowedRoles = ['admin', 'dev', 'friend'];
-  if (!allowedRoles.includes(currentRole)) {
-    window.location.href = '/dashboard';
-    return;
-  }
+    if (!allowedRoles.includes(currentRole)) {
+      // Customer → show dashboard view direkt (alles in einer Seite)
+      showDashboardView();
+      return;
+    }
   hub.classList.add('show');
   document.getElementById('sb-user-name').textContent = currentUser.name || currentUser.email;
   document.getElementById('sb-user-role').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1) + ' · Abmelden';
