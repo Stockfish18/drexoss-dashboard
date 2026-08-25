@@ -139,6 +139,14 @@
     margin-top: 0.5rem;
   }
   .btn-primary:hover { background: #6d6bf0; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .login-error {
+    font-size: 0.75rem;
+    color: #ef4444;
+    margin-bottom: 0.75rem;
+    display: none;
+  }
 
   .login-divider {
     display: flex;
@@ -148,8 +156,7 @@
     color: #222;
     font-size: 0.6rem;
   }
-  .login-divider::before,
-  .login-divider::after {
+  .login-divider::before, .login-divider::after {
     content: '';
     flex: 1;
     height: 1px;
@@ -162,8 +169,11 @@
     font-size: 0.72rem;
     color: #444;
   }
-  .login-footer a { color: #5e5ce6; text-decoration: none; }
+  .login-footer a { color: #5e5ce6; text-decoration: none; cursor: pointer; }
   .login-footer a:hover { text-decoration: underline; }
+
+  /* Register form */
+  #register-form { display: none; }
 
   /* ===== HUB LAYOUT ===== */
   .hub-screen { display: none; width: 100%; height: 100vh; }
@@ -249,9 +259,23 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: #ccc;
+    color: #888;
     padding: 0.75rem 0.6rem 0.3rem;
   }
+
+  .sb-chat-item {
+    padding: 0.55rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    color: #e0e0e0;
+    transition: all 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .sb-chat-item:hover { background: #141414; }
+  .sb-chat-item.active { background: #141414; }
 
   .sb-item {
     padding: 0.55rem 0.6rem 0.55rem 1.2rem;
@@ -264,10 +288,27 @@
   .sb-item:hover { background: #141414; }
   .sb-item.active { background: #141414; }
 
+  .sb-admin-area { padding: 0; }
+
+  .sb-admin-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    color: #e0e0e0;
+    transition: all 0.1s;
+  }
+  .sb-admin-item:hover { background: #141414; color: #fff; }
+
   .sb-user {
     display: flex; align-items: center; gap: 0.5rem;
     padding: 0.65rem 0.75rem; border-top: 1px solid #141414;
+    cursor: pointer;
   }
+  .sb-user:hover { background: #0a0a0a; }
   .sb-avatar {
     width: 28px; height: 28px; border-radius: 50%;
     background: #1a1a1a; display: flex; align-items: center;
@@ -276,7 +317,7 @@
   }
   .sb-user-info { flex: 1; min-width: 0; }
   .sb-user-name { font-size: 0.75rem; color: #eee; font-weight: 500; }
-  .sb-user-role { font-size: 0.6rem; color: #ccc; }
+  .sb-user-role { font-size: 0.6rem; color: #888; }
   .sb-dot { width: 5px; height: 5px; border-radius: 50%; background: #34d399; flex-shrink: 0; }
 
   /* MAIN */
@@ -288,11 +329,6 @@
     background: #000;
     position: relative;
   }
-
-  .drop-zone { position: relative; }
-  .drop-zone.dragover { outline: 2px dashed #5e5ce6; outline-offset: -2px; background: rgba(94,92,230,0.05); }
-  .drop-overlay { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; font-size: 0.8rem; color: #5e5ce6; pointer-events: none; z-index: 10; }
-  .drop-zone.dragover .drop-overlay { display: flex; }
 
   /* Chat Messages */
   .chat-msgs {
@@ -313,6 +349,14 @@
   }
   .msg.user { justify-content: flex-end; }
   .msg.ai { justify-content: flex-start; }
+  .msg.system { justify-content: center; }
+  .msg.system .msg-bubble {
+    background: transparent;
+    color: #666;
+    font-size:0.75rem;
+    text-align:center;
+    max-width:100%;
+  }
 
   .msg-bubble {
     max-width: 75%;
@@ -332,7 +376,6 @@
     color: #e8e8e8;
     border-bottom-left-radius: 4px;
   }
-
   .msg-bubble code {
     background: rgba(255,255,255,0.08);
     border-radius: 4px;
@@ -420,7 +463,7 @@
     transition: all 0.1s; flex-shrink: 0;
   }
   .input-btn:hover { background: #141414; color: #ccc; }
-  .audio-btn:hover { background: #4a48c4 !important; transition: background 0.15s; }
+  .input-btn.send-btn:hover { background: #4a48c4 !important; }
 
   /* RIGHT PANEL */
   .right-panel {
@@ -441,7 +484,9 @@
     color: #888;
     margin-bottom: 1rem;
     cursor: pointer;
+    transition: color 0.12s;
   }
+  .rp-header:hover { color: #5e5ce6; }
   .rp-kpi {
     padding: 0.75rem;
     background: #0d0d0d;
@@ -464,11 +509,26 @@
   ::-webkit-scrollbar-thumb { background: #141414; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #222; }
 
+  /* Role info banner */
+  .role-banner {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: #0d0d0d;
+    border-bottom: 1px solid #1a1a1a;
+    font-size: 0.72rem;
+    color: #888;
+  }
+
   @media (max-width: 800px) {
     .login-screen { flex-direction: column; }
     .login-form-wrap { width: 100%; border-left: none; border-top: 2px solid; }
     .login-features { flex-wrap: wrap; justify-content: center; }
     .sidebar, .right-panel { display: none; }
+    .chat-msgs { padding: 1rem; }
+    .input-wrap { padding: 0.5rem 1rem 1rem; }
   }
 </style>
 </head>
@@ -476,7 +536,6 @@
 
 <!-- ===== LOGIN SCREEN ===== -->
 <div class="login-screen" id="login-screen">
-
   <div class="login-brand">
     <div class="login-logo">Drex<span>OSS</span></div>
     <div class="login-slogan">DESIGN · REFINE · EXECUTE</div>
@@ -492,23 +551,48 @@
   </div>
 
   <div class="login-form-wrap">
-    <div class="login-box">
+    <div class="login-box" id="login-form">
       <h2>ZUGANG</h2>
       <p class="sub">Melde dich an, um fortzufahren.</p>
+      <div class="login-error" id="login-error"></div>
       <form onsubmit="doLogin();return false">
         <div class="field">
           <label>E-Mail</label>
-          <input id="login-email" type="email" placeholder="deine@email.de" value="leis.rason@gmail.com">
+          <input id="login-email" type="email" placeholder="deine@email.de" value="">
         </div>
         <div class="field">
           <label>Passwort</label>
           <input id="login-pass" type="password" placeholder="••••••••">
         </div>
-        <button type="submit" class="btn-primary">Anmelden</button>
+        <button type="submit" class="btn-primary" id="login-btn">Anmelden</button>
       </form>
       <div class="login-divider">oder</div>
       <div class="login-footer">
         Noch kein Konto? <a href="#" onclick="showRegister();return false;">Registrieren</a>
+      </div>
+    </div>
+
+    <div class="login-box" id="register-form">
+      <h2>REGISTRIEREN</h2>
+      <p class="sub">Erstelle deinen kostenlosen Account.</p>
+      <div class="login-error" id="register-error"></div>
+      <form onsubmit="doRegister();return false">
+        <div class="field">
+          <label>E-Mail</label>
+          <input id="reg-email" type="email" placeholder="deine@email.de">
+        </div>
+        <div class="field">
+          <label>Name</label>
+          <input id="reg-name" type="text" placeholder="Dein Name">
+        </div>
+        <div class="field">
+          <label>Passwort</label>
+          <input id="reg-pass" type="password" placeholder="•••••••• (min. 6 Zeichen)">
+        </div>
+        <button type="submit" class="btn-primary" id="register-btn">Konto erstellen</button>
+      </form>
+      <div class="login-footer" style="margin-top:1rem;">
+        Bereits registriert? <a href="#" onclick="showLogin();return false;">Anmelden</a>
       </div>
     </div>
   </div>
@@ -516,38 +600,35 @@
 
 <!-- ===== HUB SCREEN ===== -->
 <div class="hub-screen" id="hub-screen">
+  <div class="role-banner" id="role-banner">
+    <span id="role-banner-text"></span>
+  </div>
 
   <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sb-header">
       <span class="logo-anim"><span class="drex">Drex</span><span class="o">O</span><span class="s1">S</span><span class="s2">S</span></span>
     </div>
-    <button class="sb-new-btn">+ Neuer Chat</button>
-    <input class="sb-search" type="text" placeholder="Durchsuchen...">
-    <div class="sb-scroll">
-      <div class="sb-section">Heute</div>
-      <div class="sb-item active">Dashboard-Layout</div>
-      <div class="sb-item">Avatar Upload Bug</div>
-      <div class="sb-section">Diese Woche</div>
-      <div class="sb-item">Supabase GRANTs</div>
-      <div class="sb-item">Logo-Varianten</div>
-      <div class="sb-item">Login Flow</div>
+    <button class="sb-new-btn" onclick="newChat()">+ Neuer Chat</button>
+    <input class="sb-search" type="text" placeholder="Durchsuchen..." id="sb-search" oninput="filterChats()">
+    <div class="sb-scroll" id="sb-scroll">
+      <div class="sb-section" id="sb-today-label">Heute</div>
+      <div id="sb-chats-list"></div>
+      <div class="sb-section" style="border-top:1px solid #141414;margin-top:0.5rem;padding-top:0.5rem;">Administration</div>
+      <div class="sb-item" onclick="window.location.href='/dashboard'">📊 Dashboard</div>
+      <div class="sb-item" onclick="showTicketForm()">📝 Ticket anlegen</div>
+      <div class="sb-item" onclick="alert('Projektverwaltung folgt')">📁 Projekte verwalten</div>
+      <div class="sb-item" onclick="alert('Benutzerverwaltung folgt')">👥 Benutzer</div>
+      <div class="sb-item" onclick="alert('Einstellungen folgt')">⚙️ Einstellungen</div>
     </div>
-    <div class="sb-section" style="padding:0.5rem 0.75rem 0.3rem;border-top:1px solid #141414;">Administration</div>
-    <div class="sb-item">Ticket anlegen</div>
-    <div class="sb-item">Projekte verwalten</div>
-    <div class="sb-item">Benutzer</div>
-    <div class="sb-item">Cronjobs</div>
-    <div class="sb-item">Einstellungen</div>
-        <div class="sb-item" onclick="logout()" style="color:#ef4444;">Abmelden</div>
-        <div class="sb-user" onclick="logout()" style="cursor:pointer;display:flex;align-items:center;gap:0.5rem;padding:0.65rem 0.75rem;border-top:1px solid #141414;">
-              <span class="sb-dot"></span>
-              <div class="sb-avatar">R</div>
-              <div class="sb-user-info">
-                <div class="sb-user-name">Rason Leis</div>
-                <div class="sb-user-role">Admin · Abmelden</div>
-              </div>
-            </div>
+    <div class="sb-user" onclick="logout()">
+      <span class="sb-dot"></span>
+      <div class="sb-avatar" id="sb-avatar-letter">R</div>
+      <div class="sb-user-info">
+        <div class="sb-user-name" id="sb-user-name">Rason Leis</div>
+        <div class="sb-user-role" id="sb-user-role">Admin · Abmelden</div>
+      </div>
+    </div>
   </div>
 
   <!-- MAIN -->
@@ -556,7 +637,7 @@
       <div class="empty-center">
         <div class="brand">Drex<span>OSS</span></div>
         <div class="slogan">Design · Refine · Execute</div>
-        <div class="suggestions">
+        <div class="suggestions" id="suggestion-list">
           <span onclick="sendSuggestion(this)">Projekt-Update erstellen</span>
           <span onclick="sendSuggestion(this)">Offene Tasks analysieren</span>
           <span onclick="sendSuggestion(this)">Weekly Briefing</span>
@@ -569,16 +650,13 @@
 
     <div class="input-wrap" id="input-wrap">
       <div class="input-box">
-        <textarea id="chat-input" rows="1" placeholder="Nachricht an Stockfish..." 
+        <textarea id="chat-input" rows="1" placeholder="Nachricht an Stockfish..."
           oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,160)+'px'"
           onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
         <div class="input-actions">
-          <button class="input-btn audio-btn" title="Audio eingeben" style="width:38px;height:38px;border-radius:50%;background:#5e5ce6;color:#fff;display:flex;align-items:center;justify-content:center;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <line x1="4" y1="8.5" x2="4" y2="15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <line x1="9.5" y1="2.5" x2="9.5" y2="21.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-              <line x1="15" y1="5" x2="15" y2="19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-              <line x1="20" y1="8.5" x2="20" y2="15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <button class="input-btn send-btn" id="send-btn" onclick="sendMsg()" style="width:38px;height:38px;border-radius:50%;background:#5e5ce6;color:#fff;display:flex;align-items:center;justify-content:center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
             </svg>
           </button>
         </div>
@@ -588,107 +666,230 @@
 
   <!-- RIGHT PANEL -->
   <div class="right-panel">
-    <div class="rp-header" onclick="alert('Dashboard öffnen')">Dashboard</div>
-    <div class="rp-kpi" onclick="alert('Dashboard öffnen')">
+    <div class="rp-header" onclick="goToDashboard()">📊 Dashboard →</div>
+    <div class="rp-kpi" onclick="goToDashboard()">
       <div class="rp-kpi-top">
         <span class="rp-kpi-label">Projekte</span>
-        <span class="rp-kpi-num">3</span>
+        <span class="rp-kpi-num" id="kpi-projects">—</span>
       </div>
-      <div class="rp-kpi-sub">Aktiv · 1 in Planung</div>
+      <div class="rp-kpi-sub" id="kpi-projects-sub">Lade...</div>
     </div>
-    <div class="rp-kpi" onclick="alert('Dashboard öffnen')">
+    <div class="rp-kpi" onclick="goToDashboard()">
       <div class="rp-kpi-top">
         <span class="rp-kpi-label">Offene Tasks</span>
-        <span class="rp-kpi-num">14</span>
+        <span class="rp-kpi-num" id="kpi-open">—</span>
       </div>
-      <div class="rp-kpi-sub">6 in Arbeit · 8 offen</div>
+      <div class="rp-kpi-sub" id="kpi-open-sub">Lade...</div>
     </div>
-    <div class="rp-kpi" onclick="alert('Dashboard öffnen')">
+    <div class="rp-kpi" onclick="goToDashboard()">
       <div class="rp-kpi-top">
-        <span class="rp-kpi-label">Erledigt</span>
-        <span class="rp-kpi-num accent">22</span>
+        <span class="rp-kpi-label">In Arbeit</span>
+        <span class="rp-kpi-num accent" id="kpi-progress">—</span>
       </div>
-      <div class="rp-kpi-sub">+3 heute · 58%</div>
+      <div class="rp-kpi-sub" id="kpi-progress-sub">Lade...</div>
     </div>
-    <div class="rp-kpi" onclick="alert('Dashboard öffnen')">
+    <div class="rp-kpi" onclick="goToDashboard()">
       <div class="rp-kpi-top">
         <span class="rp-kpi-label">Agent</span>
-        <span class="rp-kpi-num" style="font-size:0.8rem;color:#34d399;">Online</span>
+        <span class="rp-kpi-num" style="font-size:0.8rem;color:#34d399;" id="kpi-agent">Online</span>
       </div>
-      <div class="rp-kpi-sub">Session aktiv</div>
+      <div class="rp-kpi-sub" id="kpi-agent-sub">Bereit</div>
     </div>
   </div>
 </div>
 
 <script>
-// ===== LOGIN =====
-function doLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const pass = document.getElementById('login-pass').value;
-  if (!email || !pass) { alert('Bitte E-Mail und Passwort eingeben'); return; }
-  
-  // Simple login check (demo)
-  const known = { 'leis.rason@gmail.com': { pass: 'DrexOSS2026!', name: 'Rason Leis', role: 'Admin' } };
-  const user = known[email];
-  if (user && user.pass === pass) {
-        localStorage.clear();
-        localStorage.setItem('dxs_v', '1');
-        localStorage.setItem('dxs_session', JSON.stringify({ email, name: user.name, role: user.role }));
-    showHub();
-  } else {
-    alert('❌ Falsche E-Mail oder Passwort');
+// ===== SUPABASE CONFIG =====
+const SUPABASE_URL = 'https://rmveqbegqfthwdopzykh.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ByDyItDAH-NvgMLIitjl9w_VdNJZqtp';
+const CHAT_API_URL = '/api/chat'; // Will try localhost:8000/chat or this
+
+let currentUser = null;
+let currentRole = null;
+let chatHistory = [];
+
+// ===== AUTH =====
+async function api(endpoint, opts) {
+  const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' };
+  const res = await fetch(SUPABASE_URL + '/rest/v1/' + endpoint, { headers, ...opts });
+  if (!res.ok) {
+    try { const err = await res.text(); throw new Error(err.substring(0,80)); } catch(e) { throw new Error('HTTP ' + res.status); }
   }
+  return opts && opts.method === 'PATCH' ? null : res.json();
+}
+
+function showLogin() {
+  document.getElementById('register-form').style.display = 'none';
+  document.getElementById('login-form').style.display = 'block';
+  document.getElementById('login-error').style.display = 'none';
 }
 
 function showRegister() {
-  alert('Registrierung folgt in Kürze.');
+  document.getElementById('login-form').style.display = 'none';
+  document.getElementById('register-form').style.display = 'block';
+  document.getElementById('register-error').style.display = 'none';
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  errEl.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Anmelden...';
+
+  try {
+    const res = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error_description || data.error || 'Login fehlgeschlagen');
+
+    // Get user profile from our DB
+    let role = 'customer';
+    let name = data.user.email;
+    try {
+      const profiles = await api('user_profiles?select=role,name,status&email=eq.' + encodeURIComponent(data.user.email));
+      if (profiles && profiles.length > 0) {
+        role = profiles[0].role || 'customer';
+        name = profiles[0].name || data.user.email;
+      }
+    } catch(e) { /* fallback */ }
+
+    currentUser = { email: data.user.email, id: data.user.id, name, role };
+    localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
+    location.reload();
+  } catch(e) {
+    errEl.textContent = '❌ ' + e.message;
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Anmelden';
+  }
+}
+
+async function doRegister() {
+  const email = document.getElementById('reg-email').value.trim();
+  const name = document.getElementById('reg-name').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  const errEl = document.getElementById('register-error');
+  const btn = document.getElementById('register-btn');
+  errEl.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Erstelle Account...';
+
+  if (!email || !name || pass.length < 6) {
+    errEl.textContent = '❌ Alle Felder ausfüllen, Passwort min. 6 Zeichen';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Konto erstellen';
+    return;
+  }
+
+  try {
+    const res = await fetch(SUPABASE_URL + '/auth/v1/signup', {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.msg || data.error || 'Registrierung fehlgeschlagen');
+
+    alert('✅ Registrierung erfolgreich! Bitte bestätige deine E-Mail (Link im Postfach).');
+    showLogin();
+  } catch(e) {
+    errEl.textContent = '❌ ' + e.message;
+    errEl.style.display = 'block';
+  }
+  btn.disabled = false;
+  btn.textContent = 'Konto erstellen';
 }
 
 function checkSession() {
-  // Force reset from old version — new key name
-  const v = localStorage.getItem('dxs_v');
-  if (!v) {
-    localStorage.clear();
-    localStorage.setItem('dxs_v', '1');
-    document.getElementById('login-screen').classList.remove('hidden');
-    return;
-  }
-  
-  const saved = localStorage.getItem('dxs_session');
+  const saved = localStorage.getItem('drexoss_session');
   if (saved) {
     try {
-      const data = JSON.parse(saved);
-      if (data && data.email && data.email.includes('@')) {
-        showHub();
-        return;
-      }
-    } catch(e) {}
+      currentUser = JSON.parse(saved);
+      currentRole = currentUser.role || 'customer';
+      showHub();
+    } catch(e) { showLoginScreen(); }
+  } else {
+    showLoginScreen();
   }
-  // Clear bad session
-  localStorage.clear();
+}
+
+function showLoginScreen() {
   document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('hub-screen').classList.remove('show');
 }
 
 function showHub() {
   document.getElementById('login-screen').classList.add('hidden');
   const hub = document.getElementById('hub-screen');
+
+  // Role check: Admin/Dev/Friend → Chat Hub, Customer → Dashboard
+  const allowedRoles = ['admin', 'dev', 'friend'];
+  if (!allowedRoles.includes(currentRole)) {
+    // Customer → redirect to dashboard
+    window.location.href = '/dashboard';
+    return;
+  }
+
   hub.classList.add('show');
-  
+
   // Set user info
-    try {
-      const data = JSON.parse(localStorage.getItem('dxs_session'));
-    if (data) {
-      const nameEl = document.querySelector('.sb-user-name');
-      const roleEl = document.querySelector('.sb-user-role');
-      if (nameEl) nameEl.textContent = data.name || data.email;
-      if (roleEl) roleEl.textContent = data.role || 'User';
-    }
-  } catch(e) {}
+  document.getElementById('sb-user-name').textContent = currentUser.name || currentUser.email;
+  document.getElementById('sb-user-role').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1) + ' · Abmelden';
+  document.getElementById('sb-avatar-letter').textContent = (currentUser.name || currentUser.email).charAt(0).toUpperCase();
+
+  // Role banner
+  const banner = document.getElementById('role-banner');
+  banner.style.display = 'flex';
+  document.getElementById('role-banner-text').textContent = '👑 Angemeldet als ' + currentUser.name + ' (' + currentRole + ')';
+
+  // Show/hide admin items based on role
+  if (currentRole === 'admin') {
+    // full access
+  } else {
+    // dev/friend - maybe hide some admin items
+  }
+
+  // Load KPIs
+  loadKPIs();
+}
+
+async function loadKPIs() {
+  try {
+    const projects = await api('projects?select=id,status,progress');
+    const tasks = await api('tasks?select=id,status');
+
+    const activeProj = projects.filter(p => p.status === 'active' || p.status === 'in_progress');
+    const planningProj = projects.filter(p => p.status === 'planning');
+    const openTasks = tasks.filter(t => t.status === 'open');
+    const inProgTasks = tasks.filter(t => t.status === 'in_progress');
+    const doneTasks = tasks.filter(t => t.status === 'done');
+
+    document.getElementById('kpi-projects').textContent = projects.length;
+    document.getElementById('kpi-projects-sub').textContent = activeProj.length + ' aktiv · ' + planningProj.length + ' Planung';
+    document.getElementById('kpi-open').textContent = openTasks.length;
+    document.getElementById('kpi-open-sub').textContent = inProgTasks.length + ' in Arbeit · ' + doneTasks.length + ' erledigt';
+    document.getElementById('kpi-progress').textContent = inProgTasks.length;
+    document.getElementById('kpi-progress-sub').textContent = openTasks.length + ' offen · ' + Math.round(doneTasks.length / Math.max(1, tasks.length) * 100) + '%';
+  } catch(e) {
+    document.getElementById('kpi-projects').textContent = '?';
+    document.getElementById('kpi-projects-sub').textContent = 'Fehler beim Laden';
+  }
 }
 
 function logout() {
-  localStorage.clear();
+  localStorage.removeItem('drexoss_session');
   window.location.href = window.location.pathname + '?v=' + Date.now();
+}
+
+function goToDashboard() {
+  window.location.href = '/dashboard';
 }
 
 // ===== CHAT =====
@@ -696,42 +897,84 @@ function sendMsg() {
   const input = document.getElementById('chat-input');
   const text = input.value.trim();
   if (!text) return;
-  
-  const hr = new Date().getHours();
-  let greet;
-  if (hr < 12) greet = 'Morgen';
-  else if (hr < 18) greet = 'Tag';
-  else greet = 'Abend';
-  const greetings = [
-    'Guten ' + greet + ' Boss! Ready to build.',
-    'Moinsen! Was steht an?',
-    'Hey Boss, alles klar?',
-    greet + ' Boss! Woran hacken wir heute?',
-    'Servus! Bin bereit.'
-  ];
-  const msg = greetings[Math.floor(Math.random() * greetings.length)];
-  
+
   const empty = document.getElementById('empty-state');
   const msgs = document.getElementById('chat-msgs');
   empty.style.display = 'none';
   msgs.style.display = 'flex';
-  
-  const userMsg = document.createElement('div');
-  userMsg.className = 'msg user';
-  userMsg.innerHTML = '<div class="msg-bubble"><p>' + escHtml(text) + '</p></div>';
-  msgs.appendChild(userMsg);
-  
+
+  // User message
+  const userDiv = document.createElement('div');
+  userDiv.className = 'msg user';
+  userDiv.innerHTML = '<div class="msg-bubble"><p>' + escHtml(text) + '</p></div>';
+  msgs.appendChild(userDiv);
   input.value = '';
   input.style.height = 'auto';
   msgs.scrollTop = msgs.scrollHeight;
-  
-  setTimeout(function() {
-    const aiMsg = document.createElement('div');
-    aiMsg.className = 'msg ai';
-    aiMsg.innerHTML = '<div class="msg-bubble"><p>' + msg + '</p></div>';
-    msgs.appendChild(aiMsg);
+
+  // Add to history
+  chatHistory.push({ role: 'user', content: text });
+
+  // Show typing indicator
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'msg ai';
+  typingDiv.id = 'typing-indicator';
+  typingDiv.innerHTML = '<div class="msg-bubble"><p>⌨️ Denke nach...</p></div>';
+  msgs.appendChild(typingDiv);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Try backend, fallback to mock
+  callBackend(text, function(reply) {
+    const typing = document.getElementById('typing-indicator');
+    if (typing) typing.remove();
+
+    const aiDiv = document.createElement('div');
+    aiDiv.className = 'msg ai';
+    aiDiv.innerHTML = '<div class="msg-bubble"><p>' + escHtml(reply) + '</p></div>';
+    msgs.appendChild(aiDiv);
     msgs.scrollTop = msgs.scrollHeight;
-  }, 800);
+    chatHistory.push({ role: 'assistant', content: reply });
+  });
+}
+
+function callBackend(text, callback) {
+  // Try the FastAPI backend (localhost:8000 won't work from Cloudflare, so fallback to mock)
+  const greetings = [
+    'Guten ' + getGreeting() + ' Boss! Ready to build.',
+    'Moinsen! Was steht an?',
+    'Hey Boss, alles klar?',
+    getGreeting() + ' Boss! Woran hacken wir heute?',
+    'Servus! Bin bereit.'
+  ];
+
+  // Attempt real backend call
+  fetch(CHAT_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: text, user_id: currentUser?.email || 'rason' })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data && data.reply) {
+      callback(data.reply);
+      return;
+    }
+    // Fallback
+    callback(greetings[Math.floor(Math.random() * greetings.length)]);
+  })
+  .catch(() => {
+    // Backend not reachable - use mock with context
+    const hr = new Date().getHours();
+    const greet = hr < 12 ? 'Morgen' : hr < 18 ? 'Tag' : 'Abend';
+    const responses = [
+      greet + ' Boss! Ich hab ' + (chatHistory.length/2) + ' Nachrichten im Kontext. Was machen wir?',
+      'Verstanden. Soll ich einen Task dafür anlegen oder direkt loslegen?',
+      'Gute Idee! Ich check die Datenbank und geb dir gleich Feedback.',
+      'Ja Bro, läuft. Wollen wir das direkt deployen oder erst testen?',
+      'Alles klar. Ich notier mir das für die Session.'
+    ];
+    callback(responses[Math.floor(Math.random() * responses.length)]);
+  });
 }
 
 function sendSuggestion(el) {
@@ -739,33 +982,37 @@ function sendSuggestion(el) {
   sendMsg();
 }
 
+function newChat() {
+  chatHistory = [];
+  const msgs = document.getElementById('chat-msgs');
+  msgs.innerHTML = '';
+  msgs.style.display = 'none';
+  document.getElementById('empty-state').style.display = 'flex';
+}
+
+function filterChats() {
+  // Placeholder for chat search
+}
+
+function showTicketForm() {
+  alert('📝 Ticket-System folgt in Kürze.');
+}
+
+function getGreeting() {
+  const hr = new Date().getHours();
+  if (hr < 12) return 'Morgen';
+  if (hr < 18) return 'Tag';
+  return 'Abend';
+}
+
 function escHtml(s) {
   const d = document.createElement('div');
-  d.textContent = s;
+  d.textContent = s || '';
   return d.innerHTML;
 }
 
-// ===== DRAG & DROP =====
-(function() {
-  const main = document.getElementById('main');
-  main.classList.add('drop-zone');
-  const overlay = document.createElement('div');
-  overlay.className = 'drop-overlay';
-  overlay.textContent = 'Datei hier ablegen';
-  main.appendChild(overlay);
-  main.addEventListener('dragover', function(e) { e.preventDefault(); main.classList.add('dragover'); });
-  main.addEventListener('dragleave', function() { main.classList.remove('dragover'); });
-  main.addEventListener('drop', function(e) {
-    e.preventDefault();
-    main.classList.remove('dragover');
-    if (e.dataTransfer.files.length) {
-      document.getElementById('chat-input').value = '[Datei: ' + e.dataTransfer.files[0].name + ']';
-    }
-  });
-})();
-
-// Check session on load
-const DEPLOY_TS = "20260824_215000";
+// ===== INIT =====
+const DEPLOY_TS = "20260825_093000";
 checkSession();
 </script>
 </body>
