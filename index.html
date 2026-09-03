@@ -458,7 +458,7 @@ async function doLogin() {
       const profiles = await supabaseApi('user_profiles?select=role,name,status&email=eq.' + encodeURIComponent(data.user.email));
       if (profiles && profiles.length > 0) { role = profiles[0].role || 'customer'; name = profiles[0].name || data.user.email; }
     } catch(e) {}
-    currentUser = { email: data.user.email, id: data.user.id, name, role };
+    currentUser = { email: data.user.email, id: data.user.id, name, role, access_token: data.access_token };
     currentRole = role;
     localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
     location.reload();
@@ -905,21 +905,107 @@ function renderAdminUsers(root) {
   for (const u of adminUsers) {
     const roleClass = u.role === 'admin' ? '#7c7aff' : u.role === 'dev' ? '#64b5f6' : '#81c784';
     const dotColor = u.status === 'active' ? '#34d399' : u.status === 'pending' ? '#fbbf24' : '#555';
-    html += '<div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 1rem;border-bottom:1px solid rgba(255,255,255,0.03);">';
+    html += '<div style="display:grid;grid-template-columns:26px 1fr 90px 90px 30px;align-items:center;gap:1rem;padding:0.6rem 1rem;border-bottom:1px solid rgba(255,255,255,0.03);" data-id="'+u.id+'" onclick="editAdminUser('+u.id+')">';
     html += '<div style="width:26px;height:26px;border-radius:50%;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:#555;flex-shrink:0;">'+(u.shortcode||u.name?.[0]||'?')+'</div>';
-    html += '<div style="flex:1;"><div>'+u.name+'</div><div style="font-size:0.68rem;color:#555;">'+u.email+'</div></div>';
+    html += '<div><div>'+u.name+'</div><div style="font-size:0.68rem;color:#555;">'+u.email+'</div></div>';
     html += '<div style="color:'+roleClass+';font-size:0.68rem;">'+u.role+'</div>';
     html += '<div><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:'+dotColor+';margin-right:4px;"></span>'+u.status+'</div>';
-    html += '</div>';
+    html += '<td><span style="color:#555;cursor:pointer;font-size:0.72rem;">✎</span></td></div>';
   }
   html += '</div>';
+
+  // Edit form
+  html += '<div id="admin-edit-form" style="display:none;margin-top:1rem;border:1px solid rgba(255,255,255,0.06);padding:1rem;max-width:400px;">';
+  html += '<h3 style="font-size:0.85rem;color:#e8e8e8;margin-bottom:0.75rem;" id="aef-title">User bearbeiten</h3>';
+  html += '<input type="hidden" id="aef-id"><input type="hidden" id="aef-type">';
+  html += '<div style="margin-bottom:0.5rem;"><label style="display:block;font-size:0.6rem;color:#555;text-transform:uppercase;margin-bottom:0.2rem;">Name</label><input id="aef-name" style="width:100%;background:#0d0d0d;border:1px solid rgba(255,255,255,0.08);padding:0.45rem 0.6rem;font-size:0.78rem;color:#e8e8e8;"></div>';
+  html += '<div style="margin-bottom:0.5rem;"><label style="display:block;font-size:0.6rem;color:#555;text-transform:uppercase;margin-bottom:0.2rem;">E-Mail</label><input id="aef-email" style="width:100%;background:#0d0d0d;border:1px solid rgba(255,255,255,0.08);padding:0.45rem 0.6rem;font-size:0.78rem;color:#e8e8e8;"></div>';
+  html += '<div style="margin-bottom:0.5rem;"><label style="display:block;font-size:0.6rem;color:#555;text-transform:uppercase;margin-bottom:0.2rem;">Rolle</label><select id="aef-role" style="width:100%;background:#0d0d0d;border:1px solid rgba(255,255,255,0.08);padding:0.45rem 0.6rem;font-size:0.78rem;color:#e8e8e8;"><option value="admin">Admin</option><option value="dev">Team</option><option value="customer">Kunde</option></select></div>';
+  html += '<div style="margin-bottom:0.5rem;"><label style="display:block;font-size:0.6rem;color:#555;text-transform:uppercase;margin-bottom:0.2rem;">Status</label><select id="aef-status" style="width:100%;background:#0d0d0d;border:1px solid rgba(255,255,255,0.08);padding:0.45rem 0.6rem;font-size:0.78rem;color:#e8e8e8;"><option value="active">Aktiv</option><option value="pending">Ausstehend</option><option value="inactive">Inaktiv</option></select></div>';
+  html += '<div style="margin-top:0.75rem;display:flex;gap:0.5rem;">';
+  html += '<button onclick="saveAdminEdit()" style="padding:0.4rem 0.85rem;background:#5e5ce6;border:none;color:#fff;font-size:0.72rem;cursor:pointer;">Speichern</button>';
+  html += '<button onclick="document.getElementById(\'admin-edit-form\').style.display=\'none\'" style="padding:0.4rem 0.85rem;background:none;border:1px solid rgba(255,255,255,0.1);color:#888;font-size:0.72rem;cursor:pointer;">Abbrechen</button>';
+  html += '</div></div>';
+
   root.innerHTML = html;
+}
+
+function editAdminUser(id) {
+  const u = adminUsers.find(x => x.id == id);
+  if (!u) return;
+  document.getElementById('aef-id').value = id;
+  document.getElementById('aef-type').value = 'user';
+  document.getElementById('aef-title').textContent = u.name || 'User bearbeiten';
+  document.getElementById('aef-name').value = u.name || '';
+  document.getElementById('aef-email').value = u.email || '';
+  document.getElementById('aef-role').value = u.role || 'customer';
+  document.getElementById('aef-status').value = u.status || 'active';
+  document.getElementById('admin-edit-form').style.display = 'block';
+}
+
+function saveAdminEdit() {
+  const type = document.getElementById('aef-type').value;
+  const id = document.getElementById('aef-id').value;
+  const token = currentUser?.access_token;
+  if (!token) { alert('Nicht eingeloggt — bitte neu anmelden'); return; }
+
+  let table, data;
+  if (type === 'user') {
+    table = 'user_profiles';
+    data = {
+      name: document.getElementById('aef-name').value,
+      email: document.getElementById('aef-email').value,
+      role: document.getElementById('aef-role').value,
+      status: document.getElementById('aef-status').value,
+    };
+  } else if (type === 'project') {
+    table = 'projects';
+    data = {
+      name: document.getElementById('aef-name').value,
+      status: document.getElementById('aef-status').value,
+    };
+  }
+
+  fetch(SUPABASE_URL + '/rest/v1/' + table + '?id=eq.' + id, {
+    method: 'PATCH',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify(data)
+  }).then(r => {
+    if (!r.ok && r.status !== 204) throw new Error('Status ' + r.status);
+    document.getElementById('admin-edit-form').style.display = 'none';
+    loadAdminData().then(() => renderAdminView('users'));
+  }).catch(e => alert('Fehler: ' + e.message));
 }
 
 function renderAdminKunden(root) {
   const kunden = adminUsers.filter(u => u.role === 'customer' || u.type === 'firma');
-  root.innerHTML = '<div style="display:flex;gap:1rem;margin-bottom:1rem;"><div><div style="font-size:1.5rem;font-weight:600;color:#e8e8e8;">'+kunden.length+'</div><div style="font-size:0.68rem;color:#555;">Kunden</div></div></div>' +
-    (kunden.length ? '<div style="border:1px solid rgba(255,255,255,0.06);">' + kunden.map(k => '<div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 1rem;border-bottom:1px solid rgba(255,255,255,0.03);"><div style="flex:1;"><div>'+(k.company_name||k.name||'—')+'</div><div style="font-size:0.68rem;color:#555;">'+k.email+'</div></div><div style="color:'+(k.status==='active'?'#34d399':'#555')+';">'+k.status+'</div></div>').join('')+'</div>' : '<p>Keine Kunden</p>');
+  let html = '<div style="display:flex;gap:1rem;margin-bottom:1rem;"><div><div style="font-size:1.5rem;font-weight:600;color:#e8e8e8;">'+kunden.length+'</div><div style="font-size:0.68rem;color:#555;">Kunden</div></div></div>';
+  if (kunden.length) {
+    html += '<div style="border:1px solid rgba(255,255,255,0.06);">';
+    for (const k of kunden) {
+      html += '<div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 1rem;border-bottom:1px solid rgba(255,255,255,0.03);cursor:pointer;" onclick="editAdminKunde('+k.id+')">';
+      html += '<div style="flex:1;"><div>'+(k.company_name||k.name||'—')+'</div><div style="font-size:0.68rem;color:#555;">'+k.email+'</div></div>';
+      html += '<div style="color:'+(k.status==='active'?'#34d399':'#555')+';">'+k.status+'</div>';
+      html += '<span style="color:#555;font-size:0.72rem;">✎</span></div>';
+    }
+    html += '</div>';
+  } else { html += '<p>Keine Kunden</p>'; }
+  root.innerHTML = html;
+}
+
+function editAdminKunde(id) {
+  const k = adminUsers.find(x => x.id == id);
+  if (!k) return;
+  document.getElementById('aef-id').value = id;
+  document.getElementById('aef-type').value = 'user';
+  document.getElementById('aef-title').textContent = k.company_name || k.name || 'Kunde bearbeiten';
+  document.getElementById('aef-name').value = k.company_name || k.name || '';
+  document.getElementById('aef-email').value = k.email || '';
+  document.getElementById('aef-role').value = k.role || 'customer';
+  document.getElementById('aef-status').value = k.status || 'pending';
+  document.getElementById('aef-role').parentElement.style.display = 'none';
+  document.getElementById('admin-edit-form').style.display = 'block';
+  setTimeout(() => document.getElementById('aef-role').parentElement.style.display = '', 100);
 }
 
 function renderAdminProjekte(root) {
@@ -928,14 +1014,32 @@ function renderAdminProjekte(root) {
   html += '<div style="border:1px solid rgba(255,255,255,0.06);">';
   for (const p of adminProjects) {
     const color = p.status === 'active' ? '#34d399' : p.status === 'planning' ? '#fbbf24' : '#555';
-    html += '<div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 1rem;border-bottom:1px solid rgba(255,255,255,0.03);">';
+    html += '<div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 1rem;border-bottom:1px solid rgba(255,255,255,0.03);cursor:pointer;" onclick="editAdminProject('+p.id+')">';
     html += '<div style="flex:1;"><div>'+(p.icon||'')+' '+p.name+'</div><div style="font-size:0.68rem;color:#555;">'+p.number+'</div></div>';
     html += '<div style="color:'+color+';font-size:0.68rem;">'+p.status+'</div>';
-    html += '<div style="font-size:0.75rem;color:#888;">'+p.progress||0+'%</div>';
-    html += '</div>';
+    html += '<div style="font-size:0.75rem;color:#888;">'+(p.progress||0)+'%</div>';
+    html += '<span style="color:#555;font-size:0.72rem;">✎</span></div>';
   }
   html += '</div>';
   root.innerHTML = html;
+}
+
+function editAdminProject(id) {
+  const p = adminProjects.find(x => x.id == id);
+  if (!p) return;
+  document.getElementById('aef-id').value = id;
+  document.getElementById('aef-type').value = 'project';
+  document.getElementById('aef-title').textContent = p.name || 'Projekt bearbeiten';
+  document.getElementById('aef-name').value = p.name || '';
+  document.getElementById('aef-email').parentElement.style.display = 'none';
+  document.getElementById('aef-email').value = '';
+  document.getElementById('aef-role').parentElement.style.display = 'none';
+  document.getElementById('aef-status').value = p.status || 'planning';
+  document.getElementById('admin-edit-form').style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('aef-email').parentElement.style.display = 'none';
+    document.getElementById('aef-role').parentElement.style.display = 'none';
+  }, 0);
 }
 
 function renderAdminAgenten(root) {
