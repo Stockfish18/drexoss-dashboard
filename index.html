@@ -335,6 +335,7 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
             <button class="admin-tab" data-tab="cron" style="background:none;border:none;color:#888;font-size:0.72rem;cursor:pointer;font-family:inherit;padding:0.3rem 0.6rem;transition:color 0.12s;">Cron</button>
             <button class="admin-tab" data-tab="system" style="background:none;border:none;color:#888;font-size:0.72rem;cursor:pointer;font-family:inherit;padding:0.3rem 0.6rem;transition:color 0.12s;">System</button>
             <button class="admin-tab" data-tab="benchmark" style="background:none;border:none;color:#888;font-size:0.72rem;cursor:pointer;font-family:inherit;padding:0.3rem 0.6rem;transition:color 0.12s;">Benchmark</button>
+            <button class="admin-tab" data-tab="scout" style="background:none;border:none;color:#888;font-size:0.72rem;cursor:pointer;font-family:inherit;padding:0.3rem 0.6rem;transition:color 0.12s;">Scout</button>
           </div>
           <div id="admin-panel-root" style="padding:1rem 1.5rem;font-size:0.78rem;color:#888;">
             <p>Lade Admin-Panel...</p>
@@ -895,6 +896,7 @@ function renderAdminView(view) {
   else if (view === 'cron') renderAdminCron(root);
   else if (view === 'system') renderAdminSystem(root);
   else if (view === 'benchmark') renderAdminBenchmark(root);
+  else if (view === 'scout') renderAdminScout(root);
 }
 
 function renderAdminUsers(root) {
@@ -1282,6 +1284,51 @@ function renderAdminBenchmark(root) {
     }
   }
   loadBenchmark();
+}
+
+function renderAdminScout(root) {
+  async function loadScout() {
+    root.innerHTML = '<div style="font-size:0.78rem;color:#888;"><p>Lade Scout-Report...</p></div>';
+    try {
+      const reports = await supabaseApi('scout_reports?select=id,created_at,report,source_counts&order=created_at.desc&limit=3', {
+        headers: { 'Accept-Profile': 'memory' }
+      });
+      if (!reports || reports.length === 0) {
+        root.innerHTML = '<div style="font-size:0.78rem;color:#888;"><p>Noch kein Scout-Report. Erster Lauf: Mo 6:00 UTC via pg_cron.</p></div>';
+        return;
+      }
+
+      let html = '<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:0.75rem;">';
+      html += '<div><div style="font-size:1.2rem;color:#e8e8e8;">Stockfish Scout</div><div style="font-size:0.65rem;color:#555;">Autonome Recherche — PC-unabhängig, läuft in Supabase Cloud</div></div>';
+      html += '<div style="font-size:0.68rem;color:#fbbf24;">◆ Nächster Scout: Mo 6:00 UTC</div></div>';
+
+      reports.forEach((r, i) => {
+        const date = new Date(r.created_at).toLocaleString('de-DE');
+        const sources = r.source_counts || {};
+        const srcStr = '📄' + (sources.arxiv||0) + ' 🛠' + (sources.github||0) + ' 🤗' + (sources.huggingface||0);
+
+        html += '<div style="margin-bottom:1.5rem;' + (i > 0 ? 'opacity:0.5;' : '') + '">';
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">';
+        html += '<div style="font-size:0.78rem;color:#e8e8e8;">Report #' + r.id + ' — ' + date + '</div>';
+        html += '<div style="font-size:0.65rem;color:#555;">' + srcStr + '</div></div>';
+        html += '<div style="font-size:0.78rem;color:#ccc;line-height:1.8;white-space:pre-wrap;">' + (r.report || '') + '</div>';
+        html += '</div>';
+      });
+
+      html += '<div style="margin-top:1rem;padding-top:0.75rem;border-top:1px solid rgba(255,255,255,0.06);font-size:0.72rem;color:#555;line-height:1.8;">';
+      html += '<div style="font-size:0.7rem;color:#7c7aff;text-transform:uppercase;margin-bottom:0.5rem;">Wie es funktioniert</div>';
+      html += '<div>◆ Durchsucht wöchentlich arxiv, GitHub, HuggingFace nach neuen Technologien</div>';
+      html += '<div>◆ DeepSeek synthetisiert die Funde zu einem Briefing</div>';
+      html += '<div>◆ Läuft als Supabase Edge Function + pg_cron — PC muss NICHT an sein</div>';
+      html += '<div style="margin-top:0.5rem;">📍 <span style="color:#e8e8e8;">T-072: Online-Instanz (Scout-Edge)</span></div>';
+      html += '</div>';
+
+      root.innerHTML = html;
+    } catch(e) {
+      root.innerHTML = '<div style="font-size:0.78rem;color:#ef4444;">Fehler: ' + e.message + '</div>';
+    }
+  }
+  loadScout();
 }
 
 // Load admin data when entering admin view
