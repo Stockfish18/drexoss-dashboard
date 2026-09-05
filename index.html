@@ -334,6 +334,7 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
             <button class="admin-tab" data-tab="dreaming" style="background:none;border:none;color:#888;font-size:0.72rem;cursor:pointer;font-family:inherit;padding:0.3rem 0.6rem;transition:color 0.12s;">Dreaming</button>
             <button class="admin-tab" data-tab="cron" style="background:none;border:none;color:#888;font-size:0.72rem;cursor:pointer;font-family:inherit;padding:0.3rem 0.6rem;transition:color 0.12s;">Cron</button>
             <button class="admin-tab" data-tab="system" style="background:none;border:none;color:#888;font-size:0.72rem;cursor:pointer;font-family:inherit;padding:0.3rem 0.6rem;transition:color 0.12s;">System</button>
+            <button class="admin-tab" data-tab="benchmark" style="background:none;border:none;color:#888;font-size:0.72rem;cursor:pointer;font-family:inherit;padding:0.3rem 0.6rem;transition:color 0.12s;">Benchmark</button>
           </div>
           <div id="admin-panel-root" style="padding:1rem 1.5rem;font-size:0.78rem;color:#888;">
             <p>Lade Admin-Panel...</p>
@@ -893,6 +894,7 @@ function renderAdminView(view) {
   else if (view === 'dreaming') renderAdminDreaming(root);
   else if (view === 'cron') renderAdminCron(root);
   else if (view === 'system') renderAdminSystem(root);
+  else if (view === 'benchmark') renderAdminBenchmark(root);
 }
 
 function renderAdminUsers(root) {
@@ -1196,6 +1198,90 @@ function renderAdminSystem(root) {
     }
   }
   loadStatus();
+}
+
+function renderAdminBenchmark(root) {
+  async function loadBenchmark() {
+    root.innerHTML = '<div style="font-size:0.78rem;color:#888;"><p>Lade Benchmark-Daten...</p></div>';
+    try {
+      const metrics = await supabaseApi('metrics?select=metric_name,metric_value,metric_unit,created_at&order=created_at.desc&limit=50', {
+        headers: { 'Accept-Profile': 'memory' }
+      });
+      if (!metrics || metrics.length === 0) {
+        root.innerHTML = '<div style="font-size:0.78rem;color:#888;"><p>Noch keine Benchmark-Daten. Erste Messung: Mo 5:00 Uhr (Cron).</p></div>';
+        return;
+      }
+
+      let html = '<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:0.75rem;">';
+      html += '<div><div style="font-size:1.2rem;color:#e8e8e8;">Stockfish IQ — Benchmark</div><div style="font-size:0.65rem;color:#555;">Gemessen: ' + new Date().toLocaleString('de-DE') + '</div></div>';
+      html += '<div style="font-size:0.68rem;color:#fbbf24;">◆ Nächste Messung: Mo 5:00</div></div>';
+
+      // Group metrics by name
+      const groups = {};
+      metrics.forEach(m => {
+        if (!groups[m.metric_name]) groups[m.metric_name] = [];
+        groups[m.metric_name].push(m);
+      });
+
+      // Metric definitions for display
+      const meta = {
+        context_recall_avg: { label: 'Context Recall', unit: 'results/Query', desc: 'Wie viele relevante Erinnerungen pro Suchanfrage', good: '>2', color: '#34d399' },
+        dreaming_redundancy: { label: 'Dreaming Redundanz', unit: 'ratio', desc: 'Wie oft wiederholen sich Insights', good: '<0.2', color: '#fbbf24', invert: true },
+        dreaming_total_insights: { label: 'Dreaming Insights', unit: 'count', desc: 'Gesamtanzahl erkannter Muster', good: 'steigend', color: '#7c7aff' },
+        avg_tokens_per_session: { label: 'Token-Verbrauch', unit: 'tokens', desc: 'Durchschnittliche Input-Tokens pro Session', good: 'sinkend', color: '#fbbf24', invert: true },
+        session_compression_ratio: { label: 'Session-Kompression', unit: 'x', desc: 'Faktor: Rohtext → Summary', good: '>50', color: '#34d399' },
+        correction_rate: { label: 'Korrekturrate', unit: 'ratio', desc: 'Anteil Korrekturen an User-Nachrichten (niedriger = besser)', good: '<0.08', color: '#ef4444', invert: true }
+      };
+
+      Object.keys(meta).forEach(key => {
+        const m = meta[key];
+        const data = groups[key] || [];
+        const latest = data.length > 0 ? data[0] : null;
+        const prev = data.length > 1 ? data[1] : null;
+
+        html += '<div style="margin-bottom:1rem;padding:0.75rem;border:1px solid rgba(255,255,255,0.06);">';
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;">';
+        html += '<div><div style="font-size:0.85rem;color:#e8e8e8;">' + m.label + '</div><div style="font-size:0.68rem;color:#555;">' + m.desc + '</div></div>';
+
+        if (latest) {
+          let val = latest.metric_value;
+          let display = m.unit === 'ratio' ? (val * 100).toFixed(1) + '%' : val.toFixed(1) + ' ' + m.unit;
+          if (m.unit === 'count') display = val.toFixed(0) + ' ' + m.unit;
+          if (m.unit === 'x') display = val.toFixed(0) + 'x';
+
+          // Trend
+          let trend = '';
+          if (prev) {
+            const diff = val - prev.metric_value;
+            if (Math.abs(diff) > 0.01) {
+              const better = m.invert ? diff < 0 : diff > 0;
+              trend = '<span style="color:' + (better ? '#34d399' : '#ef4444') + ';font-size:0.68rem;margin-left:0.5rem;">' + (better ? '▲' : '▼') + ' ' + (m.unit === 'ratio' ? (Math.abs(diff)*100).toFixed(1) + '%' : Math.abs(diff).toFixed(1)) + '</span>';
+            }
+          }
+
+          html += '<div style="text-align:right;"><div style="font-size:1.1rem;font-weight:600;color:#e8e8e8;">' + display + trend + '</div>';
+          html += '<div style="font-size:0.65rem;color:#555;">Ziel: ' + m.good + '</div></div>';
+        } else {
+          html += '<div style="font-size:0.78rem;color:#555;">Noch keine Daten</div>';
+        }
+        html += '</div></div>';
+      });
+
+      // Explanation
+      html += '<div style="margin-top:1.5rem;padding-top:0.75rem;border-top:1px solid rgba(255,255,255,0.06);font-size:0.72rem;color:#555;line-height:1.8;">';
+      html += '<div style="font-size:0.7rem;color:#7c7aff;text-transform:uppercase;margin-bottom:0.5rem;">So liest du die Benchmarks</div>';
+      html += '<div><span style="color:#34d399;">▲</span> Pfeil nach oben = besser (außer bei Korrekturrate + Redundanz)</div>';
+      html += '<div><span style="color:#ef4444;">▼</span> Pfeil nach unten = schlechter (außer bei Korrekturrate + Redundanz)</div>';
+      html += '<div>Wöchentliche Messung jeden Montag 5:00 Uhr via Cron</div>';
+      html += '<div style="margin-top:0.5rem;">Stand: <span style="color:#e8e8e8;">' + (metrics.length > 0 ? new Date(metrics[0].created_at).toLocaleString('de-DE') : '?') + '</span></div>';
+      html += '</div>';
+
+      root.innerHTML = html;
+    } catch(e) {
+      root.innerHTML = '<div style="font-size:0.78rem;color:#ef4444;">Fehler: ' + e.message + '</div>';
+    }
+  }
+  loadBenchmark();
 }
 
 // Load admin data when entering admin view
