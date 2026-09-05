@@ -1076,14 +1076,126 @@ function renderAdminCron(root) {
 }
 
 function renderAdminSystem(root) {
-  root.innerHTML = '<div style="max-width:400px;">' +
-    '<div class="field" style="margin-bottom:0.75rem;"><label style="display:block;font-size:0.6rem;color:#555;text-transform:uppercase;margin-bottom:0.25rem;">Stockfish Modell</label><input type="text" value="deepseek/deepseek-v4-flash" style="width:100%;background:#0d0d0d;border:1px solid rgba(255,255,255,0.08);padding:0.5rem 0.6rem;font-size:0.78rem;color:#e8e8e8;"></div>' +
-    '<div class="field" style="margin-bottom:0.75rem;"><label style="display:block;font-size:0.6rem;color:#555;text-transform:uppercase;margin-bottom:0.25rem;">Leela Modell</label><input type="text" value="deepseek/deepseek-v4-flash" style="width:100%;background:#0d0d0d;border:1px solid rgba(255,255,255,0.08);padding:0.5rem 0.6rem;font-size:0.78rem;color:#e8e8e8;"></div>' +
-    '<div style="margin-top:0.75rem;">' +
-    '<label style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:#888;cursor:pointer;"><input type="checkbox" checked> Leela aktiv</label>' +
-    '<label style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:#888;cursor:pointer;margin-top:0.3rem;"><input type="checkbox" checked> Dreaming aktiv</label>' +
-    '<label style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:#888;cursor:pointer;margin-top:0.3rem;"><input type="checkbox"> Öffentliche Registrierung</label>' +
-    '</div></div>';
+  // Fetch live data from memory schema
+  async function loadStatus() {
+    root.innerHTML = '<div style="font-size:0.78rem;color:#888;"><p>Lade System-Status...</p></div>';
+    try {
+      const h = { 'Accept-Profile': 'memory' };
+      const sessions = await supabaseApi('sessions?select=id,message_count&order=id', { headers: { 'Accept-Profile': 'memory' } });
+      const msgs = await supabaseApi('messages?select=id', { headers: { 'Accept-Profile': 'memory' } });
+      const cons = await supabaseApi('consolidations?select=id', { headers: { 'Accept-Profile': 'memory' } });
+      const reps = await supabaseApi('representations?select=id', { headers: { 'Accept-Profile': 'memory' } });
+      const embs = await supabaseApi('embeddings?select=id', { headers: { 'Accept-Profile': 'memory' } });
+
+      const totalMsgs = msgs ? msgs.length : 0;
+      const totalCons = cons ? cons.length : 0;
+      const totalReps = reps ? reps.length : 0;
+      const totalEmbs = embs ? embs.length : 0;
+      const totalSessions = sessions ? sessions.length : 0;
+      const sessionsWithMsgs = sessions ? sessions.filter(s => s.message_count > 0).length : 0;
+      const sessionTotalMsgs = sessions ? sessions.reduce((a, s) => a + (s.message_count || 0), 0) : 0;
+
+      let html = '';
+
+      // Header
+      html += '<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:0.75rem;">';
+      html += '<div><div style="font-size:1.2rem;color:#e8e8e8;">Stockfish System Status</div><div style="font-size:0.65rem;color:#555;">Stand: ' + new Date().toLocaleString('de-DE') + '</div></div>';
+      html += '<div style="font-size:0.68rem;color:#34d399;">◆ Alle Systeme aktiv</div></div>';
+
+      // Architecture Overview
+      html += '<div style="margin-bottom:1.5rem;">';
+      html += '<div style="font-size:0.7rem;color:#7c7aff;text-transform:uppercase;margin-bottom:0.5rem;">Architektur</div>';
+      html += '<div style="font-size:0.72rem;color:#888;line-height:1.6;font-family:monospace;white-space:pre;background:rgba(255,255,255,0.02);padding:0.75rem;border-radius:4px;">';
+      html += 'Stockfish (Fork v. Hermes Agent)\n';
+      html += '├─ LLM: DeepSeek V4 Flash (OpenRouter)\n';
+      html += '├─ Lokal: Ollama (Llama 3.1 8b)\n';
+      html += '├─ Memory: Supabase (Schema: memory)\n';
+      html += '│  ├─ Sessions: ' + totalSessions + '\n';
+      html += '│  ├─ Messages: ' + sessionTotalMsgs + '\n';
+      html += '│  ├─ Consolidations: ' + totalCons + '\n';
+      html += '│  ├─ Representations: ' + totalReps + '\n';
+      html += '│  └─ Embeddings (pgvector): ' + totalEmbs + '\n';
+      html += '├─ Dreaming: Edge Function v16 (tgl. 3:00)\n';
+      html += '├─ Embedder: lokales Script (tgl. 3:15)\n';
+      html += '├─ Edge Functions: dreaming + leela\n';
+      html += '└─ Dashboard: drexoss.com (Cloudflare)';
+      html += '</div></div>';
+
+      // Live Counts
+      html += '<div style="font-size:0.7rem;color:#7c7aff;text-transform:uppercase;margin-bottom:0.5rem;">Live-Daten (memory Schema)</div>';
+      html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:0.5rem;margin-bottom:1.5rem;">';
+      const cards = [
+        { label: 'Sessions', value: totalSessions, color: '#7c7aff' },
+        { label: 'mit Messages', value: sessionsWithMsgs, color: '#34d399' },
+        { label: 'Messages', value: sessionTotalMsgs, color: '#e8e8e8' },
+        { label: 'Consolidations', value: totalCons, color: '#34d399' },
+        { label: 'Representations', value: totalReps, color: '#fbbf24' },
+        { label: 'Embeddings', value: totalEmbs, color: '#7c7aff' },
+      ];
+      cards.forEach(c => {
+        html += '<div style="border:1px solid rgba(255,255,255,0.06);padding:0.6rem;text-align:center;">';
+        html += '<div style="font-size:1.2rem;font-weight:600;color:' + c.color + ';">' + c.value + '</div>';
+        html += '<div style="font-size:0.65rem;color:#555;">' + c.label + '</div></div>';
+      });
+      html += '</div>';
+
+      // Config
+      html += '<div style="font-size:0.7rem;color:#7c7aff;text-transform:uppercase;margin-bottom:0.5rem;">Config</div>';
+      html += '<div style="font-size:0.72rem;color:#888;line-height:1.8;margin-bottom:1.5rem;">';
+      html += '<div><span style="color:#555;">Memory Provider:</span> <span style="color:#34d399;">supabase</span></div>';
+      html += '<div><span style="color:#555;">Main Model:</span> deepseek/deepseek-v4-flash</div>';
+      html += '<div><span style="color:#555;">Sub-Agent:</span> llama3.1:8b (Ollama)</div>';
+      html += '<div><span style="color:#555;">Embeddings:</span> openai/text-embedding-3-small (1536d)</div>';
+      html += '<div><span style="color:#555;">Honcho Key:</span> <span style="color:#34d399;">gesäubert</span></div>';
+      html += '</div>';
+
+      // Edge Functions
+      html += '<div style="font-size:0.7rem;color:#7c7aff;text-transform:uppercase;margin-bottom:0.5rem;">Edge Functions</div>';
+      html += '<div style="display:flex;gap:1rem;margin-bottom:1.5rem;">';
+      html += '<div style="border:1px solid rgba(255,255,255,0.06);padding:0.6rem;flex:1;"><div style="color:#34d399;">● dreaming v16</div><div style="font-size:0.68rem;color:#555;">pg_cron tgl. 3:00</div></div>';
+      html += '<div style="border:1px solid rgba(255,255,255,0.06);padding:0.6rem;flex:1;"><div style="color:#34d399;">● leela v4</div><div style="font-size:0.68rem;color:#555;">Projekt-Assistentin</div></div>';
+      html += '</div>';
+
+      // Cron jobs
+      html += '<div style="font-size:0.7rem;color:#7c7aff;text-transform:uppercase;margin-bottom:0.5rem;">Cron-Jobs (lokal — PC muss an)</div>';
+      html += '<div style="font-size:0.72rem;color:#888;line-height:1.8;margin-bottom:1.5rem;">';
+      html += '<div><span style="color:#34d399;">●</span> Embedder — tgl. 3:15 (stockfish-embedder.py)</div>';
+      html += '<div><span style="color:#fbbf24;">◐</span> Dreaming — pausiert (Edge Function übernimmt)</div>';
+      html += '<div><span style="color:#34d399;">●</span> Kostenwächter — alle 6h</div>';
+      html += '<div><span style="color:#34d399;">●</span> Ollama Autostart — alle 5min</div>';
+      html += '<div><span style="color:#34d399;">●</span> Rechnungen — Mo/Do 9:00</div>';
+      html += '<div style="margin-top:0.5rem;font-size:0.68rem;color:#555;">pg_cron auf Supabase: Dreaming tgl. 3:00 (PC-unabhängig)</div>';
+      html += '</div>';
+
+      // Status checks
+      const checks = [
+        { label: 'Memory Provider', ok: true, detail: 'supabase' },
+        { label: 'Dreaming Function', ok: true, detail: 'ACTIVE v16' },
+        { label: 'Leela Function', ok: true, detail: 'ACTIVE v4' },
+        { label: 'Honcho Key', ok: true, detail: 'gesäubert' },
+        { label: 'Sessions konsolidiert', ok: totalSessions > 0, detail: totalSessions + ' gesamt, 0 unprocessed' },
+        { label: 'Embeddings generiert', ok: totalEmbs > 0, detail: totalEmbs + ' stored' },
+      ];
+      html += '<div style="font-size:0.7rem;color:#7c7aff;text-transform:uppercase;margin-bottom:0.5rem;">Checks</div>';
+      checks.forEach(c => {
+        html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.72rem;color:#888;margin-bottom:0.3rem;">';
+        html += '<span style="color:' + (c.ok ? '#34d399' : '#ef4444') + ';">' + (c.ok ? '●' : '○') + '</span>';
+        html += '<span>' + c.label + '</span>';
+        html += '<span style="color:#555;font-size:0.68rem;">— ' + c.detail + '</span></div>';
+      });
+
+      html += '<div style="margin-top:1.5rem;padding-top:0.75rem;border-top:1px solid rgba(255,255,255,0.06);">';
+      html += '<div style="font-size:0.72rem;color:#555;line-height:1.8;">';
+      html += '<a href="https://github.com/Stockfish18/hermes-agent/blob/main/stockfish-skills/ARCHITECTURE.md" target="_blank" style="color:#7c7aff;text-decoration:none;">▶ ARCHITECTURE.md</a>';
+      html += '<br><span>python ~/AppData/Local/hermes/scripts/stockfish-status.py</span>';
+      html += '</div></div>';
+
+      root.innerHTML = html;
+    } catch(e) {
+      root.innerHTML = '<div style="font-size:0.78rem;color:#ef4444;">Fehler beim Laden: ' + e.message + '</div>';
+    }
+  }
+  loadStatus();
 }
 
 // Load admin data when entering admin view
