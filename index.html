@@ -336,6 +336,7 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
             <button class="admin-tab" data-tab="system" style="background:none;border:none;color:#888;font-size:0.72rem;cursor:pointer;font-family:inherit;padding:0.3rem 0.6rem;transition:color 0.12s;">System</button>
             <button class="admin-tab" data-tab="benchmark" style="background:none;border:none;color:#888;font-size:0.72rem;cursor:pointer;font-family:inherit;padding:0.3rem 0.6rem;transition:color 0.12s;">Benchmark</button>
             <button class="admin-tab" data-tab="scout" style="background:none;border:none;color:#888;font-size:0.72rem;cursor:pointer;font-family:inherit;padding:0.3rem 0.6rem;transition:color 0.12s;">Scout</button>
+            <button class="admin-tab" data-tab="settings" style="background:none;border:none;color:#888;font-size:0.72rem;cursor:pointer;font-family:inherit;padding:0.3rem 0.6rem;transition:color 0.12s;">▸ Settings</button>
           </div>
           <div id="admin-panel-root" style="padding:1rem 1.5rem;font-size:0.78rem;color:#888;">
             <p>Lade Admin-Panel...</p>
@@ -897,6 +898,7 @@ function renderAdminView(view) {
   else if (view === 'system') renderAdminSystem(root);
   else if (view === 'benchmark') renderAdminBenchmark(root);
   else if (view === 'scout') renderAdminScout(root);
+  else if (view === 'settings') renderAdminSettings(root);
 }
 
 function renderAdminUsers(root) {
@@ -1330,6 +1332,99 @@ function renderAdminScout(root) {
   }
   loadScout();
 }
+
+function renderAdminSettings(root) {
+  root.innerHTML = '<div style="color:#555;">Lade Einstellungen...</div>';
+  const CATEGORY_LABELS = { 'llm': 'LLM & Modelle', 'system': 'System', 'cron': 'Zeitplanung', 'features': 'Features' };
+  const CONFIG_TABLE = SUPABASE_URL + '/rest/v1/app_config';
+  const CONF_HEADERS = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' };
+
+  fetch(CONFIG_TABLE + '?select=*&order=category.asc,key.asc', { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } })
+    .then(r => r.json())
+    .then(configs => {
+      let html = '<div style="margin-bottom:1rem;"><div style="font-size:1.1rem;font-weight:600;color:#e8e8e8;">Einstellungen</div>';
+      html += '<div style="font-size:0.68rem;color:#555;">Alle Werte live editierbar — speichert direkt in Supabase</div></div>';
+
+      // Group by category
+      const groups = {};
+      for (const c of configs) {
+        const cat = c.category || 'general';
+        if (!groups[cat]) groups[cat] = [];
+        groups[cat].push(c);
+      }
+
+      for (const [catKey, items] of Object.entries(groups)) {
+        html += '<div style="border:1px solid rgba(255,255,255,0.06);margin-bottom:1rem;">';
+        html += '<div style="padding:0.6rem 1rem;border-bottom:1px solid rgba(255,255,255,0.06);font-size:0.65rem;color:#7c7aff;text-transform:uppercase;letter-spacing:0.06em;">' + (CATEGORY_LABELS[catKey] || catKey) + '</div>';
+
+        for (const c of items) {
+          const val = c.value || '';
+          const safeKey = c.key.replace(/[^a-zA-Z0-9_-]/g, '');
+          html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;align-items:center;padding:0.5rem 1rem;border-bottom:1px solid rgba(255,255,255,0.03);">';
+          html += '<div><div style="font-size:0.78rem;color:#e8e8e8;">' + (c.label || c.key) + '</div>';
+          if (c.hint) html += '<div style="font-size:0.65rem;color:#555;">' + c.hint + '</div>';
+          html += '</div><div>';
+
+          const fieldType = (c.field_type || 'text').toLowerCase();
+          if (fieldType === 'boolean') {
+            const checked = val === 'true' || val === '1' ? 'checked' : '';
+            html += '<label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">';
+            html += '<input type="checkbox" ' + checked + ' data-confkey="' + safeKey + '" onchange="saveConfigField(this)" style="accent-color:#5e5ce6;">';
+            html += '<span style="font-size:0.72rem;color:' + (checked ? '#34d399' : '#555') + '" id="cfg-' + safeKey + '-lbl">' + (checked ? 'Aktiv' : 'Inaktiv') + '</span>';
+            html += '</label>';
+          } else if (fieldType === 'select') {
+            html += '<select data-confkey="' + safeKey + '" onchange="saveConfigField(this)" style="width:100%;background:#0d0d0d;border:1px solid rgba(255,255,255,0.08);padding:0.35rem 0.5rem;font-size:0.72rem;color:#e8e8e8;">';
+            const opts = { 'text': 'Text', 'select': 'Select', 'number': 'Number', 'boolean': 'Boolean' };
+            html += '<option value="low" ' + (val === 'low' ? 'selected' : '') + '>Low</option>';
+            html += '<option value="medium" ' + (val === 'medium' ? 'selected' : '') + '>Medium</option>';
+            html += '<option value="high" ' + (val === 'high' ? 'selected' : '') + '>High</option>';
+            html += '</select>';
+          } else if (fieldType === 'number') {
+            html += '<input type="number" value="' + val + '" data-confkey="' + safeKey + '" onchange="saveConfigField(this)" style="width:100%;background:#0d0d0d;border:1px solid rgba(255,255,255,0.08);padding:0.35rem 0.5rem;font-size:0.72rem;color:#e8e8e8;outline:none;">';
+          } else {
+            html += '<input type="text" value="' + val + '" data-confkey="' + safeKey + '" onchange="saveConfigField(this)" style="width:100%;background:#0d0d0d;border:1px solid rgba(255,255,255,0.08);padding:0.35rem 0.5rem;font-size:0.72rem;color:#e8e8e8;outline:none;">';
+          }
+
+          html += '</div></div>';
+        }
+        html += '</div>';
+      }
+
+      html += '<div style="font-size:0.68rem;color:#555;margin-top:0.5rem;">Änderungen werden sofort gespeichert.</div>';
+      root.innerHTML = html;
+    })
+    .catch(e => {
+      root.innerHTML = '<div style="color:#ef4444;">Fehler: ' + e.message + '</div>';
+    });
+}
+
+// Global save function for inline config fields (called from onchange)
+window.saveConfigField = function(el) {
+  const key = el.dataset.confkey;
+  let value;
+  if (el.type === 'checkbox') {
+    value = el.checked ? 'true' : 'false';
+    const lbl = document.getElementById('cfg-' + key + '-lbl');
+    if (lbl) { lbl.textContent = el.checked ? 'Aktiv' : 'Inaktiv'; lbl.style.color = el.checked ? '#34d399' : '#555'; }
+  } else {
+    value = el.value;
+  }
+
+  fetch(SUPABASE_URL + '/rest/v1/app_config?key=eq.' + key, {
+    method: 'PATCH',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
+    body: JSON.stringify({ value: String(value), updated_at: new Date().toISOString() })
+  })
+  .then(r => {
+    if (!r.ok) throw new Error(r.statusText);
+    el.style.borderColor = '#34d399';
+    setTimeout(() => { el.style.borderColor = 'rgba(255,255,255,0.08)'; }, 1500);
+  })
+  .catch(e => {
+    el.style.borderColor = '#ef4444';
+    console.warn('Config save failed:', key, e);
+  });
+};
 
 // Load admin data when entering admin view
 const origOpen = openAdminPanel;
