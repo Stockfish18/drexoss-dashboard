@@ -418,7 +418,7 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 <script>
 const SUPABASE_URL = 'https://rmveqbegqfthwdopzykh.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ByDyItDAH-NvgMLIitjl9w_VdNJZqtp';
-const CHAT_API_URL = 'https://chat.drexoss.com/chat';
+const CHAT_API_URL = 'https://chat.drexoss.com/chat/json';
 
 let currentUser = null;
 let currentRole = 'customer';
@@ -588,16 +588,10 @@ function sendMsg() {
 }
 
 function callBackend(text, callback) {
-  const greetings = ['Guten ' + getGreeting() + ' Boss! Ready to build.', 'Moinsen! Was steht an?', 'Hey Boss, alles klar?', getGreeting() + ' Boss! Woran hacken wir heute?', 'Servus! Bin bereit.'];
   fetch(CHAT_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text, user_id: currentUser?.email || 'rason' }) })
     .then(r => r.json())
-    .then(data => { if (data && data.reply) { callback(data.reply); return; } callback(greetings[Math.floor(Math.random() * greetings.length)]); })
-    .catch(() => {
-      const hr = new Date().getHours();
-      const greet = hr < 12 ? 'Morgen' : hr < 18 ? 'Tag' : 'Abend';
-      const responses = [greet + ' Boss! Ich hab ' + (chatHistory.length/2) + ' Nachrichten im Kontext. Was machen wir?', 'Verstanden. Soll ich einen Task dafür anlegen?', 'Gute Idee!', 'Ja Bro, läuft.', 'Alles klar.'];
-      callback(responses[Math.floor(Math.random() * responses.length)]);
-    });
+    .then(data => { if (data && data.reply) { callback(data.reply); return; } callback('🤖 ' + (data.error || 'Keine Antwort')); })
+    .catch(() => { callback('⚠️ Bridge nicht erreichbar. Läuft dein PC?'); });
 }
 
 function sendSuggestion(el) { document.getElementById('chat-input').value = el.textContent; sendMsg(); }
