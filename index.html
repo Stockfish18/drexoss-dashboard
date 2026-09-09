@@ -196,6 +196,16 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 
 /* Role banner */
 
+/* Image preview */
+.img-preview-wrap { display:none; max-width:780px; margin:0 auto 0.25rem; padding:0.5rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; }
+.img-preview-wrap.show { display:flex; align-items:center; gap:0.5rem; }
+.img-preview-wrap img { max-height:120px; max-width:120px; border-radius:6px; object-fit:contain; }
+.img-preview-wrap .ip-info { font-size:0.72rem; color:#888; flex:1; }
+.img-preview-wrap .ip-remove { width:24px; height:24px; border-radius:50%; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); color:#ef4444; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.7rem; transition:all 0.12s; }
+.img-preview-wrap .ip-remove:hover { background:rgba(239,68,68,0.3); }
+.msg-bubble img { max-width:100%; max-height:300px; border-radius:8px; margin:0.4rem 0; display:block; }
+.msg.user .msg-bubble img { border:1px solid rgba(255,255,255,0.1); }
+
 ::-webkit-scrollbar { width:6px; }
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:#141414; border-radius:3px; }
@@ -296,17 +306,23 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
       <div class="chat-msgs" id="chat-msgs"></div>
       <div class="input-wrap" id="input-wrap">
         <div class="input-box">
-          <textarea id="chat-input" rows="1" placeholder="Nachricht an Stockfish..." oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,160)+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
+          <textarea id="chat-input" rows="1" placeholder="Nachricht an Stockfish..." oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,160)+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}" onpaste="handlePaste(event)"></textarea>
           <div class="input-actions">
             <div class="send-circle" onclick="sendMsg()">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+              <!-- Image Preview (hidden by default) -->
+              <div class="img-preview-wrap" id="img-preview">
+                <img id="img-preview-src" src="" alt="Vorschau">
+                <div class="ip-info" id="img-preview-info">Bild eingefügt (Strg+V)</div>
+                <div class="ip-remove" onclick="clearImagePreview()" title="Entfernen">✕</div>
+              </div>
+            </div>
+          </div>
 
-    <!-- Dashboard View -->
+          <!-- Dashboard View -->
     <div class="dashboard-view" id="dashboard-view">
       <div class="dash-topbar">
         <div class="dash-topbar-left">
@@ -437,6 +453,7 @@ let currentRole = 'customer';
 let chatHistory = [];
 let projects = [], tasks = [], taskMessages = [];
 let currentProjectId = null, currentTaskId = null, editingProjectId = null, editingTaskField = null;
+let currentImage = null; // base64 data URL of pasted image
 
 // ===== AUTH =====
 function checkSession() {
@@ -569,45 +586,98 @@ function showKanbanOverview() {
 function sendMsg() {
   const input = document.getElementById('chat-input');
   const text = input.value.trim();
-  if (!text) return;
+  if (!text && !currentImage) return;
   const empty = document.getElementById('empty-state');
   const msgs = document.getElementById('chat-msgs');
   empty.classList.add('hidden');
   msgs.classList.add('show');
+
+  // Build user message HTML
+  let bubbleHtml = '';
+  if (text) bubbleHtml += '<p>' + escHtml(text) + '</p>';
+  if (currentImage) bubbleHtml += '<img src="' + currentImage + '" alt="Screenshot">';
+
   const userDiv = document.createElement('div');
   userDiv.className = 'msg user';
-  userDiv.innerHTML = '<div class="msg-bubble"><p>' + escHtml(text) + '</p></div>';
+  userDiv.innerHTML = '<div class="msg-bubble">' + bubbleHtml + '</div>';
   msgs.appendChild(userDiv);
   input.value = ''; input.style.height = 'auto';
   msgs.scrollTop = msgs.scrollHeight;
-  chatHistory.push({ role: 'user', content: text });
+  chatHistory.push({ role: 'user', content: text + (currentImage ? ' [Bild]' : '') });
+
   const typingDiv = document.createElement('div');
   typingDiv.className = 'msg ai';
   typingDiv.id = 'typing-indicator';
-  typingDiv.innerHTML = '<div class="msg-bubble"><p>⌨️ Denke nach...</p></div>';
+  typingDiv.innerHTML = '<div class="msg-bubble"><p>◊ Denke nach...</p></div>';
   msgs.appendChild(typingDiv);
   msgs.scrollTop = msgs.scrollHeight;
-  callBackend(text, function(reply) {
+
+  const imageData = currentImage;
+  currentImage = null;
+  clearImagePreview();
+  callBackend(text, imageData, function(reply, imgUrl) {
     const typing = document.getElementById('typing-indicator');
     if (typing) typing.remove();
     const aiDiv = document.createElement('div');
     aiDiv.className = 'msg ai';
-    aiDiv.innerHTML = '<div class="msg-bubble">' + sanitizeHtml(reply) + '</div>';
+    aiDiv.innerHTML = '<div class="msg-bubble">' + sanitizeHtml(reply || '') + '</div>';
     msgs.appendChild(aiDiv);
     msgs.scrollTop = msgs.scrollHeight;
     chatHistory.push({ role: 'assistant', content: reply });
   });
 }
 
-function callBackend(text, callback) {
-  fetch(CHAT_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text, user_id: currentUser?.email || 'rason' }) })
+function callBackend(text, imageData, callback) {
+  const body = { message: text, user_id: currentUser?.email || 'rason' };
+  if (imageData) body.image = imageData;
+  fetch(CHAT_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
     .then(r => r.json())
-    .then(data => { if (data && data.reply) { callback(data.reply); return; } callback('🤖 ' + (data.error || 'Keine Antwort')); })
-    .catch(() => { callback('⚠️ Bridge nicht erreichbar. Läuft dein PC?'); });
+    .then(data => {
+      if (data && data.reply) { callback(data.reply, data.image_url || null); return; }
+      callback('⚠️ ' + (data.error || 'Keine Antwort'), null);
+    })
+    .catch(() => { callback('⚠️ Bridge nicht erreichbar. Laeuft dein PC?', null); });
+}
+
+function handlePaste(event) {
+  const items = event.clipboardData && event.clipboardData.items;
+  if (!items) return;
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    if (item.type.startsWith('image/')) {
+      event.preventDefault();
+      const file = item.getAsFile();
+      if (!file) continue;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        setImagePreview(e.target.result, file.type);
+      };
+      reader.readAsDataURL(file);
+      break;
+    }
+  }
+}
+
+function setImagePreview(dataUrl, mimeType) {
+  currentImage = dataUrl;
+  const wrap = document.getElementById('img-preview');
+  const img = document.getElementById('img-preview-src');
+  const info = document.getElementById('img-preview-info');
+  img.src = dataUrl;
+  const label = mimeType === 'image/png' ? 'PNG' : mimeType === 'image/jpeg' ? 'JPEG' : 'Bild';
+  info.textContent = label + ' · Enter zum Senden';
+  wrap.classList.add('show');
+}
+
+function clearImagePreview() {
+  currentImage = null;
+  const wrap = document.getElementById('img-preview');
+  wrap.classList.remove('show');
+  document.getElementById('img-preview-src').src = '';
 }
 
 function sendSuggestion(el) { document.getElementById('chat-input').value = el.textContent; sendMsg(); }
-function newChat() { chatHistory = []; const msgs = document.getElementById('chat-msgs'); msgs.innerHTML = ''; msgs.classList.remove('show'); document.getElementById('empty-state').classList.remove('hidden'); }
+function newChat() { chatHistory = []; currentImage = null; clearImagePreview(); const msgs = document.getElementById('chat-msgs'); msgs.innerHTML = ''; msgs.classList.remove('show'); document.getElementById('empty-state').classList.remove('hidden'); }
 function filterChats() {}
 function showTicketForm() { alert('📝 Ticket-System folgt in Kürze.'); }
 function getGreeting() { const hr = new Date().getHours(); if (hr < 12) return 'Morgen'; if (hr < 18) return 'Tag'; return 'Abend'; }
@@ -829,7 +899,65 @@ async function loadKPIs() {
 
 function escHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 
-function sanitizeHtml(html) {
+function mdToHtml(md) {
+  // Escape HTML first to prevent injection
+  let d = document.createElement('div');
+  d.textContent = md || '';
+  let h = d.innerHTML;
+  // Code blocks (```...```) — preserve
+  h = h.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+  // Inline code
+  h = h.replace(/`([^`]+)`/g, '<code>$1</code>');
+  // Bold **text** and __text__
+  h = h.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  h = h.replace(/__(.+?)__/g, '<b>$1</b>');
+  // Italic *text* (not **) and _text_
+  h = h.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  h = h.replace(/_([^_]+)_/g, '<em>$1</em>');
+  // Links [text](url)
+  h = h.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  // Ordered lists 1. item
+  h = h.replace(/^(\d+)\.\s+(.+)$/gm, '<li value="$1">$2</li>');
+  h = h.replace(/(<li.*<\/li>\n?)+/g, '<ol>$&</ol>');
+  // Unordered lists - item or * item
+  h = h.replace(/^[-*]\s+(.+)$/gm, '<li>$1</li>');
+  h = h.replace(/(<li.*<\/li>\n?)+/g, function(m) { return '<ul>' + m.replace(/\n/g,'') + '</ul>'; });
+  // Multiple <ol>/<ul> blocks
+  h = h.replace(/<\/ol>\s*<ol>/g, '');
+  h = h.replace(/<\/ul>\s*<ul>/g, '');
+  // Headings (### → h4, ## → h3, # → h3)
+  h = h.replace(/^###\s+(.+)$/gm, '<h4>$1</h4>');
+  h = h.replace(/^##\s+(.+)$/gm, '<h3>$1</h3>');
+  h = h.replace(/^#\s+(.+)$/gm, '<h3>$1</h3>');
+  // Horizontal rules
+  h = h.replace(/^---+\s*$/gm, '<hr>');
+  // Blockquotes
+  h = h.replace(/^>\s+(.+)$/gm, '<blockquote>$1</blockquote>');
+  // Paragraphs: double newline
+  h = h.replace(/\n\n/g, '</p><p>');
+  h = '<p>' + h + '</p>';
+  // Clean empty paragraphs
+  h = h.replace(/<p>\s*<\/p>/g, '');
+  h = h.replace(/<p>(<[ou]l>)/g, '$1');
+  h = h.replace(/(<\/[ou]l>)<\/p>/g, '$1');
+  h = h.replace(/<\/?p>(<pre)/g, '$1');
+  h = h.replace(/(<\/pre>)<\/?p>/g, '$1');
+  h = h.replace(/<p>(<h[34]>)/g, '$1');
+  h = h.replace(/(<\/h[34]>)<\/p>/g, '$1');
+  h = h.replace(/<p>(<blockquote>)/g, '$1');
+  h = h.replace(/(<\/blockquote>)<\/p>/g, '$1');
+  h = h.replace(/<p>(<hr)/g, '$1');
+  // Line breaks within paragraphs
+  h = h.replace(/\n/g, '<br>');
+  // Remove empty <p> at start/end
+  h = h.replace(/^<p>/, '');
+  h = h.replace(/<\/p>$/, '');
+  return h;
+}
+
+function sanitizeHtml(text) {
+  // First convert Markdown to HTML
+  const html = mdToHtml(text);
   const d = document.createElement('div');
   d.innerHTML = html || '';
   // Remove dangerous elements
