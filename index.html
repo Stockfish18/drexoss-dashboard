@@ -92,6 +92,18 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 .msg-bubble code { background:rgba(255,255,255,0.08); border-radius:4px; padding:0.1rem 0.35rem; font-size:0.8rem; }
 .msg-bubble pre { background:rgba(0,0,0,0.3); border-radius:8px; padding:0.6rem; margin:0.4rem 0; overflow-x:auto; font-size:0.8rem; }
 .msg-bubble p { margin-bottom:0.4rem; }
+.msg-bubble ul, .msg-bubble ol { margin:0.3rem 0; padding-left:1.3rem; }
+.msg-bubble li { margin-bottom:0.15rem; }
+.msg-bubble blockquote { border-left:2px solid #5e5ce6; margin:0.4rem 0; padding:0.2rem 0.8rem; color:#a0a0b0; font-style:italic; }
+.msg-bubble h3 { font-size:0.95rem; font-weight:600; margin:0.6rem 0 0.3rem; color:#e8e8e8; }
+.msg-bubble h4 { font-size:0.88rem; font-weight:500; margin:0.5rem 0 0.25rem; color:#d0d0d8; }
+.msg-bubble table { border-collapse:collapse; margin:0.4rem 0; font-size:0.8rem; width:100%; }
+.msg-bubble th, .msg-bubble td { border:1px solid #2a2a2a; padding:0.3rem 0.5rem; text-align:left; }
+.msg-bubble th { background:#141414; color:#888; font-weight:500; text-transform:uppercase; font-size:0.65rem; letter-spacing:0.05em; }
+.msg-bubble hr { border:none; border-top:1px solid #1a1a1a; margin:0.5rem 0; }
+.msg-bubble a { color:#7c7aff; text-decoration:underline; }
+.msg-bubble a:hover { color:#9b9aff; }
+.msg-bubble strong { font-weight:600; color:#f0f0f0; }
 .empty-state { flex:1; display:flex; align-items:center; justify-content:center; padding:2rem 3rem; }
 .empty-state.hidden { display:none; }
 .empty-center { text-align:center; max-width:440px; }
@@ -580,7 +592,7 @@ function sendMsg() {
     if (typing) typing.remove();
     const aiDiv = document.createElement('div');
     aiDiv.className = 'msg ai';
-    aiDiv.innerHTML = '<div class="msg-bubble"><p>' + escHtml(reply) + '</p></div>';
+    aiDiv.innerHTML = '<div class="msg-bubble">' + sanitizeHtml(reply) + '</div>';
     msgs.appendChild(aiDiv);
     msgs.scrollTop = msgs.scrollHeight;
     chatHistory.push({ role: 'assistant', content: reply });
@@ -816,6 +828,24 @@ async function loadKPIs() {
 }
 
 function escHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+function sanitizeHtml(html) {
+  const d = document.createElement('div');
+  d.innerHTML = html || '';
+  // Remove dangerous elements
+  const kill = d.querySelectorAll('script, style, iframe, object, embed, form, input, textarea, select, button, link, meta, head, frame, frameset');
+  for (const el of kill) el.remove();
+  // Strip event handlers + javascript: links
+  const all = d.querySelectorAll('*');
+  for (const el of all) {
+    for (const attr of [...el.attributes]) {
+      if (attr.name.startsWith('on') || (attr.name === 'href' && attr.value.trim().toLowerCase().startsWith('javascript:'))) {
+        el.removeAttribute(attr.name);
+      }
+    }
+  }
+  return d.innerHTML;
+}
 
 // ===== ACCOUNT MODAL =====
 function openAccountModal() {
