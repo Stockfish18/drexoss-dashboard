@@ -582,10 +582,8 @@ async function loadUserProfile() {
 
 // ===== PROJECTS (Dashboard Mode) =====
 let sidebarMode = 'chat';
-let projects = [];
 let projectTasks = {};
 
-}
 
 async function renderProjects() {
   projects = await supabaseApi('projects?select=id,name,code,status&order=name');
