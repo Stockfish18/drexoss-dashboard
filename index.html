@@ -103,6 +103,25 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 .pd-promote-btn:hover { color:#7c7aff; background:rgba(94,92,230,0.1); }
 .pd-prompt { font-size:0.72rem; color:#888; margin-top:0.3rem; padding:0.4rem 0.5rem; background:#0a0a0a; border-radius:4px; line-height:1.5; white-space:pre-wrap; cursor:text; }
 .pd-prompt:focus { outline:none; border-color:#5e5ce6; }
+
+/* Task Detail */
+.td-bread { font-size:0.72rem; color:#555; margin-bottom:0.75rem; }
+.td-header { display:flex; align-items:baseline; gap:0.5rem; margin-bottom:1rem; }
+.td-ref { color:#5e5ce6; font-size:0.72rem; font-weight:600; white-space:nowrap; }
+.td-title { font-size:1rem; font-weight:500; color:#e8e8e8; }
+.td-meta { display:flex; gap:2rem; margin-bottom:1rem; flex-wrap:wrap; }
+.td-meta-item { }
+.td-label { font-size:0.6rem; text-transform:uppercase; letter-spacing:0.08em; color:#888; display:block; margin-bottom:0.15rem; }
+.td-value { font-size:0.78rem; color:#e0e0e0; }
+.td-section { margin-bottom:1rem; }
+.td-section-label { font-size:0.6rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#888; margin-bottom:0.3rem; border-bottom:1px solid #141414; padding-bottom:0.25rem; }
+.td-desc { font-size:0.8rem; color:#d0d0d0; line-height:1.5; }
+.td-prompt { font-size:0.78rem; color:#c0c0d0; line-height:1.6; background:#0a0a0a; border:1px solid #141414; border-radius:6px; padding:0.6rem; min-height:60px; cursor:text; white-space:pre-wrap; }
+.td-prompt:focus { outline:none; border-color:#333; }
+.td-log { }
+.tl-item { display:flex; align-items:center; gap:0.75rem; padding:0.3rem 0; font-size:0.75rem; color:#888; }
+.tl-date { font-size:0.65rem; color:#555; min-width:80px; }
+.tl-action { color:#b0b0b0; }
 /* Profile Popup — Dropdown über Profilzeile */
 .chat-sidebar { position:relative; }
 .profile-panel { position:absolute; left:6px; right:6px; bottom:54px; background:#0d0d0d; border:1px solid #1a1a1a; border-radius:8px; padding:0.9rem 0.9rem 1rem; opacity:0; pointer-events:none; transform:translateY(4px); transition:opacity 0.12s, transform 0.12s; z-index:10; box-shadow:0 -4px 20px rgba(0,0,0,0.5); }
@@ -637,7 +656,7 @@ function renderConceptList(concepts) {
       '<span class="pd-title">' + escHtml(c.title) + '</span>' +
       '<span class="pd-promote-btn">→ DV</span>';
     el.querySelector('.pd-promote-btn').onclick = function(e) { e.stopPropagation(); promoteToDev(c.id); };
-    el.onclick = function() { editTaskPrompt(c.id); };
+    el.onclick = function() { showTaskPrompt(c.id); };
     list.appendChild(el);
   }
 }
@@ -778,12 +797,91 @@ function closeProjectDetail() {
 }
 
 function showTaskPrompt(taskId) {
-  // TODO: expand task to show prompt
-  alert('Prompt-Ansicht folgt im nächsten Build.');
+  // Show task detail view
+  document.getElementById('project-detail-view').style.display = 'none';
+  
+  // Load task + assignee data
+  supabaseApi('tasks?select=id,number,title,description,prompt,dev_type,status,assignee,created_by,created_at,effort&id=eq.' + taskId).then(function(tasks) {
+    if (!tasks || !tasks.length) return;
+    const t = tasks[0];
+    currentTaskId = taskId;
+    
+    // Load users for assignee dropdown
+    supabaseApi('user_profiles?select=email,name,shortcode').then(function(users) {
+      showTaskDetail(t, users || []);
+    });
+  });
 }
 
-function editTaskPrompt(taskId) {
-  alert('Prompt-Editor folgt im nächsten Build.');
+function showTaskDetail(t, users) {
+  const pd = document.getElementById('pd-task-detail');
+  pd.style.display = 'block';
+  
+  const p = projects.find(x => x.id === currentProjectId);
+  const projName = p ? (p.code + ' ' + (p.name || '')) : 'Projekt';
+  
+  let assigneeName = '';
+  if (t.assignee) {
+    const u = users.find(x => x.email === t.assignee || x.name === t.assignee);
+    assigneeName = u ? (u.name + (u.shortcode ? ' (' + u.shortcode + ')' : '')) : t.assignee;
+  }
+  
+  let logHtml = '';
+  const createdAt = t.created_at ? new Date(t.created_at).toLocaleDateString('de-DE') : '?';
+  const createdBy = t.created_by || 'Stockfish';
+  logHtml += '<div class="tl-item"><span class="tl-date">' + createdAt + '</span><span class="tl-action">Erstellt von ' + createdBy + '</span></div>';
+  
+  pd.innerHTML = 
+    '<div class="td-bread"><span class="bread" onclick="closeTaskDetail()">← ' + projName + '</span></div>' +
+    '<div class="td-header"><span class="td-ref">' + escHtml(t.number) + '</span><span class="td-title">' + escHtml(t.title) + '</span></div>' +
+    '<div class="td-meta">' +
+      '<div class="td-meta-item"><span class="td-label">Status</span><span class="td-value"><select id="td-status" onchange="updateTaskStatus(\'' + t.id + '\')" style="background:#0d0d0d;border:1px solid #1a1a1a;color:#e0e0e0;font-size:0.78rem;padding:0.25rem 0.4rem;border-radius:4px;font-family:inherit;">' +
+        '<option value="open"' + (t.status === 'open' ? ' selected' : '') + '>● Offen</option>' +
+        '<option value="active"' + (t.status === 'active' ? ' selected' : '') + '>▸ Aktiv</option>' +
+        '<option value="in_progress"' + (t.status === 'in_progress' ? ' selected' : '') + '>◉ In Arbeit</option>' +
+        '<option value="review"' + (t.status === 'review' ? ' selected' : '') + '>◷ Review</option>' +
+        '<option value="done"' + (t.status === 'done' ? ' selected' : '') + '>✓ Erledigt</option>' +
+      '</select></span></div>' +
+      '<div class="td-meta-item"><span class="td-label">Assignee</span><span class="td-value"><select id="td-assignee" onchange="updateTaskAssignee(\'' + t.id + '\')" style="background:#0d0d0d;border:1px solid #1a1a1a;color:#e0e0e0;font-size:0.78rem;padding:0.25rem 0.4rem;border-radius:4px;font-family:inherit;">' +
+        '<option value="">— Nicht zugewiesen —</option>' +
+        users.map(function(u) { return '<option value="' + escHtml(u.email) + '"' + (t.assignee === u.email ? ' selected' : '') + '>' + escHtml(u.name) + (u.shortcode ? ' (' + u.shortcode + ')' : '') + '</option>'; }).join('') +
+      '</select></span></div>' +
+      (t.effort ? '<div class="td-meta-item"><span class="td-label">Aufwand</span><span class="td-value">' + escHtml(t.effort) + '</span></div>' : '') +
+    '</div>' +
+    (t.description ? '<div class="td-section"><div class="td-section-label">Beschreibung</div><div class="td-desc">' + escHtml(t.description) + '</div></div>' : '') +
+    (t.dev_type === 'development' ? '<div class="td-section"><div class="td-section-label">Prompt</div><div class="td-prompt" id="td-prompt" contenteditable="true" onblur="saveTaskPrompt(\'' + t.id + '\')">' + escHtml(t.prompt || '') + '</div></div>' : '') +
+    '<div class="td-section"><div class="td-section-label">Aktivität</div><div class="td-log">' + logHtml + '</div></div>';
+}
+
+function closeTaskDetail() {
+  document.getElementById('pd-task-detail').style.display = 'none';
+  document.getElementById('project-detail-view').style.display = 'block';
+  openProject(currentProjectId);
+}
+
+function updateTaskStatus(taskId) {
+  const status = document.getElementById('td-status').value;
+  supabaseApi('tasks?id=eq.' + taskId, {
+    method: 'PATCH', body: JSON.stringify({ status: status })
+  });
+  document.getElementById('td-status').style.borderColor = '#34d399';
+  setTimeout(function() { document.getElementById('td-status').style.borderColor = '#1a1a1a'; }, 1000);
+}
+
+function updateTaskAssignee(taskId) {
+  const assignee = document.getElementById('td-assignee').value;
+  supabaseApi('tasks?id=eq.' + taskId, {
+    method: 'PATCH', body: JSON.stringify({ assignee: assignee })
+  });
+  document.getElementById('td-assignee').style.borderColor = '#34d399';
+  setTimeout(function() { document.getElementById('td-assignee').style.borderColor = '#1a1a1a'; }, 1000);
+}
+
+function saveTaskPrompt(taskId) {
+  const prompt = document.getElementById('td-prompt').textContent.trim();
+  supabaseApi('tasks?id=eq.' + taskId, {
+    method: 'PATCH', body: JSON.stringify({ prompt: prompt })
+  });
 }
 
 function filterProjects() {
