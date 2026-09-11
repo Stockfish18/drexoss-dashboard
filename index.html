@@ -122,6 +122,11 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 .tl-item { display:flex; align-items:center; gap:0.75rem; padding:0.3rem 0; font-size:0.75rem; color:#888; }
 .tl-date { font-size:0.65rem; color:#555; min-width:80px; }
 .tl-action { color:#b0b0b0; }
+
+/* Project Detail - User Story */
+.pd-story { scrollbar-width:thin; }
+.pd-story::-webkit-scrollbar { width:4px; }
+.pd-story::-webkit-scrollbar-thumb { background:#141414; border-radius:2px; }
 /* Profile Popup — Dropdown über Profilzeile */
 .chat-sidebar { position:relative; }
 .profile-panel { position:absolute; left:6px; right:6px; bottom:54px; background:#0d0d0d; border:1px solid #1a1a1a; border-radius:8px; padding:0.9rem 0.9rem 1rem; opacity:0; pointer-events:none; transform:translateY(4px); transition:opacity 0.12s, transform 0.12s; z-index:10; box-shadow:0 -4px 20px rgba(0,0,0,0.5); }
@@ -441,29 +446,39 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 
     
     <!-- Project Detail View -->
-    <div class="proj-detail" id="project-detail-view" style="display:none;padding:1.5rem 2rem;overflow-y:auto;height:100%;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
-        <div style="display:flex;align-items:center;gap:0.5rem;">
-          <span class="bread" id="pd-bread" onclick="closeProjectDetail()">← Alle Projekte</span>
-          <span style="color:#333;">/</span>
-          <span class="cs-logo" style="font-size:1rem;" id="pd-title">Projektname</span>
-        </div>
-        <div style="display:flex;gap:0.4rem;">
-          <button class="btn btn-primary-sm" onclick="openNewConcept()" style="padding:0.35rem 0.7rem;font-size:0.72rem;background:transparent;border:1px solid #1a1a1a;color:#e0e0e0;border-radius:6px;cursor:pointer;font-family:inherit;transition:color 0.12s;" onmouseover="this.style.color='#fff';this.style.borderColor='#2a2a2a'" onmouseout="this.style.color='#e0e0e0';this.style.borderColor='#1a1a1a'">+ Konzept</button>
-          <button class="btn btn-primary-sm" onclick="openNewDevTask()" style="padding:0.35rem 0.7rem;font-size:0.72rem;background:transparent;border:1px solid #1a1a1a;color:#e0e0e0;border-radius:6px;cursor:pointer;font-family:inherit;transition:color 0.12s;" onmouseover="this.style.color='#fff';this.style.borderColor='#2a2a2a'" onmouseout="this.style.color='#e0e0e0';this.style.borderColor='#1a1a1a'">+ Task</button>
-        </div>
-      </div>
+        <div class="proj-detail" id="project-detail-view" style="display:none;overflow:hidden;height:100%;display:none;">
+          <!-- Breadcrumb + Buttons -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem 0;flex-shrink:0;">
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+              <span class="bread" id="pd-bread" onclick="closeProjectDetail()">← Alle Projekte</span>
+              <span style="color:#333;">/</span>
+              <span class="cs-logo" style="font-size:1rem;" id="pd-title">Projektname</span>
+            </div>
+            <div style="display:flex;gap:0.4rem;">
+              <button class="btn btn-primary-sm" onclick="openNewConcept()" style="padding:0.35rem 0.7rem;font-size:0.72rem;background:transparent;border:1px solid #1a1a1a;color:#e0e0e0;border-radius:6px;cursor:pointer;font-family:inherit;transition:color 0.12s;" onmouseover="this.style.color='#fff';this.style.borderColor='#2a2a2a'" onmouseout="this.style.color='#e0e0e0';this.style.borderColor='#1a1a1a'">+ Konzept</button>
+              <button class="btn btn-primary-sm" onclick="openNewDevTask()" style="padding:0.35rem 0.7rem;font-size:0.72rem;background:transparent;border:1px solid #1a1a1a;color:#e0e0e0;border-radius:6px;cursor:pointer;font-family:inherit;transition:color 0.12s;" onmouseover="this.style.color='#fff';this.style.borderColor='#2a2a2a'" onmouseout="this.style.color='#e0e0e0';this.style.borderColor='#1a1a1a'">+ Task</button>
+            </div>
+          </div>
 
-      <div id="pd-concepts-area" style="margin-bottom:1.5rem;">
-        <div class="pd-section-label">Concepts <span class="pd-count" id="pd-cn-count">0</span></div>
-        <div id="pd-concepts-list"></div>
-      </div>
+          <!-- User Story (1/3 Bildschirmhöhe) -->
+          <div class="pd-story" id="pd-story" style="padding:1rem 2rem;max-height:33vh;overflow-y:auto;border-bottom:1px solid #141414;">
+            <div class="pd-section-label" style="margin-bottom:0.3rem;">User Story</div>
+            <div id="pd-story-text" style="font-size:0.85rem;color:#d0d0d0;line-height:1.6;"></div>
+          </div>
 
-      <div id="pd-dev-area">
-        <div class="pd-section-label">Development <span class="pd-count" id="pd-dv-count">0</span></div>
-        <div id="pd-dev-list"></div>
-      </div>
-    </div>
+          <!-- Concepts + Development (scrollbar) -->
+          <div style="flex:1;overflow-y:auto;padding:1rem 2rem;">
+            <div id="pd-concepts-area" style="margin-bottom:1.5rem;">
+              <div class="pd-section-label">Concepts <span class="pd-count" id="pd-cn-count">0</span></div>
+              <div id="pd-concepts-list"></div>
+            </div>
+
+            <div id="pd-dev-area">
+              <div class="pd-section-label">Development <span class="pd-count" id="pd-dv-count">0</span></div>
+              <div id="pd-dev-list"></div>
+            </div>
+          </div>
+        </div>
 
     <!-- Task Detail View -->
     <div id="pd-task-detail" style="display:none;padding:1.5rem 2rem;overflow-y:auto;height:100%;"></div>
@@ -639,6 +654,11 @@ async function openProject(projectId) {
   
   document.getElementById('pd-title').textContent = p.name || 'Projekt';
   currentProjectId = projectId;
+  
+  // Load project description for User Story
+  const fullProj = await supabaseApi('projects?select=description&id=eq.' + projectId);
+  const storyText = (fullProj && fullProj.length > 0 && fullProj[0].description) ? fullProj[0].description : 'Keine User Story definiert.';
+  document.getElementById('pd-story-text').innerHTML = sanitizeHtml(storyText);
   
   // Load concepts and dev tasks
   const allTasks = await supabaseApi('tasks?select=id,number,title,description,prompt,dev_type,status&project_id=eq.' + projectId + '&order=number');
