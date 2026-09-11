@@ -1248,21 +1248,10 @@ async function saveSettings() {
 
   if (!name) { err.textContent = '❌ Anzeigename ist erforderlich'; err.style.display = 'block'; btn.disabled = false; btn.textContent = '💾 Speichern'; return; }
 
-  // Auto-generate shortcode: 3 Zeichen aus Vor+Nachname
-  let shortcode = (first.charAt(0) || '') + (last.charAt(0) || '') + (last.charAt(1) || '');
-  shortcode = shortcode.toUpperCase().slice(0, 3);
-  // Falls < 3 Zeichen, mit X auffuellen
-  while (shortcode.length < 3) shortcode += 'X';
-  // Bekannte 2-stellige Ausnahmen bleiben
-  const existing = currentProfile?.shortcode || '';
-  const TWO_CHAR_USERS = ['RL', 'GK']; // Bro + Gu
-  if (TWO_CHAR_USERS.includes(existing)) shortcode = existing;
-
   const payload = {
     first_name: first,
     last_name: last,
     name: name,
-    shortcode: shortcode,
     company_name: document.getElementById('set-company').value.trim()
   };
 
@@ -1274,11 +1263,9 @@ async function saveSettings() {
     currentUser.name = name;
     localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
     document.getElementById('cs-user-name').textContent = name;
-    // Update profile panel fields
     document.getElementById('pp-name').textContent = name;
-    document.getElementById('pp-shortcode').textContent = shortcode ? '▸ ' + shortcode : '';
     document.getElementById('pp-avatar-letter').textContent = (name || '?').charAt(0).toUpperCase();
-    ok.textContent = '✅ Gespeichert (Kürzel: ' + shortcode + ')'; ok.style.display = 'block';
+    ok.textContent = '✅ Gespeichert'; ok.style.display = 'block';
     setTimeout(closeSettingsModal, 1200);
   } catch(e) {
     err.textContent = '❌ Fehler: ' + e.message;
