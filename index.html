@@ -1184,11 +1184,10 @@ function uploadAvatar(event) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = function(e) {
-    document.getElementById('ac-avatar-letter').textContent = '📷';
-    document.getElementById('ac-avatar').style.backgroundImage = 'url(' + e.target.result + ')';
-    document.getElementById('ac-avatar').style.backgroundSize = 'cover';
-    document.getElementById('ac-avatar-letter').style.display = 'none';
-    // Save to localStorage for now (Supabase Storage später)
+    document.getElementById('pp-avatar-letter').textContent = '📷';
+    document.getElementById('pp-avatar').style.backgroundImage = 'url(' + e.target.result + ')';
+    document.getElementById('pp-avatar').style.backgroundSize = 'cover';
+    document.getElementById('pp-avatar-letter').style.display = 'none';
     localStorage.setItem('drexoss_avatar', e.target.result);
   };
   reader.readAsDataURL(file);
