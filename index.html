@@ -72,6 +72,37 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 .cs-user-role { font-size:0.6rem; color:#888; }
 .cs-dot { width:5px; height:5px; border-radius:50%; background:#34d399; flex-shrink:0; }
 
+
+/* Project Sidebar */
+#project-sidebar { flex:1; overflow-y:auto; min-height:0; display:none; flex-direction:column; }
+#project-sidebar.show { display:flex; }
+#cs-threads-list.hide, .cs-scroll.hide { display:none; }
+.proj-item { display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.6rem; border-radius:6px; cursor:pointer; font-size:0.78rem; color:#e0e0e0; transition:color 0.12s; margin:0 0.3rem; }
+.proj-item:hover { background:#141414; color:#fff; }
+.proj-item .p-code { color:#5e5ce6; font-size:0.65rem; font-weight:600; min-width:44px; }
+.proj-item .p-name { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.proj-item .p-count { color:#555; font-size:0.65rem; }
+.proj-item.active { background:#141414; }
+
+/* Project Detail */
+.pd-section-label { font-size:0.6rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#888; margin-bottom:0.5rem; padding:0.5rem 0; border-bottom:1px solid #141414; display:flex; align-items:center; gap:0.5rem; }
+.pd-count { font-size:0.6rem; color:#555; font-weight:400; }
+.pd-item { padding:0.5rem 0.6rem; border-radius:6px; margin:0 0 0.2rem; font-size:0.8rem; color:#e0e0e0; transition:color 0.12s; cursor:pointer; display:flex; align-items:center; gap:0.5rem; }
+.pd-item:hover { background:#141414; }
+.pd-item .pd-ref { color:#5e5ce6; font-size:0.65rem; font-weight:600; min-width:100px; }
+.pd-item .pd-title { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pd-item .pd-status { font-size:0.6rem; color:#555; }
+.pd-item.concept { border-left:2px solid #555; }
+.pd-item.development { border-left:2px solid #5e5ce6; }
+.pd-item.done { opacity:0.5; }
+.pd-item .pd-badge { font-size:0.55rem; padding:0.1rem 0.35rem; border-radius:4px; font-weight:600; }
+.pd-item .pd-badge.cn { background:rgba(255,255,255,0.05); color:#888; }
+.pd-item .pd-badge.dv { background:rgba(94,92,230,0.15); color:#7c7aff; }
+.pd-item .pd-badge.done { background:rgba(52,211,153,0.15); color:#34d399; }
+.pd-promote-btn { font-size:0.6rem; color:#5e5ce6; cursor:pointer; padding:0.15rem 0.4rem; border-radius:4px; transition:color 0.12s; white-space:nowrap; }
+.pd-promote-btn:hover { color:#7c7aff; background:rgba(94,92,230,0.1); }
+.pd-prompt { font-size:0.72rem; color:#888; margin-top:0.3rem; padding:0.4rem 0.5rem; background:#0a0a0a; border-radius:4px; line-height:1.5; white-space:pre-wrap; cursor:text; }
+.pd-prompt:focus { outline:none; border-color:#5e5ce6; }
 /* Profile Popup — Dropdown über Profilzeile */
 .chat-sidebar { position:relative; }
 .profile-panel { position:absolute; left:6px; right:6px; bottom:54px; background:#0d0d0d; border:1px solid #1a1a1a; border-radius:8px; padding:0.9rem 0.9rem 1rem; opacity:0; pointer-events:none; transform:translateY(4px); transition:opacity 0.12s, transform 0.12s; z-index:10; box-shadow:0 -4px 20px rgba(0,0,0,0.5); }
@@ -277,6 +308,13 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
           <div id="cs-threads-list"></div>
         </div>
 
+
+    <!-- Project List (shown when Dashboard active) -->
+    <div id="project-sidebar" style="display:none;">
+      <input class="cs-search" type="text" placeholder="Projekte durchsuchen..." id="proj-search" oninput="filterProjects()" style="margin:0.5rem 0.75rem;">
+      <div style="padding:0 0.3rem;" id="proj-list"></div>
+      <div style="border-top:1px solid #141414;margin:0.5rem 0.75rem 0;"></div>
+    </div>
     <div class="cs-section" style="border-top:1px solid #141414;margin-top:0.5rem;padding-top:0.5rem;">Administration</div>
     <div class="cs-admin-area">
       <div class="cs-admin-item" onclick="openDashboard()">
@@ -382,7 +420,32 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
       </div>
     </div>
 
-    <!-- Admin View -->
+    
+    <!-- Project Detail View -->
+    <div class="proj-detail" id="project-detail-view" style="display:none;padding:1.5rem 2rem;overflow-y:auto;height:100%;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <span class="bread" id="pd-bread" onclick="closeProjectDetail()">← Alle Projekte</span>
+          <span style="color:#333;">/</span>
+          <span class="cs-logo" style="font-size:1rem;" id="pd-title">Projektname</span>
+        </div>
+        <div style="display:flex;gap:0.4rem;">
+          <button class="btn btn-primary-sm" onclick="openNewConcept()" style="padding:0.35rem 0.7rem;font-size:0.72rem;background:transparent;border:1px solid #1a1a1a;color:#e0e0e0;border-radius:6px;cursor:pointer;font-family:inherit;transition:color 0.12s;" onmouseover="this.style.color='#fff';this.style.borderColor='#2a2a2a'" onmouseout="this.style.color='#e0e0e0';this.style.borderColor='#1a1a1a'">+ Konzept</button>
+          <button class="btn btn-primary-sm" onclick="openNewDevTask()" style="padding:0.35rem 0.7rem;font-size:0.72rem;background:transparent;border:1px solid #1a1a1a;color:#e0e0e0;border-radius:6px;cursor:pointer;font-family:inherit;transition:color 0.12s;" onmouseover="this.style.color='#fff';this.style.borderColor='#2a2a2a'" onmouseout="this.style.color='#e0e0e0';this.style.borderColor='#1a1a1a'">+ Task</button>
+        </div>
+      </div>
+
+      <div id="pd-concepts-area" style="margin-bottom:1.5rem;">
+        <div class="pd-section-label">Concepts <span class="pd-count" id="pd-cn-count">0</span></div>
+        <div id="pd-concepts-list"></div>
+      </div>
+
+      <div id="pd-dev-area">
+        <div class="pd-section-label">Development <span class="pd-count" id="pd-dv-count">0</span></div>
+        <div id="pd-dev-list"></div>
+      </div>
+    </div>
+<!-- Admin View -->
     <div class="dashboard-view" id="admin-view">
       <div class="dash-topbar">
         <div class="dash-topbar-left">
@@ -515,6 +578,186 @@ async function loadUserProfile() {
       localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
     }
   } catch(e) { /* profile load failed */ }
+}
+
+// ===== PROJECTS (Dashboard Mode) =====
+let sidebarMode = 'chat';
+let projects = [];
+let projectTasks = {};
+
+}
+
+async function renderProjects() {
+  projects = await supabaseApi('projects?select=id,name,code,status&order=name');
+  const list = document.getElementById('proj-list');
+  list.innerHTML = '';
+  for (const p of projects) {
+    // Count tasks per project
+    const tasks = await supabaseApi('tasks?select=dev_type,status&project_id=eq.' + p.id);
+    const cn = (tasks || []).filter(t => t.dev_type === 'concept').length;
+    const dv = (tasks || []).filter(t => t.dev_type === 'development').length;
+    projectTasks[p.id] = tasks || [];
+    
+    const el = document.createElement('div');
+    el.className = 'proj-item';
+    el.setAttribute('onclick', 'openProject(' + p.id + ')');
+    el.innerHTML = '<span class="p-code">' + (p.code || '???') + '</span><span class="p-name">' + escHtml(p.name) + '</span><span class="p-count">' + cn + '○ ' + dv + '▸</span>';
+    list.appendChild(el);
+  }
+}
+
+async function openProject(projectId) {
+  // Show project detail
+  document.getElementById('kanban-overview').style.display = 'none';
+  document.getElementById('proj-detail').style.display = 'none';
+  document.getElementById('task-detail-view').style.display = 'none';
+  document.getElementById('project-detail-view').style.display = 'block';
+  
+  const p = projects.find(x => x.id === projectId);
+  if (!p) return;
+  
+  document.getElementById('pd-title').textContent = p.name || 'Projekt';
+  currentProjectId = projectId;
+  
+  // Load concepts and dev tasks
+  const allTasks = await supabaseApi('tasks?select=id,number,title,description,prompt,dev_type,status&project_id=eq.' + projectId + '&order=number');
+  const concepts = (allTasks || []).filter(t => t.dev_type === 'concept');
+  const devTasks = (allTasks || []).filter(t => t.dev_type === 'development');
+  
+  renderConceptList(concepts);
+  renderDevList(devTasks);
+}
+
+function renderConceptList(concepts) {
+  const list = document.getElementById('pd-concepts-list');
+  document.getElementById('pd-cn-count').textContent = concepts.length;
+  list.innerHTML = '';
+  for (const c of concepts) {
+    const el = document.createElement('div');
+    el.className = 'pd-item concept';
+    el.innerHTML = '<span class="pd-ref">' + escHtml(c.number || '???') + '</span>' +
+      '<span class="pd-title">' + escHtml(c.title) + '</span>' +
+      '<span class="pd-promote-btn" onclick="event.stopPropagation();promoteToDev('' + c.id + '')">→ DV</span>';
+    el.setAttribute('onclick', 'editTaskPrompt('' + c.id + '')');
+    list.appendChild(el);
+  }
+}
+
+function renderDevList(devTasks) {
+  const list = document.getElementById('pd-dev-list');
+  document.getElementById('pd-dv-count').textContent = devTasks.length;
+  list.innerHTML = '';
+  for (const t of devTasks) {
+    const isDone = t.status === 'done';
+    const badge = isDone ? 'dv done' : 'dv';
+    const badgeLabel = isDone ? '✓' : '▸';
+    const statusClass = isDone ? ' done' : '';
+    
+    const el = document.createElement('div');
+    el.className = 'pd-item development' + statusClass;
+    el.innerHTML = '<span class="pd-ref">' + escHtml(t.number || '???') + '</span>' +
+      '<span class="pd-title">' + escHtml(t.title) + '</span>' +
+      '<span class="pd-badge ' + badge + '">' + badgeLabel + '</span>';
+    el.setAttribute('onclick', 'showTaskPrompt('' + t.id + '')');
+    list.appendChild(el);
+  }
+}
+
+async function openNewConcept() {
+  const title = prompt('Konzept-Titel:');
+  if (!title || !title.trim()) return;
+  const p = projects.find(x => x.id === currentProjectId);
+  if (!p) return;
+  
+  // Generate next CN number
+  const existing = await supabaseApi('tasks?select=number&project_id=eq.' + currentProjectId + '&dev_type=eq.concept');
+  const n = (existing || []).length + 1;
+  const refId = (p.code || 'PRJ') + '-CN-' + String(n).padStart(3, '0');
+  
+  await supabaseApi('tasks', {
+    method: 'POST', body: JSON.stringify({
+      project_id: currentProjectId,
+      title: title.trim(),
+      description: '',
+      prompt: '',
+      dev_type: 'concept',
+      status: 'open',
+      number: refId
+    })
+  });
+  openProject(currentProjectId);
+}
+
+async function openNewDevTask() {
+  const title = prompt('Development-Task Titel:');
+  if (!title || !title.trim()) return;
+  const p = projects.find(x => x.id === currentProjectId);
+  if (!p) return;
+  
+  const existing = await supabaseApi('tasks?select=number&project_id=eq.' + currentProjectId + '&dev_type=eq.development');
+  const n = (existing || []).length + 1;
+  const refId = (p.code || 'PRJ') + '-DV-' + String(n).padStart(3, '0');
+  
+  await supabaseApi('tasks', {
+    method: 'POST', body: JSON.stringify({
+      project_id: currentProjectId,
+      title: title.trim(),
+      description: '',
+      prompt: '',
+      dev_type: 'development',
+      status: 'open',
+      number: refId
+    })
+  });
+  openProject(currentProjectId);
+}
+
+async function promoteToDev(conceptId) {
+  if (!confirm('Konzept zu Development befördern? Ein detaillierter Prompt wird benötigt.')) return;
+  
+  const prompt = prompt('Prompt für den Task (genaue Beschreibung für LLM/DEV):');
+  if (!prompt) return;
+  
+  const task = (await supabaseApi('tasks?select=id,number,project_id,title&id=eq.' + conceptId))[0];
+  if (!task) return;
+  
+  // Generate new DV number
+  const p = projects.find(x => x.id === task.project_id);
+  const devTasks = await supabaseApi('tasks?select=number&project_id=eq.' + task.project_id + '&dev_type=eq.development');
+  const n = (devTasks || []).length + 1;
+  const newNum = (p?.code || 'PRJ') + '-DV-' + String(n).padStart(3, '0');
+  
+  await supabaseApi('tasks?id=eq.' + conceptId, {
+    method: 'PATCH', body: JSON.stringify({
+      dev_type: 'development',
+      prompt: prompt,
+      number: newNum,
+      status: 'open'
+    })
+  });
+  
+  openProject(task.project_id);
+}
+
+function closeProjectDetail() {
+  document.getElementById('project-detail-view').style.display = 'none';
+  document.getElementById('kanban-overview').style.display = '';
+}
+
+function showTaskPrompt(taskId) {
+  // TODO: expand task to show prompt
+  alert('Prompt-Ansicht folgt im nächsten Build.');
+}
+
+function editTaskPrompt(taskId) {
+  alert('Prompt-Editor folgt im nächsten Build.');
+}
+
+function filterProjects() {
+  const q = document.getElementById('proj-search').value.toLowerCase();
+  document.querySelectorAll('.proj-item').forEach(el => {
+    el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
 }
 
 // ===== CHAT THREADS =====
@@ -749,12 +992,27 @@ async function loadAllData() {
 
 // ===== VIEW SWITCHING =====
 function openDashboard() {
-  showDashboardView();
+  sidebarMode = 'dashboard';
+  document.getElementById('cs-threads-list').style.display = 'none';
+  document.querySelector('.cs-scroll').style.display = 'none';
+  document.getElementById('project-sidebar').style.display = 'flex';
+  document.querySelector('.cs-search').style.display = 'none';
+  document.querySelector('.cs-new-btn').style.display = 'none';
+  document.getElementById('empty-state').classList.add('hidden');
+  document.getElementById('chat-msgs').classList.remove('show');
+  renderProjects();
 }
 function closeDashboard() {
-  document.getElementById('dashboard-view').classList.remove('active');
-  document.getElementById('admin-view')?.classList.remove('active');
-  document.getElementById('chat-view').style.display = 'flex';
+  sidebarMode = 'chat';
+  document.getElementById('cs-threads-list').style.display = '';
+  document.querySelector('.cs-scroll').style.display = '';
+  document.getElementById('project-sidebar').style.display = 'none';
+  document.querySelector('.cs-search').style.display = '';
+  document.querySelector('.cs-new-btn').style.display = '';
+  document.getElementById('project-detail-view').style.display = 'none';
+  document.getElementById('kanban-overview').style.display = '';
+  document.getElementById('proj-detail').style.display = '';
+  document.getElementById('task-detail-view').style.display = 'none';
   currentProjectId = null; currentTaskId = null;
 }
 function openAdminPanel() {
