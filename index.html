@@ -316,19 +316,15 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
       </div>
       <div class="pp-details" id="pp-email"></div>
       <div class="pp-actions">
-              <div class="pp-btn" onclick="closeProfilePanel();openSettingsModal()">
-                <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-                Einstellungen
-              </div>
-              <div class="pp-btn" onclick="closeProfilePanel();openPasswordModal()">
-                <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
-                Passwort ändern
-              </div>
-              <div class="pp-btn logout" onclick="closeProfilePanel();logout()">
-                <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-                Abmelden
-              </div>
-            </div>
+                    <div class="pp-btn" onclick="closeProfilePanel();openSettingsModal()">
+                      <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                      Einstellungen
+                    </div>
+                    <div class="pp-btn logout" onclick="closeProfilePanel();logout()">
+                      <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+                      Abmelden
+                    </div>
+                  </div>
     </div>
   </div>
 
@@ -465,22 +461,27 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 
 <!-- ===== SETTINGS MODAL ===== -->
 <div class="modal-overlay" id="settings-modal" onclick="if(event.target===this)closeSettingsModal()">
-  <div class="modal">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
-      <h3 style="margin:0;">⚙️ Einstellungen</h3>
-      <span onclick="closeSettingsModal()" style="cursor:pointer;color:#888;font-size:1.2rem;">✕</span>
+  <div class="modal" style="background:#0a0a0f;border:1px solid #141428;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;border-bottom:1px solid #141428;padding-bottom:0.75rem;">
+      <h3 style="margin:0;color:#e8e8e8;font-size:0.9rem;font-weight:600;">⚙️ Einstellungen</h3>
+      <span onclick="closeSettingsModal()" style="cursor:pointer;color:#555;font-size:1.1rem;transition:color 0.12s;" onmouseover="this.style.color='#e8e8e8'" onmouseout="this.style.color='#555'">✕</span>
     </div>
     <div style="text-align:left;max-width:400px;margin:0 auto;">
-      <div class="form-group"><label>Vorname</label><input id="set-firstname" placeholder="Vorname"></div>
-      <div class="form-group"><label>Nachname</label><input id="set-lastname" placeholder="Nachname"></div>
-      <div class="form-group"><label>Anzeigename</label><input id="set-name" placeholder="Anzeigename"></div>
-      <div class="form-group"><label>E-Mail</label><input id="set-email" type="email" placeholder="E-Mail-Adresse"></div>
-      <div class="form-group" id="set-company-group" style="display:none;"><label>Firma</label><input id="set-company" placeholder="Firmenname"></div>
-      <div class="form-group"><label>Kurzzeichen</label><input id="set-shortcode" placeholder="z.B. RL" style="text-transform:uppercase;"></div>
+      <div class="form-group"><label style="color:#888;font-size:0.6rem;">Vorname</label><input id="set-firstname" placeholder="Vorname" style="background:#0d0d0d;border:1px solid #1a1a1a;color:#e0e0e0;"></div>
+      <div class="form-group"><label style="color:#888;font-size:0.6rem;">Nachname</label><input id="set-lastname" placeholder="Nachname" style="background:#0d0d0d;border:1px solid #1a1a1a;color:#e0e0e0;"></div>
+      <div class="form-group"><label style="color:#888;font-size:0.6rem;">Anzeigename</label><input id="set-name" placeholder="Anzeigename" style="background:#0d0d0d;border:1px solid #1a1a1a;color:#e0e0e0;"></div>
+      <div class="form-group"><label style="color:#888;font-size:0.6rem;">E-Mail</label><input id="set-email" type="email" placeholder="E-Mail-Adresse" readonly style="background:#0d0d0d;border:1px solid #1a1a1a;color:#555;cursor:not-allowed;"></div>
+      <div class="form-group" id="set-company-group" style="display:none;"><label style="color:#888;font-size:0.6rem;">Firma</label><input id="set-company" placeholder="Firmenname" style="background:#0d0d0d;border:1px solid #1a1a1a;color:#e0e0e0;"></div>
+      <div style="margin-top:1rem;padding-top:0.75rem;border-top:1px solid #141428;">
+        <div class="pp-btn" onclick="closeSettingsModal();closePWModal();openPasswordModal()" style="display:flex;align-items:center;gap:0.45rem;padding:0.4rem 0.5rem;border-radius:6px;font-size:0.78rem;color:#d0d0d0;cursor:pointer;transition:color 0.12s,background 0.12s;background:transparent;border:none;font-family:inherit;text-align:left;width:100%;" onmouseover="this.style.color='#e8e8e8';this.style.background='#141414'" onmouseout="this.style.color='#d0d0d0';this.style.background='transparent'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
+          Passwort ändern
+        </div>
+      </div>
     </div>
     <div id="set-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.5rem;display:none;"></div>
     <div id="set-success" style="font-size:0.75rem;color:#34d399;margin-bottom:0.5rem;display:none;"></div>
-    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeSettingsModal()">Abbrechen</button><button class="btn btn-primary-sm" onclick="saveSettings()">💾 Speichern</button></div>
+    <div class="modal-actions" style="border-top:1px solid #141428;padding-top:0.75rem;margin-top:0.75rem;"><button class="btn btn-ghost" onclick="closeSettingsModal()" style="border-color:#1a1a2a;color:#888;">Abbrechen</button><button class="btn btn-primary-sm" onclick="saveSettings()" style="background:#5e5ce6;color:#fff;">💾 Speichern</button></div>
   </div>
 </div>
 
@@ -1241,30 +1242,46 @@ async function saveSettings() {
   const ok = document.getElementById('set-success');
   err.style.display = 'none'; ok.style.display = 'none';
 
+  const first = document.getElementById('set-firstname').value.trim();
+  const last = document.getElementById('set-lastname').value.trim();
+  const name = document.getElementById('set-name').value.trim();
+
+  if (!name) { err.textContent = '❌ Anzeigename ist erforderlich'; err.style.display = 'block'; btn.disabled = false; btn.textContent = '💾 Speichern'; return; }
+
+  // Auto-generate shortcode: 3 Zeichen aus Vor+Nachname
+  let shortcode = (first.charAt(0) || '') + (last.charAt(0) || '') + (last.charAt(1) || '');
+  shortcode = shortcode.toUpperCase().slice(0, 3);
+  // Falls < 3 Zeichen, mit X auffuellen
+  while (shortcode.length < 3) shortcode += 'X';
+  // Bekannte 2-stellige Ausnahmen bleiben
+  const existing = currentProfile?.shortcode || '';
+  const TWO_CHAR_USERS = ['RL', 'GK']; // Bro + Gu
+  if (TWO_CHAR_USERS.includes(existing)) shortcode = existing;
+
   const payload = {
-    first_name: document.getElementById('set-firstname').value.trim(),
-    last_name: document.getElementById('set-lastname').value.trim(),
-    name: document.getElementById('set-name').value.trim(),
-    shortcode: document.getElementById('set-shortcode').value.trim().toUpperCase(),
+    first_name: first,
+    last_name: last,
+    name: name,
+    shortcode: shortcode,
     company_name: document.getElementById('set-company').value.trim()
   };
-
-  if (!payload.name) { err.textContent = '❌ Anzeigename ist erforderlich'; err.style.display = 'block'; btn.disabled = false; btn.textContent = '💾 Speichern'; return; }
 
   try {
     await supabaseApi('user_profiles?email=eq.' + encodeURIComponent(currentUser.email), {
       method: 'PATCH', body: JSON.stringify(payload)
     });
-    // Update local state
     if (currentProfile) Object.assign(currentProfile, payload);
-    currentUser.name = payload.name;
+    currentUser.name = name;
     localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
-    document.getElementById('cs-user-name').textContent = payload.name;
-    document.getElementById('pp-name').textContent = payload.name;
-    ok.textContent = '✅ Gespeichert'; ok.style.display = 'block';
+    document.getElementById('cs-user-name').textContent = name;
+    // Update profile panel fields
+    document.getElementById('pp-name').textContent = name;
+    document.getElementById('pp-shortcode').textContent = shortcode ? '▸ ' + shortcode : '';
+    document.getElementById('pp-avatar-letter').textContent = (name || '?').charAt(0).toUpperCase();
+    ok.textContent = '✅ Gespeichert (Kürzel: ' + shortcode + ')'; ok.style.display = 'block';
     setTimeout(closeSettingsModal, 1200);
   } catch(e) {
-    err.textContent = '❌ Fehler beim Speichern: ' + e.message;
+    err.textContent = '❌ Fehler: ' + e.message;
     err.style.display = 'block';
   }
   btn.disabled = false; btn.textContent = '💾 Speichern';
