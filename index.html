@@ -635,8 +635,9 @@ function renderConceptList(concepts) {
     el.className = 'pd-item concept';
     el.innerHTML = '<span class="pd-ref">' + escHtml(c.number || '???') + '</span>' +
       '<span class="pd-title">' + escHtml(c.title) + '</span>' +
-      '<span class="pd-promote-btn" onclick="event.stopPropagation();promoteToDev('' + c.id + '')">→ DV</span>';
-    el.setAttribute('onclick', 'editTaskPrompt('' + c.id + '')');
+      '<span class="pd-promote-btn">→ DV</span>';
+    el.querySelector('.pd-promote-btn').onclick = function(e) { e.stopPropagation(); promoteToDev(c.id); };
+    el.onclick = function() { editTaskPrompt(c.id); };
     list.appendChild(el);
   }
 }
@@ -654,10 +655,10 @@ function renderDevList(devTasks) {
     const el = document.createElement('div');
     el.className = 'pd-item development' + statusClass;
     el.innerHTML = '<span class="pd-ref">' + escHtml(t.number || '???') + '</span>' +
-      '<span class="pd-title">' + escHtml(t.title) + '</span>' +
-      '<span class="pd-badge ' + badge + '">' + badgeLabel + '</span>';
-    el.setAttribute('onclick', 'showTaskPrompt('' + t.id + '')');
-    list.appendChild(el);
+          '<span class="pd-title">' + escHtml(t.title) + '</span>' +
+          '<span class="pd-badge ' + badge + '">' + badgeLabel + '</span>';
+        el.onclick = function() { showTaskPrompt(t.id); };
+        list.appendChild(el);
   }
 }
 
