@@ -316,15 +316,19 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
       </div>
       <div class="pp-details" id="pp-email"></div>
       <div class="pp-actions">
-        <div class="pp-btn" onclick="closeProfilePanel();openPasswordModal()">
-          <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
-          Passwort ändern
-        </div>
-        <div class="pp-btn logout" onclick="closeProfilePanel();logout()">
-          <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-          Abmelden
-        </div>
-      </div>
+              <div class="pp-btn" onclick="closeProfilePanel();openSettingsModal()">
+                <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                Einstellungen
+              </div>
+              <div class="pp-btn" onclick="closeProfilePanel();openPasswordModal()">
+                <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
+                Passwort ändern
+              </div>
+              <div class="pp-btn logout" onclick="closeProfilePanel();logout()">
+                <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+                Abmelden
+              </div>
+            </div>
     </div>
   </div>
 
@@ -456,6 +460,27 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
     </div>
     <div id="pw-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.5rem;display:none;"></div>
     <div class="modal-actions"><button class="btn btn-ghost" onclick="closePWModal()">Abbrechen</button><button class="btn btn-primary-sm" onclick="changePassword()">💾 Ändern</button></div>
+  </div>
+</div>
+
+<!-- ===== SETTINGS MODAL ===== -->
+<div class="modal-overlay" id="settings-modal" onclick="if(event.target===this)closeSettingsModal()">
+  <div class="modal">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+      <h3 style="margin:0;">⚙️ Einstellungen</h3>
+      <span onclick="closeSettingsModal()" style="cursor:pointer;color:#888;font-size:1.2rem;">✕</span>
+    </div>
+    <div style="text-align:left;max-width:400px;margin:0 auto;">
+      <div class="form-group"><label>Vorname</label><input id="set-firstname" placeholder="Vorname"></div>
+      <div class="form-group"><label>Nachname</label><input id="set-lastname" placeholder="Nachname"></div>
+      <div class="form-group"><label>Anzeigename</label><input id="set-name" placeholder="Anzeigename"></div>
+      <div class="form-group"><label>E-Mail</label><input id="set-email" type="email" placeholder="E-Mail-Adresse"></div>
+      <div class="form-group" id="set-company-group" style="display:none;"><label>Firma</label><input id="set-company" placeholder="Firmenname"></div>
+      <div class="form-group"><label>Kurzzeichen</label><input id="set-shortcode" placeholder="z.B. RL" style="text-transform:uppercase;"></div>
+    </div>
+    <div id="set-error" style="font-size:0.75rem;color:#ef4444;margin-bottom:0.5rem;display:none;"></div>
+    <div id="set-success" style="font-size:0.75rem;color:#34d399;margin-bottom:0.5rem;display:none;"></div>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeSettingsModal()">Abbrechen</button><button class="btn btn-primary-sm" onclick="saveSettings()">💾 Speichern</button></div>
   </div>
 </div>
 
@@ -1191,6 +1216,59 @@ document.addEventListener('click', function(e) {
     panel.classList.remove('open');
   }
 });
+
+// ===== SETTINGS MODAL =====
+function openSettingsModal() {
+  const p = currentProfile || {};
+  document.getElementById('set-firstname').value = p.first_name || '';
+  document.getElementById('set-lastname').value = p.last_name || '';
+  document.getElementById('set-name').value = p.name || currentUser?.name || '';
+  document.getElementById('set-email').value = currentUser?.email || '';
+  document.getElementById('set-shortcode').value = p.shortcode || '';
+  const isCompany = p.type === 'firma';
+  document.getElementById('set-company-group').style.display = isCompany ? 'block' : 'none';
+  if (isCompany) document.getElementById('set-company').value = p.company_name || '';
+  document.getElementById('set-error').style.display = 'none';
+  document.getElementById('set-success').style.display = 'none';
+  document.getElementById('settings-modal').classList.add('show');
+}
+function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('show'); }
+
+async function saveSettings() {
+  const btn = document.querySelector('#settings-modal .btn-primary-sm');
+  btn.disabled = true; btn.textContent = 'Speichern...';
+  const err = document.getElementById('set-error');
+  const ok = document.getElementById('set-success');
+  err.style.display = 'none'; ok.style.display = 'none';
+
+  const payload = {
+    first_name: document.getElementById('set-firstname').value.trim(),
+    last_name: document.getElementById('set-lastname').value.trim(),
+    name: document.getElementById('set-name').value.trim(),
+    shortcode: document.getElementById('set-shortcode').value.trim().toUpperCase(),
+    company_name: document.getElementById('set-company').value.trim()
+  };
+
+  if (!payload.name) { err.textContent = '❌ Anzeigename ist erforderlich'; err.style.display = 'block'; btn.disabled = false; btn.textContent = '💾 Speichern'; return; }
+
+  try {
+    await supabaseApi('user_profiles?email=eq.' + encodeURIComponent(currentUser.email), {
+      method: 'PATCH', body: JSON.stringify(payload)
+    });
+    // Update local state
+    if (currentProfile) Object.assign(currentProfile, payload);
+    currentUser.name = payload.name;
+    localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
+    document.getElementById('cs-user-name').textContent = payload.name;
+    document.getElementById('pp-name').textContent = payload.name;
+    ok.textContent = '✅ Gespeichert'; ok.style.display = 'block';
+    setTimeout(closeSettingsModal, 1200);
+  } catch(e) {
+    err.textContent = '❌ Fehler beim Speichern: ' + e.message;
+    err.style.display = 'block';
+  }
+  btn.disabled = false; btn.textContent = '💾 Speichern';
+}
 
 function saveAccountName() {
   const newName = document.getElementById('pp-name').textContent;
