@@ -258,7 +258,6 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
     <button class="cs-new-btn" onclick="newChat()">+ Neuer Chat</button>
     <input class="cs-search" type="text" placeholder="Chats durchsuchen..." id="cs-search" oninput="filterChats()">
     <div class="cs-scroll">
-      <div class="cs-section" id="cs-today-label">Heute</div>
       <div id="cs-threads-list"></div>
       <div class="cs-section" style="border-top:1px solid #141414;margin-top:0.5rem;padding-top:0.5rem;">Administration</div>
       <div class="cs-admin-area">
@@ -454,6 +453,113 @@ let chatHistory = [];
 let projects = [], tasks = [], taskMessages = [];
 let currentProjectId = null, currentTaskId = null, editingProjectId = null, editingTaskField = null;
 let currentImage = null; // base64 data URL of pasted image
+let currentThreadId = null;
+let threads = [];
+
+// ===== CHAT THREADS =====
+async function createThread(title) {
+  const res = await fetch(SUPABASE_URL + '/rest/v1/chat_threads', {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+    body: JSON.stringify({ title: title || 'Neuer Chat', user_id: currentUser?.email || 'rason' })
+  });
+  if (!res.ok) throw new Error('Thread create failed');
+  const data = await res.json();
+  const thread = Array.isArray(data) ? data[0] : data;
+  threads.unshift(thread);
+  renderThreads();
+  return thread.id;
+}
+
+async function saveMessage(threadId, role, content) {
+  await fetch(SUPABASE_URL + '/rest/v1/chat_messages', {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ thread_id: threadId, role: role, content: content })
+  });
+  // Touch updated_at on thread
+  await fetch(SUPABASE_URL + '/rest/v1/chat_threads?id=eq.' + threadId, {
+    method: 'PATCH',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ updated_at: new Date().toISOString() })
+  });
+}
+
+async function loadThreads() {
+  const res = await fetch(SUPABASE_URL + '/rest/v1/chat_threads?select=id,title,created_at,updated_at&user_id=eq.' + (currentUser?.email || 'rason') + '&order=updated_at.desc&limit=50', {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+  });
+  if (!res.ok) return;
+  threads = await res.json();
+  renderThreads();
+}
+
+async function openThread(threadId) {
+  currentThreadId = threadId;
+  chatHistory = [];
+  document.getElementById('empty-state').classList.add('hidden');
+  const msgs = document.getElementById('chat-msgs');
+  msgs.innerHTML = '';
+  msgs.classList.add('show');
+
+  // Mark active in sidebar
+  document.querySelectorAll('.cs-thread').forEach(el => el.classList.remove('active'));
+  const el = document.querySelector('[data-thread-id="' + threadId + '"]');
+  if (el) el.classList.add('active');
+
+  // Load messages
+  const res = await fetch(SUPABASE_URL + '/rest/v1/chat_messages?select=role,content,created_at&thread_id=eq.' + threadId + '&order=created_at.asc', {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+  });
+  if (!res.ok) return;
+  const msgsData = await res.json();
+  for (const m of msgsData) {
+    const div = document.createElement('div');
+    div.className = 'msg ' + m.role;
+    div.innerHTML = '<div class="msg-bubble">' + (m.role === 'user' ? '<p>' + escHtml(m.content) + '</p>' : sanitizeHtml(m.content || '')) + '</div>';
+    msgs.appendChild(div);
+    chatHistory.push({ role: m.role, content: m.content });
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function renderThreads() {
+  const list = document.getElementById('cs-threads-list');
+  list.innerHTML = '';
+  const now = new Date();
+  const todayStr = now.toDateString();
+  let todaySection = null, earlierSection = null;
+
+  for (const t of threads) {
+    const updated = new Date(t.updated_at);
+    const section = updated.toDateString() === todayStr ? 'today' : 'earlier';
+
+    if (section === 'today' && !todaySection) {
+      todaySection = document.createElement('div');
+      todaySection.className = 'cs-section';
+      todaySection.textContent = 'Heute';
+      list.appendChild(todaySection);
+    } else if (section === 'earlier' && !earlierSection) {
+      earlierSection = document.createElement('div');
+      earlierSection.className = 'cs-section';
+      earlierSection.textContent = 'Früher';
+      list.appendChild(earlierSection);
+    }
+
+    const el = document.createElement('div');
+    el.className = 'cs-thread' + (currentThreadId === t.id ? ' active' : '');
+    el.setAttribute('data-thread-id', t.id);
+    el.setAttribute('onclick', 'openThread(\'' + t.id + '\')');
+    el.innerHTML = '<div class="t-info"><div class="t-name">' + escHtml(t.title) + '</div><div class="t-preview">' + (t.updated_at ? formatTime(updated) : '') + '</div></div>';
+    list.appendChild(el);
+  }
+}
+
+function formatTime(d) {
+  const h = d.getHours().toString().padStart(2, '0');
+  const m = d.getMinutes().toString().padStart(2, '0');
+  return h + ':' + m;
+}
 
 // ===== AUTH =====
 function checkSession() {
@@ -530,6 +636,7 @@ function showHub() {
   document.getElementById('cs-user-role').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1);
   document.getElementById('cs-avatar-letter').textContent = (currentUser.name || currentUser.email).charAt(0).toUpperCase();
   loadAllData();
+  loadThreads();
 }
 
 async function supabaseApi(endpoint, opts) {
@@ -601,9 +708,20 @@ function sendMsg() {
   userDiv.className = 'msg user';
   userDiv.innerHTML = '<div class="msg-bubble">' + bubbleHtml + '</div>';
   msgs.appendChild(userDiv);
-  input.value = ''; input.style.height = 'auto';
   msgs.scrollTop = msgs.scrollHeight;
   chatHistory.push({ role: 'user', content: text + (currentImage ? ' [Bild]' : '') });
+
+  // Create thread on first message, async (fire+forget wont work here — need threadId for save)
+  (async () => {
+    if (!currentThreadId) {
+      currentThreadId = await createThread(text || 'Bild');
+      renderThreads();
+    }
+    // Save user message
+    await saveMessage(currentThreadId, 'user', text || '[Bild]');
+  })();
+
+  input.value = ''; input.style.height = 'auto';
 
   const typingDiv = document.createElement('div');
   typingDiv.className = 'msg ai';
@@ -615,7 +733,7 @@ function sendMsg() {
   const imageData = currentImage;
   currentImage = null;
   clearImagePreview();
-  callBackend(text, imageData, function(reply, imgUrl) {
+  callBackend(text, imageData, async function(reply, imgUrl) {
     const typing = document.getElementById('typing-indicator');
     if (typing) typing.remove();
     const aiDiv = document.createElement('div');
@@ -624,6 +742,10 @@ function sendMsg() {
     msgs.appendChild(aiDiv);
     msgs.scrollTop = msgs.scrollHeight;
     chatHistory.push({ role: 'assistant', content: reply });
+    // Save assistant message
+    if (currentThreadId && reply) {
+      await saveMessage(currentThreadId, 'assistant', reply);
+    }
   });
 }
 
@@ -710,7 +832,7 @@ function clearImagePreview() {
 }
 
 function sendSuggestion(el) { document.getElementById('chat-input').value = el.textContent; sendMsg(); }
-function newChat() { chatHistory = []; currentImage = null; clearImagePreview(); const msgs = document.getElementById('chat-msgs'); msgs.innerHTML = ''; msgs.classList.remove('show'); document.getElementById('empty-state').classList.remove('hidden'); }
+function newChat() { currentThreadId = null; chatHistory = []; currentImage = null; clearImagePreview(); const msgs = document.getElementById('chat-msgs'); msgs.innerHTML = ''; msgs.classList.remove('show'); document.getElementById('empty-state').classList.remove('hidden'); renderThreads(); }
 function filterChats() {}
 function showTicketForm() { alert('📝 Ticket-System folgt in Kürze.'); }
 function getGreeting() { const hr = new Date().getHours(); if (hr < 12) return 'Morgen'; if (hr < 18) return 'Tag'; return 'Abend'; }
