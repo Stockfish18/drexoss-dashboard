@@ -63,7 +63,27 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 .cs-thread .cs-del { font-size:0.6rem; color:#333; cursor:pointer; padding:0.15rem; transition:color 0.12s; flex-shrink:0; opacity:0; }
 .cs-thread:hover .cs-del { opacity:1; }
 .cs-thread .cs-del:hover { color:#ef4444; }
-.cs-admin-area { padding:0 0.3rem; }
+/* Three-dot Menu */
+.cs-thread-actions { position:relative; flex-shrink:0; }
+.cs-dot-btn { font-size:0.7rem; color:#444; cursor:pointer; padding:0.1rem 0.25rem; transition:color 0.12s; opacity:0; line-height:1; }
+.cs-thread:hover .cs-dot-btn { opacity:1; }
+.cs-dot-btn:hover { color:#e0e0e0; }
+.cs-dot-menu { position:absolute; right:0; top:100%; background:#0d0d0d; border:1px solid #1a1a1a; border-radius:6px; padding:0.2rem 0; z-index:20; min-width:140px; box-shadow:0 4px 12px rgba(0,0,0,0.4); display:none; }
+.cs-dot-menu.show { display:block; }
+.cs-dot-item { display:flex; align-items:center; gap:0.35rem; padding:0.35rem 0.6rem; font-size:0.72rem; color:#d0d0d0; cursor:pointer; transition:color 0.12s,background 0.12s; }
+.cs-dot-item:hover { color:#fff; background:#141414; }
+.cs-dot-item.danger { color:#ef4444; }
+.cs-dot-item.danger:hover { color:#ff5555; background:#1a0a0a; }
+.cs-dot-divider { height:1px; background:#141414; margin:0.15rem 0; }
+
+/* Pinned indicator */
+.cs-thread.pinned .t-name::before { content:'\u25C9 '; color:#5e5ce6; font-size:0.65rem; }
+.cs-pinned-section { margin-bottom:0.25rem; }
+.cs-pinned-section .cs-section { border-bottom:1px solid #141414; margin-bottom:0.25rem; }
+.cs-archived-toggle { font-size:0.6rem; color:#555; cursor:pointer; padding:0.3rem 0.6rem; transition:color 0.12s; display:flex; align-items:center; gap:0.3rem; }
+.cs-archived-toggle:hover { color:#888; }
+.cs-archived-wrap { display:none; }
+.cs-archived-wrap.show { display:block; }
 .cs-admin-item { display:flex; align-items:center; gap:0.5rem; padding:0.45rem 0.5rem; border-radius:6px; cursor:pointer; font-size:0.78rem; color:#e0e0e0; transition:color 0.12s; }
 .cs-admin-item:hover { background:#141414; color:#fff; }
 .cs-admin-item svg { width:14px; height:14px; stroke:currentColor; stroke-width:1.5; fill:none; flex-shrink:0; }
@@ -949,7 +969,7 @@ async function saveMessage(threadId, role, content) {
 }
 
 async function loadThreads() {
-  const res = await fetch(SUPABASE_URL + '/rest/v1/chat_threads?select=id,title,created_at,updated_at&user_id=eq.' + (currentUser?.email || 'rason') + '&order=updated_at.desc&limit=50', {
+  const res = await fetch(SUPABASE_URL + '/rest/v1/chat_threads?select=id,title,created_at,updated_at,pinned,archived&user_id=eq.' + (currentUser?.email || 'rason') + '&order=updated_at.desc&limit=50', {
     headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
   });
   if (!res.ok) return;
@@ -989,37 +1009,137 @@ async function openThread(threadId) {
 function renderThreads() {
   const list = document.getElementById('cs-threads-list');
   list.innerHTML = '';
+  const pinned = threads.filter(function(t) { return t.pinned && !t.archived; });
+  const active = threads.filter(function(t) { return !t.pinned && !t.archived; });
+  const archived = threads.filter(function(t) { return t.archived; });
   const now = new Date();
   const todayStr = now.toDateString();
-  let todaySection = null, earlierSection = null;
-
-  for (const t of threads) {
+  if (pinned.length > 0) {
+    const sec = document.createElement('div');
+    sec.className = 'cs-pinned-section';
+    const label = document.createElement('div');
+    label.className = 'cs-section';
+    label.textContent = 'Angeheftet';
+    sec.appendChild(label);
+    for (const t of pinned) { sec.appendChild(buildThreadEl(t)); }
+    list.appendChild(sec);
+  }
+  let todaySec = null, earlierSec = null;
+  for (const t of active) {
     const updated = new Date(t.updated_at);
-    const section = updated.toDateString() === todayStr ? 'today' : 'earlier';
-
-    if (section === 'today' && !todaySection) {
-      todaySection = document.createElement('div');
-      todaySection.className = 'cs-section';
-      todaySection.textContent = 'Heute';
-      list.appendChild(todaySection);
-    } else if (section === 'earlier' && !earlierSection) {
-      earlierSection = document.createElement('div');
-      earlierSection.className = 'cs-section';
-      earlierSection.textContent = 'Früher';
-      list.appendChild(earlierSection);
+    const isToday = updated.toDateString() === todayStr;
+    if (isToday && !todaySec) {
+      todaySec = document.createElement('div');
+      todaySec.className = 'cs-section';
+      todaySec.textContent = 'Heute';
+      list.appendChild(todaySec);
+    } else if (!isToday && !earlierSec) {
+      earlierSec = document.createElement('div');
+      earlierSec.className = 'cs-section';
+      earlierSec.textContent = 'Fr\u00fcher';
+      list.appendChild(earlierSec);
     }
-
-    const el = document.createElement('div');
-    el.className = 'cs-thread' + (currentThreadId === t.id ? ' active' : '');
-    el.setAttribute('data-thread-id', t.id);
-    el.setAttribute('onclick', 'openThread(\'' + t.id + '\')');
-    el.innerHTML = '<div class="t-info"><div class="t-name">' + escHtml(t.title) + '</div><div class="t-preview">' + (t.updated_at ? formatTime(updated) : '') + '</div></div>' +
-          '<span class="cs-del" title="Chat löschen">✕</span>';
-        el.querySelector('.cs-del').onclick = function(e) { e.stopPropagation(); deleteThread(t.id); };
-        list.appendChild(el);
+    list.appendChild(buildThreadEl(t));
+  }
+  if (archived.length > 0) {
+    const toggle = document.createElement('div');
+    toggle.className = 'cs-archived-toggle';
+    toggle.onclick = function() {
+      const w = document.getElementById('cs-archived-wrap');
+      w.classList.toggle('show');
+      toggle.textContent = (w.classList.contains('show') ? '\u25be' : '\u25b8') + ' ' + archived.length + ' archiviert';
+    };
+    toggle.textContent = '\u25b8 ' + archived.length + ' archiviert';
+    list.appendChild(toggle);
+    const wrap = document.createElement('div');
+    wrap.id = 'cs-archived-wrap';
+    wrap.className = 'cs-archived-wrap';
+    for (const t of archived) { wrap.appendChild(buildThreadEl(t)); }
+    list.appendChild(wrap);
   }
 }
-
+function buildThreadEl(t) {
+  const el = document.createElement('div');
+  el.className = 'cs-thread' + (currentThreadId === t.id ? ' active' : '') + (t.pinned ? ' pinned' : '');
+  el.setAttribute('data-thread-id', t.id);
+  el.onclick = function() { openThread(t.id); };
+  const title = t.title || 'Neuer Chat';
+  const time = t.updated_at ? formatTime(new Date(t.updated_at)) : '';
+  const menuId = 'dm-' + t.id;
+  const nameId = 'tn-' + t.id;
+  const pinLabel = t.pinned ? '\ud83d\udccc Losl\u00f6sen' : '\ud83d\udccc Anheften';
+  el.innerHTML = '<div class="t-info"><div class="t-name" id="' + nameId + '">' + escHtml(title) + '</div><div class="t-preview">' + time + '</div></div>' +
+    '<div class="cs-thread-actions"><span class="cs-dot-btn" id="db-' + t.id + '">\u22ee</span>' +
+    '<div class="cs-dot-menu" id="' + menuId + '">' +
+    '<div class="cs-dot-item" id="rn-' + t.id + '">\u270f\ufe0f Umbenennen</div>' +
+    '<div class="cs-dot-item" id="pi-' + t.id + '">' + pinLabel + '</div>' +
+    '<div class="cs-dot-item" id="ar-' + t.id + '">\ud83d\udce6 Archivieren</div>' +
+    '<div class="cs-dot-divider"></div>' +
+    '<div class="cs-dot-item danger" id="dl-' + t.id + '">\ud83d\uddd1 L\u00f6schen</div>' +
+    '</div></div>';
+  el.querySelector('#db-' + t.id).onclick = function(e) { e.stopPropagation(); toggleDotMenu(t.id); };
+  el.querySelector('#rn-' + t.id).onclick = function(e) { e.stopPropagation(); renamePrompt(t.id); };
+  el.querySelector('#pi-' + t.id).onclick = function(e) { e.stopPropagation(); togglePin(t.id); };
+  el.querySelector('#ar-' + t.id).onclick = function(e) { e.stopPropagation(); archiveThread(t.id); };
+  el.querySelector('#dl-' + t.id).onclick = function(e) { e.stopPropagation(); deleteThread(t.id); };
+  return el;
+}
+// ===== THREAD ACTIONS =====
+function toggleDotMenu(id) {
+  document.querySelectorAll('.cs-dot-menu.show').forEach(function(m) { m.classList.remove('show'); });
+  const menu = document.getElementById('dm-' + id);
+  if (menu) menu.classList.toggle('show');
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.cs-thread-actions')) {
+    document.querySelectorAll('.cs-dot-menu.show').forEach(function(m) { m.classList.remove('show'); });
+  }
+});
+function renamePrompt(threadId) {
+  const nameEl = document.getElementById('tn-' + threadId);
+  const current = nameEl.textContent;
+  const newName = prompt('Chat umbenennen:', current);
+  if (newName && newName.trim() && newName.trim() !== current) {
+    fetch(SUPABASE_URL + '/rest/v1/chat_threads?id=eq.' + threadId, {
+      method: 'PATCH',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ title: newName.trim() })
+    }).then(function() {
+      nameEl.textContent = newName.trim();
+      const t = threads.find(function(x) { return x.id === threadId; });
+      if (t) t.title = newName.trim();
+    });
+  }
+  closeDotMenus();
+}
+function togglePin(threadId) {
+  const t = threads.find(function(x) { return x.id === threadId; });
+  if (!t) return;
+  const newPinned = !t.pinned;
+  fetch(SUPABASE_URL + '/rest/v1/chat_threads?id=eq.' + threadId, {
+    method: 'PATCH',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ pinned: newPinned })
+  }).then(function() {
+    t.pinned = newPinned;
+    renderThreads();
+  });
+}
+function archiveThread(threadId) {
+  fetch(SUPABASE_URL + '/rest/v1/chat_threads?id=eq.' + threadId, {
+    method: 'PATCH',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ archived: true })
+  }).then(function() {
+    const t = threads.find(function(x) { return x.id === threadId; });
+    if (t) t.archived = true;
+    if (currentThreadId === threadId) { currentThreadId = null; newChat(); }
+    renderThreads();
+  });
+}
+function closeDotMenus() {
+  document.querySelectorAll('.cs-dot-menu.show').forEach(function(m) { m.classList.remove('show'); });
+}
 async function deleteThread(threadId) {
   if (!confirm('Chat endgültig löschen?')) return;
   
