@@ -852,7 +852,7 @@ function showTaskDetail(t, users) {
       '</select></span></div>' +
       (t.effort ? '<div class="td-meta-item"><span class="td-label">Aufwand</span><span class="td-value">' + escHtml(t.effort) + '</span></div>' : '') +
     '</div>' +
-    (t.description ? '<div class="td-section"><div class="td-section-label">Beschreibung</div><div class="td-desc">' + escHtml(t.description) + '</div></div>' : '') +
+    (t.description ? '<div class="td-section"><div class="td-section-label">Beschreibung</div><div class="td-desc">' + sanitizeHtml(t.description) + '</div></div>' : '') +
     (t.dev_type === 'development' ? '<div class="td-section"><div class="td-section-label">Prompt</div><div class="td-prompt" id="td-prompt" contenteditable="true" onblur="saveTaskPrompt(\'' + t.id + '\')">' + escHtml(t.prompt || '') + '</div></div>' : '') +
     '<div class="td-section"><div class="td-section-label">Aktivität</div><div class="td-log">' + logHtml + '</div></div>';
 }
