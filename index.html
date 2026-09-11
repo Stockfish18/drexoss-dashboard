@@ -74,19 +74,20 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 .cs-user-role { font-size:0.6rem; color:#888; }
 .cs-dot { width:5px; height:5px; border-radius:50%; background:#34d399; flex-shrink:0; }
 
-/* Profile Panel — Slide-Up in Sidebar */
-.profile-panel { position:absolute; bottom:52px; left:0; right:0; background:#0a0a0a; border-top:1px solid #1a1a1a; border-bottom:1px solid #1a1a1a; padding:1rem 1rem 1.5rem; transform:translateY(110%); transition:transform 0.18s ease; z-index:5; pointer-events:none; }
-.profile-panel.open { transform:translateY(0); pointer-events:auto; }
-.pp-header { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem; }
-.pp-avatar { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#5e5ce6,#7c7aff); display:flex; align-items:center; justify-content:center; font-size:1rem; font-weight:700; color:#fff; flex-shrink:0; cursor:pointer; }
+/* Profile Popup — Dropdown über Profilzeile */
+.chat-sidebar { position:relative; }
+.profile-panel { position:absolute; left:6px; right:6px; bottom:54px; background:#0d0d0d; border:1px solid #1a1a1a; border-radius:8px; padding:0.9rem 0.9rem 1rem; opacity:0; pointer-events:none; transform:translateY(4px); transition:opacity 0.12s, transform 0.12s; z-index:10; box-shadow:0 -4px 20px rgba(0,0,0,0.5); }
+.profile-panel.open { opacity:1; pointer-events:auto; transform:translateY(0); }
+.pp-header { display:flex; align-items:center; gap:0.65rem; margin-bottom:0.6rem; }
+.pp-avatar { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#5e5ce6,#7c7aff); display:flex; align-items:center; justify-content:center; font-size:0.9rem; font-weight:700; color:#fff; flex-shrink:0; cursor:pointer; }
 .pp-info { flex:1; min-width:0; }
 .pp-name { font-size:0.8rem; font-weight:500; color:#e8e8e8; }
-.pp-role { font-size:0.65rem; color:#5e5ce6; }
-.pp-details { font-size:0.72rem; color:#888; margin-bottom:0.75rem; }
-.pp-actions { display:flex; flex-direction:column; gap:0.3rem; }
-.pp-btn { display:flex; align-items:center; gap:0.5rem; padding:0.45rem 0.6rem; border-radius:6px; font-size:0.78rem; color:#e0e0e0; cursor:pointer; transition:color 0.12s; background:transparent; border:none; font-family:inherit; text-align:left; width:100%; }
+.pp-role { font-size:0.6rem; color:#5e5ce6; }
+.pp-details { font-size:0.7rem; color:#888; margin-bottom:0.6rem; }
+.pp-actions { display:flex; flex-direction:column; gap:0.2rem; }
+.pp-btn { display:flex; align-items:center; gap:0.45rem; padding:0.4rem 0.5rem; border-radius:6px; font-size:0.75rem; color:#d0d0d0; cursor:pointer; transition:color 0.12s,background 0.12s; background:transparent; border:none; font-family:inherit; text-align:left; width:100%; }
 .pp-btn:hover { color:#e8e8e8; background:#141414; }
-.pp-btn svg { width:14px; height:14px; stroke:currentColor; stroke-width:1.5; fill:none; flex-shrink:0; }
+.pp-btn svg { width:13px; height:13px; stroke:currentColor; stroke-width:1.5; fill:none; flex-shrink:0; }
 .pp-btn.logout { color:#ef4444; }
 .pp-btn.logout:hover { color:#ff5555; background:#1a0a0a; }
 
@@ -311,7 +312,7 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
           <div class="pp-role" id="pp-role">Admin</div>
         </div>
       </div>
-      <div class="pp-details" id="pp-email">rason@example.com</div>
+      <div class="pp-details" id="pp-email"></div>
       <div class="pp-actions">
         <div class="pp-btn" onclick="closeProfilePanel();openPasswordModal()">
           <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
