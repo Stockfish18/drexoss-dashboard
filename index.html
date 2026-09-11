@@ -60,6 +60,9 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 .cs-thread .t-info { flex:1; min-width:0; }
 .cs-thread .t-name { font-size:0.78rem; color:#e0e0e0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .cs-thread .t-preview { font-size:0.65rem; color:#5c5c78; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cs-thread .cs-del { font-size:0.6rem; color:#333; cursor:pointer; padding:0.15rem; transition:color 0.12s; flex-shrink:0; opacity:0; }
+.cs-thread:hover .cs-del { opacity:1; }
+.cs-thread .cs-del:hover { color:#ef4444; }
 .cs-admin-area { padding:0 0.3rem; }
 .cs-admin-item { display:flex; align-items:center; gap:0.5rem; padding:0.45rem 0.5rem; border-radius:6px; cursor:pointer; font-size:0.78rem; color:#e0e0e0; transition:color 0.12s; }
 .cs-admin-item:hover { background:#141414; color:#fff; }
@@ -330,6 +333,7 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
     <input class="cs-search" type="text" placeholder="Chats durchsuchen..." id="cs-search" oninput="filterChats()">
     <div class="cs-scroll">
           <div id="cs-threads-list"></div>
+      <div id="cs-deleted-threads" style="display:none;"></div>
         </div>
 
 
@@ -1009,9 +1013,29 @@ function renderThreads() {
     el.className = 'cs-thread' + (currentThreadId === t.id ? ' active' : '');
     el.setAttribute('data-thread-id', t.id);
     el.setAttribute('onclick', 'openThread(\'' + t.id + '\')');
-    el.innerHTML = '<div class="t-info"><div class="t-name">' + escHtml(t.title) + '</div><div class="t-preview">' + (t.updated_at ? formatTime(updated) : '') + '</div></div>';
-    list.appendChild(el);
+    el.innerHTML = '<div class="t-info"><div class="t-name">' + escHtml(t.title) + '</div><div class="t-preview">' + (t.updated_at ? formatTime(updated) : '') + '</div></div>' +
+          '<span class="cs-del" title="Chat löschen">✕</span>';
+        el.querySelector('.cs-del').onclick = function(e) { e.stopPropagation(); deleteThread(t.id); };
+        list.appendChild(el);
   }
+}
+
+async function deleteThread(threadId) {
+  if (!confirm('Chat endgültig löschen?')) return;
+  
+  // Delete from Supabase — CASCADE removes messages
+  await fetch(SUPABASE_URL + '/rest/v1/chat_threads?id=eq.' + threadId, {
+    method: 'DELETE',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+  });
+  
+  // Remove from local threads list
+  threads = threads.filter(t => t.id !== threadId);
+  if (currentThreadId === threadId) {
+    currentThreadId = null;
+    newChat();
+  }
+  renderThreads();
 }
 
 function formatTime(d) {
