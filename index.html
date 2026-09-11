@@ -68,13 +68,13 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 .cs-dot-btn { font-size:0.7rem; color:#444; cursor:pointer; padding:0.1rem 0.25rem; transition:color 0.12s; opacity:0; line-height:1; }
 .cs-thread:hover .cs-dot-btn { opacity:1; }
 .cs-dot-btn:hover { color:#e0e0e0; }
-.cs-dot-menu { position:absolute; right:0; top:100%; background:#0d0d0d; border:1px solid #1a1a1a; border-radius:6px; padding:0.2rem 0; z-index:20; min-width:140px; box-shadow:0 4px 12px rgba(0,0,0,0.4); display:none; }
+.cs-dot-menu { position:absolute; right:0; top:100%; background:#111; border:1px solid #222; border-radius:10px; padding:0.3rem 0; z-index:20; min-width:170px; box-shadow:0 4px 16px rgba(0,0,0,0.5); display:none; }
 .cs-dot-menu.show { display:block; }
 .cs-dot-item { display:flex; align-items:center; gap:0.35rem; padding:0.35rem 0.6rem; font-size:0.72rem; color:#d0d0d0; cursor:pointer; transition:color 0.12s,background 0.12s; }
-.cs-dot-item:hover { color:#fff; background:#141414; }
+.cs-dot-item:hover { color:#fff; background:#1a1a1a; }
 .cs-dot-item.danger { color:#ef4444; }
-.cs-dot-item.danger:hover { color:#ff5555; background:#1a0a0a; }
-.cs-dot-divider { height:1px; background:#141414; margin:0.15rem 0; }
+.cs-dot-item.danger:hover { color:#ff5555; background:#1f0f0f; }
+.cs-dot-divider { height:1px; background:#222; margin:0.2rem 0; }
 
 /* Pinned indicator */
 .cs-thread.pinned .t-name::before { content:'\u25C9 '; color:#5e5ce6; font-size:0.65rem; }
