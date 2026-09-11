@@ -83,6 +83,7 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
 .pp-info { flex:1; min-width:0; }
 .pp-name { font-size:0.8rem; font-weight:500; color:#e8e8e8; }
 .pp-role { font-size:0.6rem; color:#5e5ce6; }
+.pp-shortcode { font-size:0.6rem; color:#555; margin-top:1px; }
 .pp-details { font-size:0.7rem; color:#888; margin-bottom:0.6rem; }
 .pp-actions { display:flex; flex-direction:column; gap:0.2rem; }
 .pp-btn { display:flex; align-items:center; gap:0.45rem; padding:0.4rem 0.5rem; border-radius:6px; font-size:0.75rem; color:#d0d0d0; cursor:pointer; transition:color 0.12s,background 0.12s; background:transparent; border:none; font-family:inherit; text-align:left; width:100%; }
@@ -310,6 +311,7 @@ body { font-family:'Inter',-apple-system,sans-serif; background:#000; color:#e8e
         <div class="pp-info">
           <div class="pp-name" id="pp-name" contenteditable="true" onblur="saveAccountName()" style="cursor:text;">Rason Leis</div>
           <div class="pp-role" id="pp-role">Admin</div>
+          <div class="pp-shortcode" id="pp-shortcode"></div>
         </div>
       </div>
       <div class="pp-details" id="pp-email"></div>
@@ -470,6 +472,25 @@ let currentProjectId = null, currentTaskId = null, editingProjectId = null, edit
 let currentImage = null; // base64 data URL of pasted image
 let currentThreadId = null;
 let threads = [];
+
+let currentProfile = null;
+
+// ===== PROFILE DATA (from DB) =====
+async function loadUserProfile() {
+  const email = currentUser?.email;
+  if (!email) return;
+  try {
+    const res = await supabaseApi('user_profiles?select=id,email,name,first_name,last_name,shortcode,role,status,type,company_name,avatar_url&email=eq.' + encodeURIComponent(email));
+    if (res && res.length > 0) {
+      currentProfile = res[0];
+      // Sync to currentUser
+      currentUser.name = currentProfile.name || currentUser.name;
+      currentUser.role = currentProfile.role || currentUser.role;
+      currentRole = currentProfile.role || currentRole;
+      localStorage.setItem('drexoss_session', JSON.stringify(currentUser));
+    }
+  } catch(e) { /* profile load failed */ }
+}
 
 // ===== CHAT THREADS =====
 async function createThread(title) {
@@ -652,6 +673,7 @@ function showHub() {
   document.getElementById('cs-avatar-letter').textContent = (currentUser.name || currentUser.email).charAt(0).toUpperCase();
   loadAllData();
   loadThreads();
+  loadUserProfile();
 }
 
 async function supabaseApi(endpoint, opts) {
@@ -1151,11 +1173,13 @@ function toggleProfilePanel() {
   const opening = !panel.classList.contains('open');
   // Populate on open
   if (opening) {
-    document.getElementById('pp-name').textContent = currentUser?.name || currentUser?.email || '';
-    document.getElementById('pp-email').textContent = currentUser?.email || '';
-    document.getElementById('pp-role').textContent = currentRole.charAt(0).toUpperCase() + currentRole.slice(1);
-    document.getElementById('pp-avatar-letter').textContent = (currentUser?.name || currentUser?.email || '?').charAt(0).toUpperCase();
-  }
+      const p = currentProfile || currentUser;
+      document.getElementById('pp-name').textContent = p.name || p.email || '';
+      document.getElementById('pp-email').textContent = currentUser?.email || '';
+      document.getElementById('pp-role').textContent = (currentProfile?.role || currentRole).charAt(0).toUpperCase() + (currentProfile?.role || currentRole).slice(1);
+      document.getElementById('pp-shortcode').textContent = currentProfile?.shortcode ? '▸ ' + currentProfile.shortcode : '';
+      document.getElementById('pp-avatar-letter').textContent = (p.name || p.email || '?').charAt(0).toUpperCase();
+    }
   panel.classList.toggle('open');
 }
 function closeProfilePanel() { document.getElementById('profile-panel').classList.remove('open'); }
