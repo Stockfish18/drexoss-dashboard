@@ -1254,7 +1254,6 @@ function openSettingsModal() {
   document.getElementById('set-lastname').value = p.last_name || '';
   document.getElementById('set-name').value = p.name || currentUser?.name || '';
   document.getElementById('set-email').value = currentUser?.email || '';
-  document.getElementById('set-shortcode').value = p.shortcode || '';
   const isCompany = p.type === 'firma';
   document.getElementById('set-company-group').style.display = isCompany ? 'block' : 'none';
   if (isCompany) document.getElementById('set-company').value = p.company_name || '';
