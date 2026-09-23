@@ -1408,12 +1408,15 @@ function sendMsg() {
   currentImage = null;
   clearImagePreview();
   callBackend(text, imageData, async function(reply, imgUrl, sid) {
-      const typing = document.getElementById('typing-indicator');
-      if (typing) typing.remove();
-      const aiDiv = document.createElement('div');
-      aiDiv.className = 'msg ai';
-      aiDiv.innerHTML = '<div class="msg-bubble">' + sanitizeHtml(reply || '') + '</div>';
-      msgs.appendChild(aiDiv);
+        const typing = document.getElementById('typing-indicator');
+        if (typing) {
+          // Kein Live-Rendering (keine Deltas gekommen) — typing ersetzen
+          typing.remove();
+          const aiDiv = document.createElement('div');
+          aiDiv.className = 'msg ai';
+          aiDiv.innerHTML = '<div class="msg-bubble">' + sanitizeHtml(reply || '') + '</div>';
+          msgs.appendChild(aiDiv);
+        }
       msgs.scrollTop = msgs.scrollHeight;
       chatHistory.push({ role: 'assistant', content: reply });
       // Save assistant message
